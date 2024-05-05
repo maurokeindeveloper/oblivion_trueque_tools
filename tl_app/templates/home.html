@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<main class="container my-5">
+    <section class="card card-body">
+        <h4 class="display-6 text-center"><strong>Bienvenido a TruequeTools: la plataforma para intercambios presenciales</strong></h4>
+        <p>
+            ¿Cansado de las complicaciones de vender y comprar en línea? ¡TruequeTools tiene la solución perfecta para ti! Nuestra aplicación revoluciona la experiencia de intercambio al ofrecer un sistema de trueque en línea que te permite conectar con personas locales y pactar encuentros presenciales en nuestras sedes en sucursales.
+            <br>
+            <strong>¿Cómo funciona?</strong>
+            <ul>
+                <li>
+                    Regístrate Gratis: Crea una cuenta en TruequeTools en solo unos pocos pasos simples y comienza a explorar la comunidad de intercambio.
+                </li>
+                <li>
+                    Publica tus Artículos: Sube fotos y descripciones detalladas de los artículos que deseas intercambiar. ¡Cuanto más detallada sea tu publicación, más fácil será encontrar un compañero de trueque!
+                </li>
+                <li>
+                    Explora Ofertas Locales: Navega por los listados de artículos disponibles para intercambiar cerca de ti. Encuentra lo que necesitas y conecta con otros usuarios para iniciar una conversación.
+                </li>
+                <li>
+                    Pacta un Encuentro: Una vez que hayas encontrado el artículo perfecto para intercambiar, utiliza nuestro sistema de mensajería integrado para coordinar un encuentro presencial en una de nuestras sedes en sucursales convenientemente ubicadas.
+                </li>
+                <li>
+                    Realiza el Intercambio: ¡Es hora de hacer el trueque! Encuéntrate con tu compañero de trueque en la sede en sucursal acordada y lleva a cabo el intercambio de manera segura y sin complicaciones.
+                </li>
+            </ul>
+            
+            <strong>¿Por qué TruequeTools?</strong>
+            <ul>
+                <li>
+                    Seguridad Garantizada: Nuestro sistema de trueques presenciales en sedes en sucursales garantiza transacciones seguras y sin riesgos.
+                </li>
+                <li>
+                    Comunidad Activa: Únete a una comunidad de intercambio vibrante y conecta con personas locales que comparten tus intereses.
+                </li>
+                <li>
+                    Simplicidad Absoluta: Olvídate de los complicados procesos de venta en línea. TruequeTools simplifica el intercambio de bienes al máximo.
+                </li>
+            </ul>
+</p>
+
+        {% if user.is_authenticated %}
+            <h1 class="display-6 text-center">Disfrutá la aplicación</h1>
+        {% else %}
+            <div class="text-center">
+                <a class="btn btn-secondary" href="{% url 'ingreso' %}">Ingresar</a>
+                <a class="btn btn-dark" href="{% url 'registro' %}">Registrarse</a>
+            </div>
+        {% endif %}
+    </section>
+</main>
+
+{% endblock %}
