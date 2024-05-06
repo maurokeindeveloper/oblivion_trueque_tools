@@ -19,12 +19,13 @@
                         <a class="nav-link active" href="/">Home</a>
                     </li>
                     {% if user.is_authenticated %}
-<!--                     <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'productos' %}">Productos</a>
-                    </li> -->
-<!--                     <li class="nav-item">
+                    </li> 
+                    
+                  <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Salir</a>
-                    </li> -->
+
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'registro' %}">Registrarse</a>
@@ -33,6 +34,9 @@
                         <a class="nav-link" href="{% url 'ingreso' %}">Ingresar</a>
                     </li>
                     {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'crear_producto' %}">Crear producto</a>
+                    </li>
                 </div>
             </div>
         </div>

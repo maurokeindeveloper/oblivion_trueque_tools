@@ -6,12 +6,18 @@ from django.db import IntegrityError
 from .models import Usuario, Producto
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from .forms import CreacionDeProducto
+from django.contrib.auth import logout
+
 
 
 # Create your views here.
 def home(request):
     return render(request, "home.html")
 
+def cerrar_sesion(request):
+    logout(request)
+    return redirect('home')
 
 def registro(request):
     if request.method == "GET":
@@ -64,3 +70,21 @@ def ingreso(request):
 
 
 """             return redirect("productos") """
+
+
+
+def crear_producto(request):
+    if request.method == 'POST':
+        form = CreacionDeProducto(request.POST, request.FILES)
+        if form.is_valid():
+            producto = form.save(commit=False)
+            producto.fecha_de_publicacion = timezone.now()  # Establecer la fecha de publicación antes de guardar
+            producto.save()
+            return redirect('productos')  # Redirige a la página de productos
+    else:
+        form = CreacionDeProducto()
+    return render(request, 'crear_producto.html', {'form': form})
+
+
+def prodcutos(request):
+    return render(request, "productos.html")
