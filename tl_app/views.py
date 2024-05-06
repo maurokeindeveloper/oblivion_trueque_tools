@@ -78,6 +78,7 @@ def crear_producto(request):
         form = CreacionDeProducto(request.POST, request.FILES)
         if form.is_valid():
             producto = form.save(commit=False)
+            producto.usuario = Usuario.objects.get(id=2)
             producto.fecha_de_publicacion = timezone.now()  # Establecer la fecha de publicación antes de guardar
             producto.save()
             return redirect('productos')  # Redirige a la página de productos
