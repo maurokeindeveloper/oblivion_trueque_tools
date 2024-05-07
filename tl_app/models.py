@@ -36,6 +36,6 @@ class Producto(models.Model):
     usuario = models.ForeignKey(
         Usuario, on_delete=models.CASCADE, related_name="productos"
     )
-    imagen = ImageField(null=True, blank=True, upload_to="media/")
+    imagen = ImageField(blank=True, upload_to="media/")
     promocionado = models.BooleanField(default=False)
     activo = models.BooleanField(default=True)

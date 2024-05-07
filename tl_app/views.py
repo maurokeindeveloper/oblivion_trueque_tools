@@ -87,5 +87,19 @@ def crear_producto(request):
     return render(request, 'crear_producto.html', {'form': form})
 
 
-def prodcutos(request):
-    return render(request, "productos.html")
+def productos(request):
+    productos = Producto.objects.all()
+    return render(request, "products/productos.html",{
+        "productos": productos
+    })
+def buscar_productos(request,cadena):
+    productos = Producto.objects.filter(nombre__icontains=cadena).filter(descripcion__icontains=cadena)
+    return render(request, "products/buscar_productos.html",{
+        "productos": productos,
+        "cadena":cadena
+    })
+def detalle_producto(request,id):
+    producto = get_object_or_404(Producto, id=id)
+    return render(request,"products/detalle.html",{
+        "producto": producto
+    })
