@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-md-5">
                 {% if producto.imagen %}
-                <img src="{{producto.imagen.url}}" alt="Imagen del producto" class="img-thumbnail" />
+                <img src="{{producto.imagen.url}}" alt="Imagen del producto" class="img-fluid border border-2" />
                 {% else %}
                 <img src="{%static 'default-image-missing.png'%}" alt="El producto no tiene imagenes" class="img-thumbnail" />
                 {% endif %}

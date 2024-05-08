@@ -1,47 +1,72 @@
 {%extends 'base.html'%}
 
 {% load static %}
-{%block content%}
-<h1>Todos los productos.</h1>
 
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
+{%block content%}
+
+<div class="container-fluid p-2">
+        
+    <h3 class="ms-4 mt-3 mb-5 text-start fw-bold">Se muestran todos los productos: </h3>
+	<div class="row ">
+		<div class="col-md-2 ">
+            <div class="card card-body h-100 ">
+            {%comment%}
+            ESTE ES EL PANEL DE FILTROS POR CATEGORIA A IMPLEMENTAR
+            <div class="d-grid gap-1 col-6 p-1 mx-auto">
+				<button class="btn btn-secondary mb-2" type="button">0-5</button> 
+				<button class="btn btn-secondary mb-2" type="button">5-10</button> 
+				<button class="btn btn-secondary mb-2" type="button">10+</button> 
+			</div>    
+            {%endcomment%}
+            </div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-2">
-            <div class=" flex-column align-items-center">
-				 
-				<button class="btn btn-secondary my-2" type="button">
-					Left
-				</button> 
-				<button class="btn btn-secondary my-2" type="button">
-					Center
-				</button> 
-				<button class="btn btn-secondary my-2" type="button">
-					Right
-				</button> 
-			</div>
-		</div>
-		<div class="col-md-10">
-			<div class="row">
-				<div class="col-md-12">
-					<h3>
-						h3. Lorem ipsum dolor sit amet.
-					</h3>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-8">
-					<p>
-						Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>. Aliquam eget sapien sapien. Curabitur in metus urna. In hac habitasse platea dictumst. Phasellus eu sem sapien, sed vestibulum velit. Nam purus nibh, lacinia non faucibus et, pharetra in dolor. Sed iaculis posuere diam ut cursus. <em>Morbi commodo sodales nisi id sodales. Proin consectetur, nisi id commodo imperdiet, metus nunc consequat lectus, id bibendum diam velit et dui.</em> Proin massa magna, vulputate nec bibendum nec, posuere nec lacus. <small>Aliquam mi erat, aliquam vel luctus eu, pharetra quis elit. Nulla euismod ultrices massa, et feugiat ipsum consequat eu.</small>
-					</p>
-				</div>
-				<div class="col-md-4">
-					<img alt="Bootstrap Image Preview" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" />
-				</div>
-			</div>
+		<div class="col-md-10 ">
+
+            {% for producto in productos %}
+            {% if producto.activo %}
+            <div class="card-group">    
+                <div class="card card-body mb-2" style="max-height: 30vh;" >
+                    <div class="row mh-100">
+                        <div class="col-md-3 mh-100 d-flex justify-content-center align-items-center">
+                            <div class="container h-100 " style="max-height: 30vh;">
+                                {% if producto.imagen %}
+                                <a href="{% url 'detalle_producto' producto.id%}"><img src="{{producto.imagen.url}}" alt="img"class="img-fluid mh-100 border border-2 rounded " /></a>
+                                {% else %}
+                                <img src="{% static 'default-image-missing.png' %}" alt="no img"  class="img-fluid border border-2 rounded"/>
+                                {% endif %}
+                            </div>
+                            
+                        </div>
+                        <div class="col-md-9">
+                            <div class="d-flex">
+                                <div class="flex-grow-1 ">
+                                    <h4 class="card-title"><a href="{% url 'detalle_producto' producto.id%}" class=" text-decoration-none text-reset">{{producto.nombre}}</a></h4>
+                                </div>
+                                <div class="align-self-stretch">
+                                    <span class="badge badge-primary bg-primary">
+                                        <a class="text-decoration-none text-white">Categoria {{producto.get_categoria_display}}</a>    
+                                    </span>
+                                    {% if producto.promocionado %}
+                                    <span class="badge badge-primary bg-warning">
+                                        <a href="#" class="text-decoration-none text-dark">Promocionado</a>    {# AGREGAR LINK A HU PROMOCIONAR UN PRODUCTO #}
+                                    </span>
+                                    {% else %}
+                                    <span class="badge badge-secondary bg-secondary">
+                                        <a href="#" class="text-decoration-none text-white">No promocionado</a>    {# AGREGAR LINK A HU PROMOCIONAR UN PRODUCTO #}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <p>{{producto.descripcion|striptags|truncatechars:190}}</p>
+                            <small><p class="fw-light">{{producto.fecha_de_publicacion|date:'d M Y'|upper}}</p></small>
+                            
+                            <a href="" class="btn btn-primary">Solicitar intercambio</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
 		</div>
 	</div>
 </div>

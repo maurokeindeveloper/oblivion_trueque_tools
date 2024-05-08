@@ -88,7 +88,7 @@ def crear_producto(request):
 
 
 def productos(request):
-    productos = Producto.objects.all()
+    productos = Producto.objects.all().order_by('nombre')
     return render(request, "products/productos.html",{
         "productos": productos
     })
