@@ -1,1 +1,20 @@
-<h1>Se muestran los productos que contengan {{cadena}} en el nombre o descripcion.</h1>
+{%extends 'base.html'%}
+
+{% load static %}
+
+{%block content%}
+
+{% if productos %}
+<h3 class="ms-4 mt-3 mb-5 text-start">Resultados de su búsqueda "{{cadena}}": </h3>
+    {% include 'products/partial_listado_productos.html' %}
+
+{% else %}
+    <h5 class="my-3 text-center">
+        No hay productos que contengan "{{cadena}}" en su título o descripción.
+    </h5> 
+    <p class="text-center">
+        <a href="{%url 'productos'%}">Volver a productos</a>
+    </p>
+{% endif %}
+
+{%endblock%}

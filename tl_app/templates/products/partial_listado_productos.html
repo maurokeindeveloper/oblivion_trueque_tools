@@ -1,0 +1,69 @@
+{% load static %}
+<div class="row ">
+    <div class="col-md-2 ">
+        <div class="card card-body h-100 ">
+        {%comment%}
+        ESTE ES EL PANEL DE FILTROS POR CATEGORIA A IMPLEMENTAR
+        <div class="d-grid gap-1 col-6 p-1 mx-auto">
+            <button class="btn btn-secondary mb-2" type="button">0-5</button> 
+            <button class="btn btn-secondary mb-2" type="button">5-10</button> 
+            <button class="btn btn-secondary mb-2" type="button">10+</button> 
+        </div>    
+        {%endcomment%}
+        </div>
+    </div>
+    <div class="col-md-10 ">
+
+        {% for producto in productos %}
+        {% if producto.activo %}
+        <div class="card-group">    
+            {% if producto.promocionado %}
+            <div class="card card-body mb-2 border border-2 border-warning"  >
+            {% else %}
+            <div class="card card-body mb-2 " >
+            {% endif %}
+                <div class="row mh-100">
+                    <div class="col-md-3 mh-100 d-flex justify-content-center align-items-center">
+                        <div class="container h-100 " style="max-height: 30vh;">
+                            {% if producto.imagen %}
+                            <a href="{% url 'detalle_producto' producto.id%}"><img src="{{producto.imagen.url}}" alt="img"class="img-fluid mh-100 border border-2 rounded " /></a>
+                            {% else %}
+                            <img src="{% static 'default-image-missing.png' %}" alt="no img"  class="img-fluid border border-2 rounded"/>
+                            {% endif %}
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-9">
+                        <div class="d-flex">
+                            <div class="flex-grow-1 ">
+                                <h4 class="card-title"><a href="{% url 'detalle_producto' producto.id%}" class=" text-decoration-none text-reset">{{producto.nombre}}</a></h4>
+                            </div>
+                            <div class="align-self-stretch">
+                                {% if producto.promocionado %}
+                                <span class="badge badge-primary bg-warning">
+                                    <a href="#" class="text-decoration-none text-dark">Promocionado</a>    {# AGREGAR LINK A HU PROMOCIONAR UN PRODUCTO #}
+                                </span>
+                                {% else %}
+                                {%comment%}
+                                <span class="badge badge-secondary bg-secondary">
+                                    <a href="#" class="text-decoration-none text-white">No promocionado</a>    {# AGREGAR LINK A HU PROMOCIONAR UN PRODUCTO #}
+                                </span>
+                                {%endcomment%}
+                                {% endif %} 
+                                <span class="badge badge-primary bg-primary">
+                                    <a class="text-decoration-none text-white">Categoria {{producto.get_categoria_display}}</a>    
+                                </span>
+                            </div>
+                        </div>
+                        <p>{{producto.descripcion|striptags|truncatechars:190}}</p>
+                        <small><p class="fw-light">{{producto.fecha_de_publicacion|date:'d M Y'|upper}}</p></small>
+                        
+                        <a href="" class="btn btn-primary">Solicitar intercambio</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
