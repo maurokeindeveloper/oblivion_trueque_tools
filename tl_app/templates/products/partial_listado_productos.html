@@ -28,7 +28,7 @@
                             {% if producto.imagen %}
                             <a href="{% url 'detalle_producto' producto.id%}"><img src="{{producto.imagen.url}}" alt="img"class="img-fluid mh-100 border border-2 rounded " /></a>
                             {% else %}
-                            <img src="{% static 'default-image-missing.png' %}" alt="no img"  class="img-fluid border border-2 rounded"/>
+                            <img src="{% static 'images/default-image-missing.png' %}" alt="no img"  class="img-fluid border border-2 rounded"/>
                             {% endif %}
                         </div>
                         
