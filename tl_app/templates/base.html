@@ -1,22 +1,23 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TruequeTools</title>
-    <link rel="stylesheet" href="../static/bootstrap/styles.css" >
-    <link rel="stylesheet" href="{% static 'styles/main.css'%}">
-</head>
-<body>
-    {% include 'partials/navbar.html' %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TruequeTools</title>
+        <link rel="stylesheet" href="../static/bootstrap/styles.css" >
+        <link rel="stylesheet" href="{% static 'styles/main.css'%}">
+    </head>
+    <body>
+        {% include 'partials/navbar.html' %}
 
-    <div class="container p-2">
-        {% block content %}
-        {% endblock %}
-    </div>
-</body>
-<footer>
-    <small><a href=""class="text-decoration-none"><p class="text-end text-muted me-4 fw-light ">Oblivion - 2024</p></a></small>
-</footer>
+        <div class="container p-2">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <footer>
+            <small><a href=""class="text-decoration-none"><p class="text-end text-muted me-4 fw-light ">Oblivion - 2024</p></a></small>
+        </footer>
+        <script src="../static/bootstrap/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    </body>
 </html>
