@@ -84,19 +84,30 @@ def ingreso(request):
 #     return render(request, 'crear_producto.html', {'form': form})
 
 
-# def productos(request):
-#     productos = Producto.objects.all().order_by('nombre')
-#     return render(request, "products/productos.html",{
-#         "productos": productos
-#     })
-# def buscar_productos(request,cadena):
-#     productos = Producto.objects.filter(nombre__icontains=cadena).filter(descripcion__icontains=cadena)
-#     return render(request, "products/buscar_productos.html",{
-#         "productos": productos,
-#         "cadena":cadena
-#     })
-# def detalle_producto(request,id):
-#     producto = get_object_or_404(Producto, id=id)
-#     return render(request,"products/detalle.html",{
-#         "producto": producto
-#     })
+def productos(request):
+    productos = Producto.objects.exclude(activo=False).order_by('-promocionado')
+    return render(request, "products/productos.html",{
+        "productos": productos
+    })
+
+def buscar_productos(request):
+    if request.method == 'GET':            
+        cadena = request.GET.get('cadena')
+        productos_nom = Producto.objects.exclude(activo=False).filter(nombre__icontains=cadena)
+        productos_desc = Producto.objects.exclude(activo=False).filter(descripcion__icontains=cadena)
+        productos = productos_nom.union(productos_desc).order_by('-promocionado')
+        return render(request, "products/buscar_productos.html",{
+            "productos": productos,
+            "cadena":cadena
+        })
+    else:
+        print('nao nao')
+        return render(request, "products/productos.html",{
+        "productos": productos
+    })
+
+def detalle_producto(request,id):
+    producto = get_object_or_404(Producto, id=id)
+    return render(request,"products/detalle.html",{
+        "producto": producto
+    })
