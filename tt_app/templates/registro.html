@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style type="text/css">
+    .card-register {
+        width: 100%;
+        max-width: 400px;
+        padding: 15px;
+        margin: auto;
+    }
+
+    .form-register input[type="email"] {
+        margin-bottom: 10px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .form-register input[type="text"] {
+        margin-bottom: 10px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .form-register input[type="password"] {
+        margin-bottom: -1px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="card card-register">
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <h1>Registrarse</h1>
+                    <input type="email" name="email" id="input" class="form-control" placeholder="Ingresá tu correo electrónico" required autofocus>
+                    <input type="text" name="first_name" id="first_name" class="form-control" placeholder="Ingresá tu nombre">
+                    <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Ingresá tu apellido">
+                    <input type="text" name="dni" id="dni" class="form-control" placeholder="Ingresá tu DNI">
+                    <input type="text" name="phone" id="phone" class="form-control" placeholder="Ingresá tu número de teléfono">
+                    <input type="date" name="birthdate" id="birthdate" class="form-control">
+                    <input type="password" name="password1" id="password1" class="form-control" placeholder="Ingresá tu contraseña" required>
+                    <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirmá tu contraseña" required>
+
+                    {% for field in registration_form %}
+                    <p>
+                    {% for error in field.errors %}
+                    <p style="color:red">{{ error }}</p>
+                    {% endfor %}
+                    </p>
+                    {% endfor %}
+                    {% if registration_form.non_field_errors %}
+                    <div style="color:red">
+                        <p>{{ registration_form.non_field_errors }}</p>
+                    </div>
+
+                    {% endif %}
+
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Registrarse</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
