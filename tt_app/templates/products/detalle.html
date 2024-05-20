@@ -40,11 +40,8 @@
                 <p>
                     {{producto.descripcion}}
                 </p>
-                <p>
-                    <small class="text-muted fw-light">
-                    fecha de publicación: {{producto.fecha_de_publicacion|date:'l j, F Y'}}
-                </small>
-                </p>
+                <p><small class="text-muted fw-light"> Publicado por: {{producto.usuario.first_name}}</small></p>
+                <p><small class="text-muted fw-light"> Fecha de publicación: {{producto.fecha_de_publicacion|date:'l j \d\e F \d\e Y'}} </small></p>
             </div>
         </div>
     </div>

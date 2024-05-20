@@ -82,7 +82,7 @@ class Producto(models.Model):
         validators=[
             MinLengthValidator(10, "Este campo debe contener al menos 10 caracteres")
         ],
-        max_length=550,
+        max_length=1000,
     )
 
     class Categoria(models.IntegerChoices):
