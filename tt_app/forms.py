@@ -21,11 +21,22 @@ class RegistrationForm(UserCreationForm):
     email = forms.EmailField(
         max_length=255, help_text="Ingresá tu dirección de correo."
     )
-    first_name = forms.CharField(max_length=60)
-    last_name = forms.CharField(max_length=60)
+    first_name = forms.CharField(
+        max_length=60,
+        error_messages={"required": "Ingresá tu nombre"},
+    )
+    last_name = forms.CharField(
+        max_length=60,
+        error_messages={"required": "Ingresá tu apellido"},
+    )
     dni = forms.CharField(max_length=20)
     phone = forms.CharField(max_length=30)
-    birthdate = forms.DateField(validators=[validate_age])
+    birthdate = forms.DateField(
+        validators=[validate_age],
+        error_messages={
+            "required": "Necesitamos tu fecha de nacimiento. Tenés que ser mayor de edad para registrarte."
+        },
+    )
 
     class Meta:
         model = CustomUser
@@ -39,6 +50,11 @@ class RegistrationForm(UserCreationForm):
             "phone",
             "birthdate",
         )
+
+    def __init__(self, *args, **kwargs):
+        super(RegistrationForm, self).__init__(*args, **kwargs)
+        self.fields["dni"].required = False
+        self.fields["phone"].required = False
 
     def clean_email(self):
         email = self.cleaned_data["email"].lower()
@@ -59,8 +75,8 @@ class CreacionDeProducto(forms.ModelForm):
         max_length=50,
         widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"}),
         error_messages={
-        'required': 'Debe completar el campo de nombre del producto',
-    }
+            "required": "Debe completar el campo de nombre del producto",
+        },
     )
     descripcion = forms.CharField(
         label="Descripción",
@@ -68,9 +84,9 @@ class CreacionDeProducto(forms.ModelForm):
         min_length=10,
         widget=forms.Textarea(attrs={"class": "input mb-2", "style": "width: 100%;"}),
         error_messages={
-            'required': 'Debe completar el campo de descripción.',
-            'min_length': 'La descripción debe tener al menos 10 caracteres.',
-        }
+            "required": "Debe completar el campo de descripción.",
+            "min_length": "La descripción debe tener al menos 10 caracteres.",
+        },
     )
     categoria = forms.ChoiceField(
         label="Categoria",
@@ -90,8 +106,7 @@ class CreacionDeProducto(forms.ModelForm):
         label="Aceptar términos y condiciones",
         required=True,
         error_messages={
-            'required': 'Debe aceptar los términos y condiciones para continuar.',
+            "required": "Debe aceptar los términos y condiciones para continuar.",
         },
-        widget=forms.CheckboxInput(attrs={"class": "form-check-input"})
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )
-    

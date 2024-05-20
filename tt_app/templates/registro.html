@@ -36,14 +36,14 @@
                 <form method="POST">
                     {% csrf_token %}
                     <h1>Registrarse</h1>
-                    <input type="text" name="email" id="input" class="form-control" placeholder="Ingresá tu correo electrónico" required autofocus>
-                    <input type="text" name="first_name" id="first_name" class="form-control" placeholder="Ingresá tu nombre">
-                    <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Ingresá tu apellido">
-                    <input type="text" name="dni" id="dni" class="form-control" placeholder="Ingresá tu DNI">
-                    <input type="text" name="phone" id="phone" class="form-control" placeholder="Ingresá tu número de teléfono">
+                    <input type="text" name="email" id="input" class="form-control" placeholder="Ingresá tu correo electrónico"  oninvalid="this.setCustomValidity('Tu email es obligatorio')" oninput="setCustomValidity('')" required="" autofocus>
+                    <input type="text" name="first_name" id="first_name" oninvalid="this.setCustomValidity('Tu nombre es obligatorio')" oninput="setCustomValidity('')" class="form-control" placeholder="* Ingresá tu nombre" required="">
+                    <input type="text" name="last_name" id="last_name" oninvalid="this.setCustomValidity('Tu apellido es obligatorio')" oninput="setCustomValidity('')" class="form-control" placeholder="* Ingresá tu apellido" required="">
+                    <input type="text" name="dni" id="dni" placeholder="Ingresá tu DNI (opcional)" class="form-control">
+                    <input type="text" name="phone" id="phone" placeholder="Ingresá tu número de teléfono (opcional)" class="form-control">
                     <input type="date" name="birthdate" id="birthdate" class="form-control">
-                    <input type="password" name="password1" id="password1" class="form-control" placeholder="Ingresá tu contraseña" required>
-                    <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirmá tu contraseña" required>
+                    <input type="password" name="password1" id="password1" class="form-control"  placeholder="Ingresá tu contraseña" oninvalid="this.setCustomValidity('Por favor ingresá tu contraseña')" oninput="setCustomValidity('')" required="">
+                    <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirmá tu contraseña" oninvalid="this.setCustomValidity('Por favor confirmá tu contraseña')" oninput="setCustomValidity('')" required="">
 
                     {% for field in registration_form %}
                     <p>
