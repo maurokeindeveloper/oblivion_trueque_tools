@@ -4,6 +4,7 @@
 
 {%block content%}
 
+<div id="mensaje-feedback" class="alert alert-success" style="display: none;"></div>
 {% if productos %}
 {#<a href="{% url 'home' %}" class="ms-4 mt-3 mb-5 text-start fw-light">Volver</a>  Link descartado #}
 <h3 class="ms-4 mt-3 mb-5 text-start ">Se muestran todos los productos: </h3>
@@ -17,5 +18,26 @@
         <a href="{%url 'home'%}">Volver al inicio</a>
     </p>
 {% endif %}
+
+<!-- Script JavaScript -->
+<script>
+    // Función para mostrar el mensaje de feedback
+    function mostrarMensajeFeedback(mensaje) {
+        var mensajeElemento = document.getElementById("mensaje-feedback");
+        mensajeElemento.innerText = mensaje;
+        mensajeElemento.style.display = "block";
+        // Ocultar el mensaje después de 3 segundos (3000 milisegundos)
+        setTimeout(function() {
+            mensajeElemento.style.display = "none";
+        }, 3000);
+    }
+
+    // Obtener el mensaje de feedback de la URL (si lo hay)
+    var parametrosURL = new URLSearchParams(window.location.search);
+    var mensaje = parametrosURL.get("mensaje");
+    if (mensaje) {
+        mostrarMensajeFeedback(mensaje);
+    }
+</script>
 
 {%endblock%}

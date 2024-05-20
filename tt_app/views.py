@@ -7,6 +7,7 @@ from django.db import IntegrityError
 from django.utils import timezone
 from .models import CustomUser, Producto
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 
 # Create your views here.
@@ -82,12 +83,14 @@ def crear_producto(request):
         form = CreacionDeProducto(request.POST, request.FILES)
         if form.is_valid():
             producto = form.save(commit=False)
-            producto.usuario = CustomUser.objects.get(id=2)
+            # Asignar el usuario autenticado al producto
+            producto.usuario = request.user
             # Establecer la fecha de publicación antes de guardar
             producto.fecha_de_publicacion = timezone.now()
             producto.save()
-            # Redirigir a la página de productos
-            return redirect("productos")
+            # Redirigir a la página de productos con mensaje de feedback
+            return redirect(reverse("productos") + '?mensaje=El producto se ha agregado correctamente.')
+
     else:
         form = CreacionDeProducto()
     return render(request, "products/crear_producto.html", {"form": form})

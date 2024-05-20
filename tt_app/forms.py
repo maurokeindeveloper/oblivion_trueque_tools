@@ -58,12 +58,19 @@ class CreacionDeProducto(forms.ModelForm):
         label="Nombre del producto",
         max_length=50,
         widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"}),
+        error_messages={
+        'required': 'Debe completar el campo de nombre del producto',
+    }
     )
     descripcion = forms.CharField(
         label="Descripción",
         max_length=200,
         min_length=10,
         widget=forms.Textarea(attrs={"class": "input mb-2", "style": "width: 100%;"}),
+        error_messages={
+            'required': 'Debe completar el campo de descripción.',
+            'min_length': 'La descripción debe tener al menos 10 caracteres.',
+        }
     )
     categoria = forms.ChoiceField(
         label="Categoria",
@@ -79,3 +86,12 @@ class CreacionDeProducto(forms.ModelForm):
             attrs={"class": "btn btn-outline-dark mb-4", "style": "width: 100%;"}
         ),
     )
+    aceptar_terminos = forms.BooleanField(
+        label="Aceptar términos y condiciones",
+        required=True,
+        error_messages={
+            'required': 'Debe aceptar los términos y condiciones para continuar.',
+        },
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"})
+    )
+    
