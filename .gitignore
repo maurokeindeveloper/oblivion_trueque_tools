@@ -1,1 +1,4 @@
 venv
+trueque_tools/__pycache__
+tt_app/__pycache__
+tt_app/migrations/__pycache__

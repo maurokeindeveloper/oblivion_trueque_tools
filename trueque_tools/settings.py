@@ -108,7 +108,11 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
+<<<<<<< HEAD
 LANGUAGE_CODE = "es-ES"
+=======
+LANGUAGE_CODE = "es-AR"
+>>>>>>> 241ec2efe886552b36db8b5c500ed5a703f33cd1
 
 TIME_ZONE = "UTC"
 

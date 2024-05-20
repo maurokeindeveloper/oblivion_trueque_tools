@@ -55,10 +55,11 @@
                                 </span>
                             </div>
                         </div>
-                        <p>{{producto.descripcion|striptags|truncatechars:190}}</p>
-                        <small><p class="fw-light">{{producto.fecha_de_publicacion|date:'d M Y'|upper}}</p></small>
-                        
-                        <a href="" class="btn btn-primary">Solicitar intercambio</a>
+                        <div class="my-2">
+                            <p>{{producto.descripcion|striptags|truncatechars:90}}</p>
+                            <small><p class="fw-light">{{producto.fecha_de_publicacion|date:'d M Y'|upper}}</p></small>
+                            <a href="" class="btn btn-primary">Solicitar intercambio</a>
+                        </div>
                     </div>
                 </div>
             </div>

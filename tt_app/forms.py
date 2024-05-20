@@ -80,7 +80,7 @@ class CreacionDeProducto(forms.ModelForm):
     )
     descripcion = forms.CharField(
         label="Descripción",
-        max_length=200,
+        max_length=1000,
         min_length=10,
         widget=forms.Textarea(attrs={"class": "input mb-2", "style": "width: 100%;"}),
         error_messages={
