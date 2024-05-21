@@ -36,14 +36,45 @@
                 <form method="POST">
                     {% csrf_token %}
                     <h1>Registrarse</h1>
-                    <input type="text" name="email" id="input" class="form-control" placeholder="Ingresá tu correo electrónico" required autofocus>
-                    <input type="text" name="first_name" id="first_name" class="form-control" placeholder="Ingresá tu nombre">
-                    <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Ingresá tu apellido">
-                    <input type="text" name="dni" id="dni" class="form-control" placeholder="Ingresá tu DNI">
-                    <input type="text" name="phone" id="phone" class="form-control" placeholder="Ingresá tu número de teléfono">
-                    <input type="date" name="birthdate" id="birthdate" class="form-control">
-                    <input type="password" name="password1" id="password1" class="form-control" placeholder="Ingresá tu contraseña" required>
-                    <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirmá tu contraseña" required>
+                    <div class="mb-3">
+                        <label class="mb-1">Correo electrónico *</label>
+                        <input type="text" name="email" id="input" class="form-control" placeholder="Ingresá tu correo electrónico"  required autofocus>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="mb-1">Nombre *</label>
+                        <input type="text" name="first_name" id="first_name" class="form-control mb-2" placeholder="Ingresá tu nombre">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="mb-1">Apellido *</label>
+                        <input type="text" name="last_name" id="last_name" class="form-control mb-2" placeholder="Ingresá tu apellido">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="mb-1">DNI</label>
+                        <input type="text" name="dni" id="dni" class="form-control mb-2" placeholder="Ingresá tu DNI">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="mb-1">Teléfono</label>
+                        <input type="text" name="phone" id="phone" class="form-control mb-2" placeholder="Ingresá tu número de teléfono">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="mb-1">Fecha de Nacimiento</label>
+                        <input type="date" name="birthdate" id="birthdate" class="form-control mb-2">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="mb-1">Contraseña</label>
+                        <input type="password" name="password1" id="password1" class="form-control mb-2" placeholder="Ingresá tu contraseña" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="mb-1">Confirmar contraseña</label>
+                        <input type="password" name="password2" id="password2" class="form-control mb-2" placeholder="Confirmá tu contraseña" required>
+                    </div>
 
                     {% for field in registration_form %}
                     <p>
@@ -59,7 +90,9 @@
 
                     {% endif %}
 
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Registrarse</button>
+                    <button class="btn btn-primary" style="width: 100%;" type="submit">
+                        <b>Registrarse</b>
+                    </button>
                 </form>
             </div>
         </div>
