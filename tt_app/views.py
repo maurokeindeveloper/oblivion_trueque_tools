@@ -46,7 +46,9 @@ def registro(request, *args, **kwargs):
             destination = kwargs.get("next")
             if destination:
                 return redirect(destination)
-            return redirect("ingreso")
+            return redirect(
+                reverse("ingreso") + "?mensaje=El usuario se registró con éxito."
+            )
         else:
             context["registration_form"] = form
 
@@ -75,7 +77,7 @@ def ingreso(request):
 
 def cerrar_sesion(request):
     logout(request)
-    return redirect("home")
+    return redirect(reverse("home") + "?mensaje=La sesión se cerró con éxito.")
 
 
 def crear_producto(request):
@@ -89,7 +91,10 @@ def crear_producto(request):
             producto.fecha_de_publicacion = timezone.now()
             producto.save()
             # Redirigir a la página de productos con mensaje de feedback
-            return redirect(reverse("productos") + '?mensaje=El producto se ha agregado correctamente.')
+            return redirect(
+                reverse("productos")
+                + "?mensaje=El producto se ha agregado correctamente."
+            )
 
     else:
         form = CreacionDeProducto()

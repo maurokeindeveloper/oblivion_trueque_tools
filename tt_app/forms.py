@@ -19,24 +19,29 @@ def validate_age(value):
 
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(
-        max_length=255, help_text="Ingresá tu dirección de correo."
-    )
+        max_length=255, help_text="Ingresá tu dirección de correo.",
+        widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"})
+        )
     first_name = forms.CharField(
         max_length=60,
-        error_messages={"required": "Ingresá tu nombre"},
-    )
+        widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"})
+        )
     last_name = forms.CharField(
         max_length=60,
-        error_messages={"required": "Ingresá tu apellido"},
-    )
-    dni = forms.CharField(max_length=20)
-    phone = forms.CharField(max_length=30)
+         widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"})
+         )
+    dni = forms.CharField(
+        max_length=20,
+         widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"})
+         )
+    phone = forms.CharField(
+        max_length=30,
+         widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"})
+         )
     birthdate = forms.DateField(
         validators=[validate_age],
-        error_messages={
-            "required": "Necesitamos tu fecha de nacimiento. Tenés que ser mayor de edad para registrarte."
-        },
-    )
+        widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"})
+        )
 
     class Meta:
         model = CustomUser
