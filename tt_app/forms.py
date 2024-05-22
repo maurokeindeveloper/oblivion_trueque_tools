@@ -19,29 +19,42 @@ def validate_age(value):
 
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(
-        max_length=255, help_text="Ingresá tu dirección de correo.",
-        widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"})
-        )
+        max_length=255,
+        help_text="Ingresá tu dirección de correo.",
+        widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"}),
+        error_messages={
+            "required": "Tenés que completar el campo con tu email",
+        },
+    )
     first_name = forms.CharField(
         max_length=60,
-        widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"})
-        )
+        widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"}),
+        error_messages={
+            "required": "Tenés que completar el campo con tu nombre",
+        },
+    )
     last_name = forms.CharField(
         max_length=60,
-         widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"})
-         )
+        widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"}),
+        error_messages={
+            "required": "Tenés que completar el campo con tu apellido",
+        },
+    )
     dni = forms.CharField(
         max_length=20,
-         widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"})
-         )
+        widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"}),
+    )
     phone = forms.CharField(
         max_length=30,
-         widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"})
-         )
+        widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"}),
+    )
     birthdate = forms.DateField(
         validators=[validate_age],
-        widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"})
-        )
+        widget=forms.TextInput(attrs={"class": "input mb-2", "style": "width: 100%;"}),
+        error_messages={
+            "required": "Tu fecha de nacimiento es obligatoria",
+        },
+    )
 
     class Meta:
         model = CustomUser

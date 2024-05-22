@@ -38,20 +38,17 @@
                     <h1>Registrarse</h1>
                     <div class="mb-3">
                         <label class="mb-1">Correo electrónico *</label>
-                        <input type="text" name="email" id="input" oninvalid="this.setCustomValidity('Tu email es obligatorio')" oninput="setCustomValidity('')"  class="form-control" placeholder="Ingresá tu correo electrónico" required="" autofocus>
-                        {% if error in field.errors %}
-                            <p style="color:red">{{ error }}</p>
-                        {% endif %}
+                        <input type="text" name="email" id="input" class="form-control" placeholder="Ingresá tu correo electrónico" required autofocus>
                     </div>
 
                     <div class="mb-3">
                         <label class="mb-1">Nombre *</label>
-                        <input type="text" name="first_name" id="first_name" oninvalid="this.setCustomValidity('Tu nombre es obligatorio')" oninput="setCustomValidity('')" class="form-control mb-2" placeholder="Ingresá tu nombre" required="">
+                        <input type="text" name="first_name" id="first_name" class="form-control mb-2" placeholder="Ingresá tu nombre">
                     </div>
 
                     <div class="mb-3">
                         <label class="mb-1">Apellido *</label>
-                        <input type="text" name="last_name" id="last_name" oninvalid="this.setCustomValidity('Tu apellido es obligatorio')" oninput="setCustomValidity('')" class="form-control mb-2" placeholder="Ingresá tu apellido" required="">
+                        <input type="text" name="last_name" id="last_name" class="form-control mb-2" placeholder="Ingresá tu apellido">
                     </div>
 
                     <div class="mb-3">
@@ -79,27 +76,23 @@
                         <input type="password" name="password2" id="password2" class="form-control mb-2" placeholder="Confirmá tu contraseña" required>
                     </div>
 
-                    {% for field in registration_form %}
-                    <p>
-                    {% for error in field.errors %}
-                    <p style="color:red">{{ error }}</p>
-                    {% endfor %}
-                    </p>
-                    {% endfor %}
-                    {% if registration_form.non_field_errors %}
-                    <div style="color:red">
-                        <p>{{ registration_form.non_field_errors }}</p>
-                    </div>
-
-                    {% endif %}
-
                     <button class="btn btn-primary" style="width: 100%;" type="submit">
                         <b>Registrarse</b>
                     </button>
+
+                    {% if registration_form.errors %}
+                            {% for field in registration_form %}
+                                {% for error in field.errors %}
+                                    <div class="alert alert-danger mt-4">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                    {% endif %}
                 </form>
             </div>
         </div>
     </div>
-</div>
+</div>                  
 
 {% endblock %}
