@@ -9,12 +9,12 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 # Create your models here.
 # Creating users and superusers
 class MyCustomUserManager(BaseUserManager):
-    def create_user(
+    def create_cliente(
         self, email, first_name, last_name, dni, phone, birthdate, password=None
     ):
         if not email:
             raise ValueError("El nombre de usuario debe ser tu correo electrónico.")
-        user = self.model(
+        cliente = self.model(
             email=self.normalize_email(email),
             first_name=first_name,
             last_name=last_name,
@@ -22,9 +22,22 @@ class MyCustomUserManager(BaseUserManager):
             phone=phone,
             birthdate=birthdate,
         )
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+        cliente.set_password(password)
+        cliente.save(using=self._db)
+        return cliente
+
+    def create_empleado(self, email, first_name, last_name, password):
+        if not email:
+            raise ValueError("El nombre de usuario debe ser tu correo electrónico.")
+        empleado = self.model(
+            email=self.normalize_email(email),
+            first_name=first_name,
+            last_name=last_name,
+        )
+        empleado.is_staff = True
+        empleado.set_password(password)
+        empleado.save(using=self._db)
+        return empleado
 
     def create_superuser(self, email, password):
         user = self.create_user(
@@ -44,7 +57,7 @@ class MyCustomUserManager(BaseUserManager):
 
 
 # User model
-class CustomUser(AbstractBaseUser):
+class Usuario(AbstractBaseUser):
     email = models.EmailField(verbose_name="email", max_length=60, unique=True)
     username = models.CharField(max_length=30, blank=True)
     first_name = models.CharField(max_length=50, blank=True)
@@ -74,6 +87,12 @@ class CustomUser(AbstractBaseUser):
         return True
 
 
+# Modelo de sucursal
+class Sucursal(models.Model):
+    ciudad = models.CharField(max_length=50)
+    dirección = models.CharField(max_length=200)
+
+
 # Product model
 class Producto(models.Model):
 
@@ -97,7 +116,10 @@ class Producto(models.Model):
     promocionado = models.BooleanField(default=False)
     activo = models.BooleanField(default=True)
     usuario = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name="productos"
+        Usuario, on_delete=models.CASCADE, related_name="productos"
+    )
+    sucursal = models.ForeignKey(
+        Sucursal, on_delete=models.CASCADE, related_name="productos"
     )
 
     def __str__(self):

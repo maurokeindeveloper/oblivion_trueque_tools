@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Producto
+from .models import Usuario, Producto
 
 # Register your models here.
 
@@ -15,5 +15,5 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = ()
 
 
-admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Usuario, CustomUserAdmin)
 admin.site.register(Producto)

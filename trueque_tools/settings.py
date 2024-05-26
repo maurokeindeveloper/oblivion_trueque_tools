@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = "tt_app.CustomUser"
+AUTH_USER_MODEL = "tt_app.Usuario"
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.AllowAllUsersModelBackend",
     "tt_app.backends.CaseInsensitiveModelBackend",

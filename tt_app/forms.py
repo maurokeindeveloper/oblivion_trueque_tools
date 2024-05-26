@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
-from .models import CustomUser, Producto
+from .models import Usuario, Producto
 from django.core.exceptions import ValidationError
 import datetime
 
@@ -56,8 +56,18 @@ class RegistrationForm(UserCreationForm):
         },
     )
 
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(),
+        error_messages={"required": "La contraseña es obligatoria"},
+    )
+
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(),
+        error_messages={"required": "La confirmación de tu contraseña es obligatoria"},
+    )
+
     class Meta:
-        model = CustomUser
+        model = Usuario
         fields = (
             "email",
             "password1",
@@ -77,7 +87,7 @@ class RegistrationForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data["email"].lower()
         try:
-            user = CustomUser.objects.get(email=email)
+            user = Usuario.objects.get(email=email)
         except Exception as e:
             return email
         raise forms.ValidationError(f"El email {email} ya posee una cuenta.")
