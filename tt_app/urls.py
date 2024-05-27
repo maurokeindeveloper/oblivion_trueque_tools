@@ -1,13 +1,15 @@
 from django.urls import path
-from . import views
+from .views import producto_view, usuario_view
 
 urlpatterns = [
-    path("", views.home, name="home"),
-    path("registro/", views.registro, name="registro"),
-    path("ingreso/", views.ingreso, name="ingreso"),
-    path("logout/", views.cerrar_sesion, name="logout"),
-    path("crear_producto/", views.crear_producto, name="crear_producto"),
-    path("productos/", views.productos, name="productos"),
-    path("buscar_productos/", views.buscar_productos, name="buscar_productos"),
-    path("productos/id/<int:id>", views.detalle_producto, name="detalle_producto"),
+    path("", usuario_view.home, name="home"),
+    path("registro/", usuario_view.registro, name="registro"),
+    path("ingreso/", usuario_view.ingreso, name="ingreso"),
+    path("logout/", usuario_view.cerrar_sesion, name="logout"),
+    path("crear_producto/", producto_view.crear_producto, name="crear_producto"),
+    path("productos/", producto_view.productos, name="productos"),
+    path("buscar_productos/", producto_view.buscar_productos, name="buscar_productos"),
+    path(
+        "productos/id/<int:id>", producto_view.detalle_producto, name="detalle_producto"
+    ),
 ]

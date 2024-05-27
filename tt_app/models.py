@@ -124,3 +124,60 @@ class Producto(models.Model):
 
     def __str__(self):
         return self.nombre + "\t(" + str(self.usuario.id) + ")"
+
+
+class Trueque(models.Model):
+    producto_solicitante = models.ForeignKey(
+        Producto, on_delete=models.CASCADE, related_name="trueque"
+    )
+    producto_solicitado = models.ForeignKey(
+        Producto, on_delete=models.CASCADE, related_name="trueques"
+    )
+    sucursal = models.ForeignKey(
+        Sucursal, on_delete=models.CASCADE, related_name="trueques"
+    )
+    activo = models.BooleanField()
+    fecha = models.DateTimeField(auto_now=True)
+
+    class Rango(models.IntegerChoices):
+        rango_1 = 1, _("Turno Mañana: 8 AM")
+        rango_2 = 2, _("Turno Mañana: 9 AM")
+        rango_3 = 3, _("Turno Mañana: 10 AM")
+        rango_4 = 4, _("Turno Mañana: 11 AM")
+        rango_5 = 5, _("Turno Tarde: 3 PM")
+        rango_6 = 6, _("Turno Tarde: 4 PM")
+        rango_7 = 7, _("Turno Tarde: 5 PM")
+        rango_8 = 8, _("Turno Tarde: 6 PM")
+        rango_9 = 9, _("Turno Tarde: 7 PM")
+
+    rango_horario = models.IntegerField(choices=Rango.choices)
+
+    class Estado(models.IntegerChoices):
+        estado_1 = 1, _("Solicitado")
+        estado_2 = 2, _("Aceptado")
+        estado_3 = 3, _("Rechazado")
+        estado_4 = 4, _("Cancelado por solicitante")
+        estado_5 = 5, _("Cancelado por empleado")
+        estado_6 = 6, _("Concretado")
+
+    estado = models.IntegerField(choices=Estado.choices)
+
+
+class Respuesta(models.Model):
+    texto = models.CharField(max_length=200)
+    fecha = models.DateField(auto_now=True)
+
+
+class Pregunta(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cliente = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    texto = models.CharField(max_length=200)
+    respuesta = models.ForeignKey(Respuesta, on_delete=models.CASCADE, null=True)
+    fecha = models.DateField(auto_now=True)
+
+
+class Venta(models.Model):
+    cantidad_unidades = models.IntegerField()
+    precio_unitario = models.FloatField()
+    nombre_producto = models.CharField(max_length=200)
+    trueque = models.ForeignKey(Trueque, on_delete=models.CASCADE)
