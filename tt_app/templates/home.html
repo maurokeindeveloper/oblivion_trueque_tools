@@ -2,10 +2,9 @@
 
 {% block content %}
 <div id="mensaje-feedback" class="alert alert-success" style="display: none;"></div>
-<div class="container my-5">
 <main class="container my-5">
     <section class="card card-body">
-        <h4 class="display-6 text-center"><strong>Bienvenido a TruequeTools: la plataforma para intercambios presenciales</strong></h4>
+        <strong class="text-center"><p class="display-5">Bienvenido a TruequeTools</p> <p class="display-6">la plataforma para intercambios presenciales</p></strong>
         <p>
             ¿Cansado de las complicaciones de vender y comprar en línea? ¡TruequeTools tiene la solución perfecta para ti! Nuestra aplicación revoluciona la experiencia de intercambio al ofrecer un sistema de trueque en línea que te permite conectar con personas locales y pactar encuentros presenciales en nuestras sedes en sucursales.
             <br>
@@ -40,7 +39,7 @@
                     Simplicidad Absoluta: Olvídate de los complicados procesos de venta en línea. TruequeTools simplifica el intercambio de bienes al máximo.
                 </li>
             </ul>
-</p>
+        </p>
 
         {% if user.is_authenticated %}
             <h1 class="display-6 text-center">Disfrutá la aplicación</h1>
@@ -50,6 +49,13 @@
                 <a class="btn btn-dark" href="{% url 'registro' %}">Registrarse</a>
             </div>
         {% endif %}
+    </section>
+    <section class="card card-body">
+        <h4 class=" text-start">Un pequeño vistazo de lo que podés encontrar en TruequeTools..</h4>
+        <div class="align-items-center justify-content-center ">
+            {% include 'products/partial_listado_productos.html' %}
+        </div>
+        <p class=" text-end">Y <a href="{% url 'productos' %}">más...</a></p>
     </section>
 </main>
 <script>
