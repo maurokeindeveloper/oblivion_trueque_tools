@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
-from ..forms import RegistrationForm, CreacionDeProducto
+from ..forms import RegistrationForm, RegistrarEmpleado
 from django.contrib.auth.forms import AuthenticationForm
 from django.db import IntegrityError
 from django.utils import timezone
@@ -16,6 +16,19 @@ from django.urls import reverse
 def home(request):
     return render(request, "home.html")
 
+
+def registro_empleado(request):
+    if request.method == "POST":
+        form = RegistrarEmpleado(request.POST)
+        if form.is_valid():
+            empleado = form.save(commit=False)
+            empleado.is_staff = True  # Marcar al empleado como staff
+            empleado.set_password(form.cleaned_data["password"])  # Establecer la contraseña correctamente
+            empleado.save()
+            return redirect(reverse('productos') + "?mensaje=El empleado se ha agregado correctamente.")    
+    else:
+        form = RegistrarEmpleado()
+    return render(request, "registro_empleado.html", {"form": form})
 
 def registro(request, *args, **kwargs):
     user = request.user
