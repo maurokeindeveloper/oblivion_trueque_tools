@@ -14,7 +14,8 @@ from django.urls import reverse
 
 
 def home(request):
-    return render(request, "home.html")
+    preview = Producto.objects.exclude(activo=False).order_by("-promocionado")[:5] # Los productos que se van a mostrar en el home #
+    return render(request, "home.html", {"productos": preview})
 
 
 def registro_empleado(request):

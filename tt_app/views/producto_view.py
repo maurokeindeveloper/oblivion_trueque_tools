@@ -19,8 +19,12 @@ def crear_producto(request):
             producto.usuario = request.user
             # Establecer la fecha de publicación antes de guardar
             producto.fecha_de_publicacion = timezone.now()
+            #hardcodeamos (de momento) una sucursal para el ingreso
+            producto.sucursal=1
             producto.save()
             # Redirigir a la página de productos con mensaje de feedback
+
+            
             return redirect(
                 reverse("productos")
                 + "?mensaje=El producto se ha agregado correctamente."
@@ -52,7 +56,6 @@ def buscar_productos(request):
             {"productos": productos, "cadena": cadena},
         )
     else:
-        print("nao nao")
         return render(request, "products/productos.html", {"productos": productos})
 
 

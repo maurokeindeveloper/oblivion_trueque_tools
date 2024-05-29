@@ -51,7 +51,7 @@ class MyCustomUserManager(BaseUserManager):
         )
         user.is_admin = True
         user.is_staff = True
-        user.is_superuser = True
+        #user.is_superuser = True #Comento esta línea porque no tendría que tener permitido el acceso al panel de administración de django
         user.save(using=self._db)
         return user
 
@@ -90,7 +90,7 @@ class Usuario(AbstractBaseUser):
 # Modelo de sucursal
 class Sucursal(models.Model):
     ciudad = models.CharField(max_length=50)
-    dirección = models.CharField(max_length=200)
+    direccion = models.CharField(max_length=200)
 
 
 # Product model

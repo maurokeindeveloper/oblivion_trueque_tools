@@ -1,5 +1,6 @@
 venv/
-
+media/
+db.sqlite3
 __pycache__
 *.pyc
 # Byte-compiled / optimized / DLL files
