@@ -12,6 +12,6 @@ def trueques_entrantes(request):
     usuario = request.user
     print(f"Usuario autenticado: {usuario.email}")
     #trueques = Trueque.objects.all()
-    trueques = Trueque.objects.filter(producto_solicitado__usuario=usuario)
+    trueques = Trueque.objects.exclude(activo=False).filter(producto_solicitado__usuario=usuario , estado=1)
 
     return render(request, "perfil/trueques_entrantes.html", {"trueques": trueques})

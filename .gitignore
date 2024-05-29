@@ -1,9 +1,6 @@
-venv
-trueque_tools/__pycache__
-tt_app/__pycache__
-tt_app/migrations/__pycache__
+venv/
 
-__pycache__/
+__pycache__
 *.pyc
 # Byte-compiled / optimized / DLL files
 __pycache__/
