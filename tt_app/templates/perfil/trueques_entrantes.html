@@ -5,18 +5,14 @@
 {%block content%}
 
 <div id="mensaje-feedback" class="alert alert-success" style="display: none;"></div>
+
 {% if trueques %}
-{#<a href="{% url 'home' %}" class="ms-4 mt-3 mb-5 text-start fw-light">Volver</a>  Link descartado #}
-    <h3 class="ms-4 mt-3 mb-5 text-start ">Solicitud de trueques entrantes </h3>
-    {% include 'perfil/partials/listado_trueques_entrantes.html' %}
+<h3 class="ms-4 mt-3 mb-5 text-start ">Solicitudes de trueques entrantes: </h3>
+{% include 'perfil/partials/listado_trueques_entrantes.html' %}
 
 {% else %}
-    <h5 class="my-3 text-center">
-        No hay trueques entrantes.
-    </h5> 
-    <p class=" p-2 text-center">
-        <a href="{%url 'home'%}">Volver al inicio</a>
-    </p>
+    <h5 class="mt-5 my-3 text-center">No hay trueques entrantes.</h5> 
+    <p class="p-2 text-center"><a href="{%url 'home'%}">Volver al inicio</a></p>
 {% endif %}
 
 <!-- Script JavaScript -->

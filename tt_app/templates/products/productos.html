@@ -5,16 +5,16 @@
 {%block content%}
 
 <div id="mensaje-feedback" class="alert alert-success" style="display: none;"></div>
-<main class="container my-5">
-    {% if productos %}
-    <h3 class="ms-4 mt-3 mb-5 text-start ">Se muestran todos los productos: </h3>
-    {% include 'products/partial_listado_productos.html' %}
 
-    {% else %}
-        <h5 class="mt-5 my-3 text-center">No hay productos cargados aún.</h5> 
-        <p class="p-2 text-center"><a href="{%url 'home'%}">Volver al inicio</a></p>
-    {% endif %}
-</main>
+{% if productos %} 
+<h3 class="ms-4 mt-3 mb-5 text-start ">Se muestran todos los productos: </h3>
+{% include 'products/partial_listado_productos.html' %}
+
+{% else %}
+    <h5 class="mt-5 my-3 text-center">No hay productos cargados aún.</h5> 
+    <p class="p-2 text-center"><a href="{%url 'home'%}">Volver al inicio</a></p>
+{% endif %}
+
 
 
 <!-- Script JavaScript -->
