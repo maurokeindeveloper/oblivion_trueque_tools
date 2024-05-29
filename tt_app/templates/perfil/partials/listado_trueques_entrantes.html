@@ -1,0 +1,58 @@
+{% load static %}
+{% for trueque in trueques %}
+    <div class="card-group"> 
+            <div class="row mh-100">                 
+
+                <div class="d-flex">
+                    <div class="align-self-stretch">
+                        <span class="badge badge-primary bg-warning">
+                            <a href="#" class="text-decoration-none text-dark">Estado: {{trueque.get_estado_display}}</a>    {# AGREGAR LINK A HU PROMOCIONAR UN PRODUCTO #}
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">                            
+                        <h3>
+                            Producto Solicitante: {{trueque.producto_solicitante.nombre}}
+                        </h3>
+                        <div>
+                            {% if trueque.producto_solicitante.imagen %}
+                                <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}">
+                                    <img src="{{trueque.producto_solicitante.imagen.url}}" alt="Imagen del producto" class="img-fluid border border-2" />
+                                </a>
+                            {% else %}
+                                <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}">
+                                    <img src="{%static 'images/default-image-missing.png'%}" alt="El producto no tiene imagenes" class="img-thumbnail" />
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>{{trueque.producto_solicitante.usuario.first_name}} quiere intercambiar contigo</h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>
+                            Producto Solcitado: {{trueque.producto_solicitado.nombre}}
+                        </h3>
+                        <div>
+                            {% if trueque.producto_solicitado.imagen %}
+                                <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}">
+                                    <img src="{{trueque.producto_solicitado.imagen.url}}" alt="Imagen del producto" class="img-fluid border border-2" />
+                                </a>
+                            {% else %}
+                                <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}"></a>
+                                    <img src="{%static 'images/default-image-missing.png'%}" alt="El producto no tiene imagenes" class="img-thumbnail" />
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mt-5" style="gap: 8px;">
+                    <button class="btn btn-success">Aceptar Trueque</button>
+                    <button class="btn btn-danger">Rechazar Trueque</button>
+                </div>
+                    
+            </div>
+        </div>
+    </div>
+{% endfor %}

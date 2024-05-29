@@ -40,7 +40,7 @@ class MyCustomUserManager(BaseUserManager):
         return empleado
 
     def create_superuser(self, email, password):
-        user = self.create_user(
+        user = self.create_cliente(
             email=self.normalize_email(email),
             first_name="",
             last_name="",
@@ -131,7 +131,7 @@ class Trueque(models.Model):
         Producto, on_delete=models.CASCADE, related_name="trueque"
     )
     producto_solicitado = models.ForeignKey(
-        Producto, on_delete=models.CASCADE, related_name="trueques"
+        Producto, on_delete=models.CASCADE, related_name="trueque_solicitado"
     )
     sucursal = models.ForeignKey(
         Sucursal, on_delete=models.CASCADE, related_name="trueques"
