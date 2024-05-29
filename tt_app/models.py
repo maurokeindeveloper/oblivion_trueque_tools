@@ -40,7 +40,7 @@ class MyCustomUserManager(BaseUserManager):
         return empleado
 
     def create_superuser(self, email, password):
-        user = self.create_user(
+        user = self.create_cliente(
             email=self.normalize_email(email),
             first_name="",
             last_name="",
@@ -126,6 +126,7 @@ class Producto(models.Model):
         return self.nombre + "\t(" + str(self.usuario.id) + ")"
 
 
+# Modelo de trueque
 class Trueque(models.Model):
     producto_solicitante = models.ForeignKey(
         Producto, on_delete=models.CASCADE, related_name="trueque"
@@ -163,19 +164,24 @@ class Trueque(models.Model):
     estado = models.IntegerField(choices=Estado.choices)
 
 
+# Modelo de respuesta
 class Respuesta(models.Model):
     texto = models.CharField(max_length=200)
     fecha = models.DateField(auto_now=True)
 
 
+# Modelo de pregunta
 class Pregunta(models.Model):
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    producto = models.ForeignKey(
+        Producto, on_delete=models.CASCADE, related_name="preguntas"
+    )
     cliente = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     texto = models.CharField(max_length=200)
     respuesta = models.ForeignKey(Respuesta, on_delete=models.CASCADE, null=True)
     fecha = models.DateField(auto_now=True)
 
 
+# Modelo de venta
 class Venta(models.Model):
     cantidad_unidades = models.IntegerField()
     precio_unitario = models.FloatField()

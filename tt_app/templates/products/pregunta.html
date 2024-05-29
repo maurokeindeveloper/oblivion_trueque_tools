@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Agregá tu consulta{% endblock %}
+
+{% block content %}
+    {% if pregunta %}
+        <h2>Ya se envió tu pregunta al dueño del producto.</h2>
+        <p><a href="{%url 'home'%}">Volver al inicio</a></p>
+    {% else %}
+        {% include 'products/includes/formulario_de_pregunta.html' %}
+    {% endif %}
+{% endblock %}

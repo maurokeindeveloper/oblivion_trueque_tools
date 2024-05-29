@@ -1,9 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
-from .models import Usuario, Producto
+from .models import Usuario, Producto, Pregunta, Respuesta
 from django.core.exceptions import ValidationError
 import datetime
+from django.db import models
 
 
 def validate_age(value):
@@ -138,3 +139,9 @@ class CreacionDeProducto(forms.ModelForm):
         },
         widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )
+
+
+class FormularioDePregunta(forms.ModelForm):
+    class Meta:
+        model = Pregunta
+        fields = ["texto"]

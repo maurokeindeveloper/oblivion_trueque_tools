@@ -1,11 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
-from ..forms import RegistrationForm, CreacionDeProducto
+from ..forms import RegistrationForm
 from django.contrib.auth.forms import AuthenticationForm
-from django.db import IntegrityError
-from django.utils import timezone
-from ..models import Usuario, Producto
+from ..models import Usuario
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 

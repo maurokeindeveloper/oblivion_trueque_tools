@@ -12,4 +12,5 @@ urlpatterns = [
     path(
         "productos/id/<int:id>", producto_view.detalle_producto, name="detalle_producto"
     ),
+    path("productos/id/<int:id>/preguntar", producto_view.preguntar, name="preguntar"),
 ]

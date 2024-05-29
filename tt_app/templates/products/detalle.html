@@ -43,6 +43,22 @@
                 <p><small class="text-muted fw-light"> Publicado por: {{producto.usuario.first_name}}</small></p>
                 <p><small class="text-muted fw-light"> Fecha de publicación: {{producto.fecha_de_publicacion|date:'l j \d\e F \d\e Y'}} </small></p>
             </div>
+            {% with preguntas.count as total_de_preguntas %}
+                <h2>
+                    {{ total_de_preguntas }} pregunta{{ total_de_preguntas|pluralize }}
+                </h2>
+            {% endwith %}
+            {% for pregunta in preguntas.all %}
+                <div class="preguntas">
+                    <p class="info">
+                        Pregunta {{ forloop.counter }} de {{ pregunta.cliente }} {{ pregunta.fecha }}
+                    </p>
+                    {{ pregunta.texto|linebreaks }}
+                </div>
+                {% empty %}
+                    <p>No hay preguntas.</p>
+            {% endfor %}
+            {% include 'products/includes/formulario_de_pregunta.html' %}
         </div>
     </div>
 </div>
