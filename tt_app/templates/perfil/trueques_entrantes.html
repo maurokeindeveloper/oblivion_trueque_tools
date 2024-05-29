@@ -1,0 +1,39 @@
+{%extends 'base.html'%}
+
+{% load static %}
+
+{%block content%}
+
+<div id="mensaje-feedback" class="alert alert-success" style="display: none;"></div>
+
+{% if trueques %}
+<h3 class="ms-4 mt-3 mb-5 text-start ">Solicitudes de trueques entrantes: </h3>
+{% include 'perfil/partials/listado_trueques_entrantes.html' %}
+
+{% else %}
+    <h5 class="mt-5 my-3 text-center">No hay trueques entrantes.</h5> 
+    <p class="p-2 text-center"><a href="{%url 'home'%}">Volver al inicio</a></p>
+{% endif %}
+
+<!-- Script JavaScript -->
+<script>
+    // Función para mostrar el mensaje de feedback
+    function mostrarMensajeFeedback(mensaje) {
+        var mensajeElemento = document.getElementById("mensaje-feedback");
+        mensajeElemento.innerText = mensaje;
+        mensajeElemento.style.display = "block";
+        // Ocultar el mensaje después de 3 segundos (3000 milisegundos)
+        setTimeout(function() {
+            mensajeElemento.style.display = "none";
+        }, 3000);
+    }
+
+    // Obtener el mensaje de feedback de la URL (si lo hay)
+    var parametrosURL = new URLSearchParams(window.location.search);
+    var mensaje = parametrosURL.get("mensaje");
+    if (mensaje) {
+        mostrarMensajeFeedback(mensaje);
+    }
+</script>
+
+{%endblock%}

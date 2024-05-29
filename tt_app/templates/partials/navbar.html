@@ -1,46 +1,83 @@
-<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-    <div class="container p-2 d-flex justify-content-between">
-        
-        <div class="">
-            <img src="../../static/images/logo_truequetools.png" style="height: 50px;" class="mr-8"/> 
-            <a class="navbar-brand fw-bold" href="{% url 'home' %}">TruequeTools</a>
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-0">
+    <div class="container d-flex justify-content-between">
+        {# MARCA TRUEQUETOOLS #}
+        <div class="navbar-brand me-auto ">
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+            <img src="{% static 'images/logo_truequetools_transparente.png'%}" alt="" class="mx-2 "
+            height="60"/>TruequeTools</a>
         </div>
-
-        <div class="">
-            <form class="form-inline d-flex flex-row " action="{% url 'buscar_productos'%}" method="GET">
-                <input class="form-control mr-sm-2 mx-2" type="text" placeholder="Buscar productos" name="cadena"/> 
-                <button class="btn btn-primary my-2 my-sm-0" type="submit">Buscar</button>
+        
+        {# BOTON DE MENU PARA PANTALLAS CHICAS #}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            {# BARRA DE BUSQUEDA #}
+            <form class="d-flex my-2 ms-auto" action="{% url 'buscar_productos'%}" method="GET">
+                <input class="form-control me-2" type="search" placeholder="Buscar productos" name="cadena" aria-label="Search">
+                <button class="btn btn-primary" type="submit">Buscar</button>
             </form>
-        </div>
-        
-        <div class="">
-            <div class="collapse navbar-collapse " id="#navbarNavAltMarkup">
-                <div class="navbar-nav ms-auto align-items-center" >
 
-                    <a class="nav-link" href="{% url 'home' %}">Inicio</a>
-                    <a class="nav-link" href="{% url 'productos' %}">Productos</a>
-
-                    {% if user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'crear_producto' %}">Publicar producto</a>
-                    <a class="nav-link" href="{% url 'logout' %}">Salir</a>
-
-                    {% else %}
-                    <a class="nav-link" href="{% url 'registro' %}">Registrarse</a>
-                    <a class="nav-link" href="{% url 'ingreso' %}">Ingresar</a>
+            {# ELEMENTOS SELECCIONABLES #}
+            {% with request.resolver_match.url_name as url_actual %} 
+            {#esto sirve para comparar la url actual a cada url pattern definido en urls.py#}
+            <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link {%if url_actual == 'home' %}active{%endif%} " href="{% url 'home' %}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {%if url_actual == 'productos' %}active{%endif%}" href="{% url 'productos' %}">Productos</a>
+                </li>
+                {% if user.is_authenticated %}
+                    {% if user.is_staff %}
+                    {% if user.is_admin %}      {# PORCION PARA ADMIN #}
+                        <li class="nav-item">
+                            <a class="nav-link {%if url_actual == 'registro_empleado' %}active{%endif%}" href="{% url 'registro_empleado' %}">Registrar Empleado</a>
+                        </li>
+                        
+                    {% else %}              {# PORCION PARA EMPLEADOS #}
+                        <li class="nav-item">
+                            <a class="nav-link {%if url_actual == 'gestion_trueque' %}active{%endif%}" href="{% url 'gestion_trueque' %}">gestion trueque</a>
+                        </li>
+                        
+                    {% endif %}
+                    {% else %}              {# PORCION PARA CLIENTES #}                        
+                        <li class="nav-item">
+                            <a class="nav-link {%if url_actual == 'crear_producto' %}active{%endif%}" href="{% url 'crear_producto' %}">Publicar producto</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            ...
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark bg-dark" aria-labelledby="navbarDropdown"> {#Opciones del dropdown#}
+                                <li><a class="dropdown-item  {%if url_actual == '' %}active{%endif%}" href="#">Mis productos</a></li>
+                                <li><hr class="dropdown-divider"></li>                                      {# separador (barrita) #}
+                                <li><a class="dropdown-item {%if url_actual == '' %}active{%endif%}" href="#">Solicitudes enviadas</a></li>
+                                <li><a class="dropdown-item {%if url_actual == 'trueques_entrantes' %}active{%endif%}" href="{% url 'trueques_entrantes' %}">Solicitudes entrantes</a></li>
+                            </ul>
+                        </li>             
+                    {% endif %}             {# PORCION PARA USUARIOS LOGEADOS(3 ROLES) #}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Salir</a>
+                    </li>
+                    {% else %}              {# PORCION PARA USUARIO NO REGISTRADO/LOGEADO #}
+                    <li class="nav-item">
+                        <a class="nav-link {%if url_actual == 'registro' %}active{%endif%}" href="{% url 'registro' %}">Registrarse</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {%if url_actual == 'ingreso' %}active{%endif%}" href="{% url 'ingreso' %}">Ingresar</a>
+                    </li>
                     {% endif %}
                 
-                </div>
-            </div>
+                {%comment%}
+                Ejemplo de li deshabilitado
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>{%endcomment%}
+            </ul>
+            {%endwith%}
         </div>
-
-
-
-        {%comment%} 
-            {# este botón iba originalmente en la navbar, al lado de la "brand", lo comenté porque solo aparece al achicar la pantalla, y ocupa espacio cuando todavía no lo usamos. Dejo acá por las dudas.#}
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        {%endcomment%}
-
     </div>
 </nav>

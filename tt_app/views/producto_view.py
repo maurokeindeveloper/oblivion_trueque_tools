@@ -16,8 +16,11 @@ def crear_producto(request):
             producto.usuario = request.user
             # Establecer la fecha de publicación antes de guardar
             producto.fecha_de_publicacion = timezone.now()
+            # hardcodeamos (de momento) una sucursal para el ingreso
+            producto.sucursal = 1
             producto.save()
             # Redirigir a la página de productos con mensaje de feedback
+
             return redirect(
                 reverse("productos")
                 + "?mensaje=El producto se ha agregado correctamente."
@@ -49,7 +52,6 @@ def buscar_productos(request):
             {"productos": productos, "cadena": cadena},
         )
     else:
-        print("nao nao")
         return render(request, "products/productos.html", {"productos": productos})
 
 
@@ -57,7 +59,7 @@ def detalle_producto(request, id):
     producto = get_object_or_404(Producto, id=id)
 
     # Lista de preguntas acerca del producto
-    preguntas = producto.preguntas
+    preguntas = producto.preguntas.order_by("-fecha")
 
     # Formulario para las preguntas de los clientes
     form = FormularioDePregunta()
@@ -69,7 +71,6 @@ def detalle_producto(request, id):
     )
 
 
-# SEGUIR TRABAJANDO EN ESTO...
 def preguntar(request, id):
     producto = get_object_or_404(Producto, id=id)
 
@@ -79,7 +80,7 @@ def preguntar(request, id):
     if form.is_valid():
         # Crea un objeto Pregunta sin guardarlo en la base de datos
         pregunta = form.save(commit=False)
-        # Asigna el producto a la pregunta
+        # Asigna el producto y el client a la pregunta - DEBEN SER LOS OBJETOS, NO LOS VALORES (O IDS)
         pregunta.producto = producto
         pregunta.cliente = producto.usuario
         # Guarda la pregunta en la base de datos

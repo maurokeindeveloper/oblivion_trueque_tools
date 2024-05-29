@@ -51,7 +51,7 @@ class MyCustomUserManager(BaseUserManager):
         )
         user.is_admin = True
         user.is_staff = True
-        user.is_superuser = True
+        # user.is_superuser = True #Comento esta línea porque no tendría que tener permitido el acceso al panel de administración de django
         user.save(using=self._db)
         return user
 
@@ -90,7 +90,7 @@ class Usuario(AbstractBaseUser):
 # Modelo de sucursal
 class Sucursal(models.Model):
     ciudad = models.CharField(max_length=50)
-    dirección = models.CharField(max_length=200)
+    direccion = models.CharField(max_length=200)
 
 
 # Product model
@@ -132,7 +132,7 @@ class Trueque(models.Model):
         Producto, on_delete=models.CASCADE, related_name="trueque"
     )
     producto_solicitado = models.ForeignKey(
-        Producto, on_delete=models.CASCADE, related_name="trueques"
+        Producto, on_delete=models.CASCADE, related_name="trueque_solicitado"
     )
     sucursal = models.ForeignKey(
         Sucursal, on_delete=models.CASCADE, related_name="trueques"
@@ -178,7 +178,7 @@ class Pregunta(models.Model):
     cliente = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     texto = models.CharField(max_length=200)
     respuesta = models.ForeignKey(Respuesta, on_delete=models.CASCADE, null=True)
-    fecha = models.DateField(auto_now=True)
+    fecha = models.DateTimeField(auto_now=True)
 
 
 # Modelo de venta

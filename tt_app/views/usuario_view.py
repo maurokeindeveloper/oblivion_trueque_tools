@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
-from ..forms import RegistrationForm
+from ..forms import RegistrationForm, RegistrarEmpleado
 from django.contrib.auth.forms import AuthenticationForm
-from ..models import Usuario
+from ..models import Usuario, Producto
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
@@ -12,7 +12,29 @@ from django.urls import reverse
 
 
 def home(request):
-    return render(request, "home.html")
+    preview = Producto.objects.exclude(activo=False).order_by("-promocionado")[
+        :5
+    ]  # Los productos que se van a mostrar en el home #
+    return render(request, "home.html", {"productos": preview})
+
+
+def registro_empleado(request):
+    if request.method == "POST":
+        form = RegistrarEmpleado(request.POST)
+        if form.is_valid():
+            empleado = form.save(commit=False)
+            empleado.is_staff = True  # Marcar al empleado como staff
+            empleado.set_password(
+                form.cleaned_data["password"]
+            )  # Establecer la contraseña correctamente
+            empleado.save()
+            return redirect(
+                reverse("productos")
+                + "?mensaje=El empleado se ha agregado correctamente."
+            )
+    else:
+        form = RegistrarEmpleado()
+    return render(request, "registro_empleado.html", {"form": form})
 
 
 def registro(request, *args, **kwargs):

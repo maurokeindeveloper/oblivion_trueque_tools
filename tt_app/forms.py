@@ -18,6 +18,47 @@ def validate_age(value):
         raise ValidationError("Tenés que ser mayor de edad para registrarte.")
 
 
+
+class RegistrarEmpleado(forms.ModelForm):
+    email = forms.EmailField(
+        label="Email",
+        max_length=50,
+        widget=forms.TextInput(attrs={"class": "form-control mb-2", "style": "width: 100%;"}),
+        error_messages={
+            "required": "Debe completar el campo de email",
+        },
+    )
+    first_name = forms.CharField(
+        label="Nombre",
+        max_length=50,
+        widget=forms.TextInput(attrs={"class": "form-control mb-2", "style": "width: 100%;"}),
+        error_messages={
+            "required": "Debe completar el campo de nombre",
+        },
+    )
+    last_name = forms.CharField(
+        label="Apellido",
+        max_length=50,
+        widget=forms.TextInput(attrs={"class": "form-control mb-2", "style": "width: 100%;"}),
+        error_messages={
+            "required": "Debe completar el campo de apellido",
+        },
+    )
+    password = forms.CharField(
+        label="Contraseña",
+        max_length=50,
+        widget=forms.PasswordInput(attrs={"class": "form-control mb-2", "style": "width: 100%;"}),
+        error_messages={
+            "required": "Debe completar el campo de contraseña",
+        },
+    )
+
+    class Meta:
+        model = Usuario
+        fields = ["email", "first_name", "last_name", "password"]
+
+        
+        
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(
         max_length=255,
