@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-0">
     <div class="container-fluid d-flex justify-content-between">
         {# MARCA TRUEQUETOOLS #}
-        <div class="navbar-brand me-auto ">
+        <div class="navbar-brand me-auto col-lg-3 ">
             <a class="navbar-brand fw-bold" href="{% url 'home' %}">
             <img src="{% static 'images/logo_truequetools_transparente.png'%}" alt="" class="mx-2 "
             height="50"/>TruequeTools</a>
@@ -13,9 +13,9 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse col-lg-9" id="navbarSupportedContent">
             {# BARRA DE BUSQUEDA #}
-            <form class="d-flex my-2 ms-auto " action="{% url 'buscar_productos'%}" method="GET">
+            <form class="d-flex my-2 ms-auto" action="{% url 'buscar_productos'%}" method="GET">
                 <input class="form-control me-2" type="search" placeholder="Buscar productos" name="cadena" aria-label="Search">
                 <button class="btn btn-primary" type="submit">Buscar</button>
             </form>
