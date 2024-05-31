@@ -17,8 +17,6 @@ def validate_age(value):
     if age < 18:
         raise ValidationError("Debe ser mayor de edad para registrarte.")
 
-
-
 class RegistrarEmpleado(forms.ModelForm):
     email = forms.EmailField(
         required=True,
@@ -74,6 +72,14 @@ class RegistrarEmpleado(forms.ModelForm):
         model = Usuario
         fields = ["email", "first_name", "last_name", "password"]
     
+    def clean_email(self):
+        email = self.cleaned_data["email"].lower()
+        try:
+            user = Usuario.objects.get(email=email)
+        except Exception as e:
+            return email
+        raise forms.ValidationError(f"El email {email} ya está registrado.")
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)              #Aca van las clases bootstrap a aplicar en todos los widgets de este form
         for field in self.fields:
