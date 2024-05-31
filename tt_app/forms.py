@@ -1,9 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
-from .models import Sucursal, Usuario, Producto
+from .models import Sucursal, Usuario, Producto, Pregunta, Respuesta
 from django.core.exceptions import ValidationError
 import datetime
+from django.db import models
 
 
 def validate_age(value):
@@ -282,3 +283,8 @@ class CreacionDeProducto(forms.ModelForm):
         fields.pop("aceptar_terminos")  #Aca sacamos el ultimo item(aceptar terminos) para no aplicarle los cambios
         for field in fields:
             self.fields[field].widget.attrs["class"] += " " + "w-100 mt-2 mb-3" #IMPORTANTE: += para que no sobreesrciba las clases individuales de cada uno, Y MUY IMPORTANTE el primer espacio en " " porque sino se aplica mal.(se concatena con la ultima letra de la ultima clase individualmente definida)
+
+class FormularioDePregunta(forms.ModelForm):
+    class Meta:
+        model = Pregunta
+        fields = ["texto"]

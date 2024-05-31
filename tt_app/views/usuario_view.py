@@ -1,10 +1,8 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from ..forms import RegistrationForm, RegistrarEmpleado
 from django.contrib.auth.forms import AuthenticationForm
-from django.db import IntegrityError
-from django.utils import timezone
 from ..models import Usuario, Producto
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -14,7 +12,9 @@ from django.urls import reverse
 
 
 def home(request):
-    preview = Producto.objects.exclude(activo=False).order_by("-promocionado")[:5] # Los productos que se van a mostrar en el home #
+    preview = Producto.objects.exclude(activo=False).order_by("-promocionado")[
+        :5
+    ]  # Los productos que se van a mostrar en el home #
     return render(request, "home.html", {"productos": preview})
 
 @login_required
@@ -26,9 +26,14 @@ def registro_empleado(request):
         if form.is_valid():
             empleado = form.save(commit=False)
             empleado.is_staff = True  # Marcar al empleado como staff
-            empleado.set_password(form.cleaned_data["password"])  # Establecer la contraseña correctamente
+            empleado.set_password(
+                form.cleaned_data["password"]
+            )  # Establecer la contraseña correctamente
             empleado.save()
-            return redirect(reverse('productos') + "?mensaje=El empleado se ha agregado correctamente.")    
+            return redirect(
+                reverse("productos")
+                + "?mensaje=El empleado se ha agregado correctamente."
+            )
     else:
         form = RegistrarEmpleado()
     return render(request, "registro_empleado.html", {
@@ -75,8 +80,8 @@ def registro(request, *args, **kwargs):
 
 
 def ingreso(request):
-    user=request.user
-    if request.user.is_authenticated:
+    user = request.user
+    if user.is_authenticated:
         return HttpResponse(f"Ya estás logeado como {user.email}.")
     
     parametros = {"form": AuthenticationForm, # el form a mostrar definido en forms.py

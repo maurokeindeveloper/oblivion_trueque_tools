@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
-from ..forms import CreacionDeProducto
+from ..forms import CreacionDeProducto, FormularioDePregunta
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from ..models import Producto
@@ -56,4 +56,36 @@ def buscar_productos(request):
 
 def detalle_producto(request, id):
     producto = get_object_or_404(Producto, id=id)
-    return render(request, "products/detalle.html", {"producto": producto})
+
+    # Lista de preguntas acerca del producto
+    preguntas = producto.preguntas.order_by("-fecha")
+
+    # Formulario para las preguntas de los clientes
+    form = FormularioDePregunta()
+
+    return render(
+        request,
+        "products/detalle.html",
+        {"producto": producto, "preguntas": preguntas, "formulario": form},
+    )
+
+
+def preguntar(request, id):
+    producto = get_object_or_404(Producto, id=id)
+
+    pregunta = None
+    # Se realiza una pregunta
+    form = FormularioDePregunta(data=request.POST)
+    if form.is_valid():
+        # Crea un objeto Pregunta sin guardarlo en la base de datos
+        pregunta = form.save(commit=False)
+        # Asigna el producto y el client a la pregunta - DEBEN SER LOS OBJETOS, NO LOS VALORES (O IDS)
+        pregunta.producto = producto
+        pregunta.cliente = producto.usuario
+        # Guarda la pregunta en la base de datos
+        pregunta.save()
+    return render(
+        request,
+        "products/pregunta.html",
+        {"producto": producto, "form": form, "pregunta": pregunta},
+    )
