@@ -17,9 +17,11 @@ def home(request):
     preview = Producto.objects.exclude(activo=False).order_by("-promocionado")[:5] # Los productos que se van a mostrar en el home #
     return render(request, "home.html", {"productos": preview})
 
-
+@login_required
 def registro_empleado(request):
-    if request.method == "POST":
+    if not request.user.is_admin:
+        return HttpResponse("No tienes permisos para entrar a esta página.")
+    if request.POST:
         form = RegistrarEmpleado(request.POST)
         if form.is_valid():
             empleado = form.save(commit=False)
@@ -29,13 +31,16 @@ def registro_empleado(request):
             return redirect(reverse('productos') + "?mensaje=El empleado se ha agregado correctamente.")    
     else:
         form = RegistrarEmpleado()
-    return render(request, "registro_empleado.html", {"form": form})
+    return render(request, "registro_empleado.html", {
+        "form": form,
+        "titulo":"Registrar empleado",
+        "boton":"Registrar",
+    })
 
-def registro(request, *args, **kwargs):
-    user = request.user
-    if user.is_authenticated:
+def registro(request, *args, **kwargs):    
+    user=request.user
+    if request.user.is_authenticated:
         return HttpResponse(f"Ya estás registrado como {user.email}.")
-    context = {}
 
     if request.POST:
         form = RegistrationForm(request.POST)
@@ -57,21 +62,28 @@ def registro(request, *args, **kwargs):
                 phone=phone,
                 birthdate=birthdate,
             )
-            destination = kwargs.get("next")
-            if destination:
-                return redirect(destination)
             return redirect(
                 reverse("ingreso") + "?mensaje=El usuario se registró con éxito."
             )
-        else:
-            context["registration_form"] = form
-
-    return render(request, "registro.html", context)
+    else:
+        form = RegistrationForm()
+    return render(request, "registro.html", {
+        "form": form,
+        "titulo": "Registrarse",
+        "boton": "Registrarse"
+    })
 
 
 def ingreso(request):
-    if request.method == "GET":
-        return render(request, "ingreso.html", {"form": AuthenticationForm})
+    user=request.user
+    if request.user.is_authenticated:
+        return HttpResponse(f"Ya estás logeado como {user.email}.")
+    
+    parametros = {"form": AuthenticationForm, # el form a mostrar definido en forms.py
+                  "titulo":"Iniciar sesión", # el titulo del formulario
+                  "boton":"Iniciar sesión",} # el texto del botón de confirmación
+    if request.method =="GET":
+        return render(request, "ingreso.html", parametros)
     else:
         usuario = authenticate(
             request,
@@ -79,16 +91,16 @@ def ingreso(request):
             password=request.POST["password"],
         )
         if usuario is None:
+            print(parametros|{"error": "Usuario o contraseña inválidos"})
             return render(
                 request,
-                "ingreso.html",
-                {"form": AuthenticationForm, "error": "Usuario o contraseña inválidos"},
+                "ingreso.html", (parametros|{"error": "Usuario o contraseña inválidos"}), # agregamos el mensaje de error a los parámetros
             )
         else:
             login(request, usuario)
             return redirect("home")
 
-
+@login_required
 def cerrar_sesion(request):
     logout(request)
     return redirect(reverse("home") + "?mensaje=La sesión se cerró con éxito.")

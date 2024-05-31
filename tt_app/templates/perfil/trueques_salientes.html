@@ -1,0 +1,16 @@
+{%extends 'base.html'%}
+
+{% load static %}
+
+{%block content%}
+
+{% if trueques %}
+    <h3 class="ms-4 mt-3 mb-5 text-start ">Solicitudes de trueque enviadas: </h3>
+    {% include 'perfil/partials/listado_trueques_salientes.html' %}
+
+{% else %}
+    <h5 class="mt-5 my-3 text-center">No ha enviado solicitudes de trueque aún.</h5> 
+    <p class="p-2 text-center"><a href="{%url 'home'%}">Volver al inicio</a></p>
+{% endif %}
+
+{%endblock%}

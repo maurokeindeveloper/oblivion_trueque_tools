@@ -1,11 +1,11 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-0">
-    <div class="container d-flex justify-content-between">
+    <div class="container-fluid d-flex justify-content-between">
         {# MARCA TRUEQUETOOLS #}
         <div class="navbar-brand me-auto ">
             <a class="navbar-brand fw-bold" href="{% url 'home' %}">
             <img src="{% static 'images/logo_truequetools_transparente.png'%}" alt="" class="mx-2 "
-            height="60"/>TruequeTools</a>
+            height="50"/>TruequeTools</a>
         </div>
         
         {# BOTON DE MENU PARA PANTALLAS CHICAS #}
@@ -15,7 +15,7 @@
         
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             {# BARRA DE BUSQUEDA #}
-            <form class="d-flex my-2 ms-auto" action="{% url 'buscar_productos'%}" method="GET">
+            <form class="d-flex my-2 ms-auto " action="{% url 'buscar_productos'%}" method="GET">
                 <input class="form-control me-2" type="search" placeholder="Buscar productos" name="cadena" aria-label="Search">
                 <button class="btn btn-primary" type="submit">Buscar</button>
             </form>
@@ -55,7 +55,7 @@
                                 <li><a class="dropdown-item  {%if url_actual == '' %}active{%endif%}" href="#">Mis productos</a></li>
                                 <li><hr class="dropdown-divider"></li>                                      {# separador (barrita) #}
                                 <li><a class="dropdown-item {%if url_actual == '' %}active{%endif%}" href="#">Solicitudes enviadas</a></li>
-                                <li><a class="dropdown-item {%if url_actual == 'trueques_entrantes' %}active{%endif%}" href="{% url 'trueques_entrantes' %}">Solicitudes entrantes</a></li>
+                                <li><a class="dropdown-item {%if url_actual == '' %}active{%endif%}" href="#">Solicitudes entrantes</a></li>
                             </ul>
                         </li>             
                     {% endif %}             {# PORCION PARA USUARIOS LOGEADOS(3 ROLES) #}

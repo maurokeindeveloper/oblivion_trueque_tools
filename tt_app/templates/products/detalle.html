@@ -17,13 +17,13 @@
                     <a href="#" class="text-decoration-none text-white">Categoria {{producto.get_categoria_display}}</a>    {# AGREGAR LINK A BUSQUEDA FILTRADA #}
                 </span>
                 {% if producto.promocionado %}
-                <span class="badge badge-primary bg-warning">
-                    <a href="#" class="text-decoration-none text-dark">Promocionado</a>    {# AGREGAR LINK A HU PROMOCIONAR UN PRODUCTO #}
-                </span>
-                {% else %}
-                <span class="badge badge-secondary bg-secondary">
-                    <a href="#" class="text-decoration-none text-white">No promocionado</a>    {# AGREGAR LINK A HU PROMOCIONAR UN PRODUCTO #}
-                </span>
+                    <span class="badge badge-primary bg-warning">
+                        <a href="#" class="text-decoration-none text-dark">Promocionado</a>    {# AGREGAR LINK A HU PROMOCIONAR UN PRODUCTO #}
+                    </span>
+                    {% else %}
+                    <span class="badge badge-secondary bg-secondary">
+                        <a href="#" class="text-decoration-none text-white">No promocionado</a>    {# AGREGAR LINK A HU PROMOCIONAR UN PRODUCTO #}
+                    </span>
                 {% endif %}
                 </div>
             </div>

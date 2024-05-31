@@ -91,6 +91,9 @@ class Usuario(AbstractBaseUser):
 class Sucursal(models.Model):
     ciudad = models.CharField(max_length=50)
     direccion = models.CharField(max_length=200)
+    activo = models.BooleanField(default=True)
+    def __str__(self):
+        return self.ciudad +" - "+ self.direccion
 
 
 # Product model
@@ -114,6 +117,8 @@ class Producto(models.Model):
 
     imagen = ImageField(blank=True, upload_to="media/")
     promocionado = models.BooleanField(default=False)
+    reservado = models.BooleanField(default=False)
+    disponible = models.BooleanField(default=False)
     activo = models.BooleanField(default=True)
     usuario = models.ForeignKey(
         Usuario, on_delete=models.CASCADE, related_name="productos"

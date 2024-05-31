@@ -2,11 +2,12 @@
 
 {% block content %}
 <div id="mensaje-feedback" class="alert alert-success" style="display: none;"></div>
-
+{%comment%}
 <div class="row">
-    <div class="col md-3 offset-md-3">
-        <form class="form-horizontal" method="post" novalidate>{% csrf_token %}
-        <fieldset>
+    <div class="card col-md-4 offset-md-4">
+        <form class="form-horizontal" method="post" novalidate>
+            {% csrf_token %}
+            <fieldset>
             <legend>{{ title }}</legend>
             {% for field in form %}
                 {% if field.errors %}
@@ -29,14 +30,15 @@
                     </div>
                 {% endif %}
             {% endfor %}
-        </fieldset>
+            </fieldset>
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Iniciar sesión</button>
         </div>
         {{ error }}
     </div>
 </div>
-
+{%endcomment%}
+{% include 'partials/form_vista.html'%}
 <script>
     // Función para mostrar el mensaje de feedback
     function mostrarMensajeFeedback(mensaje) {

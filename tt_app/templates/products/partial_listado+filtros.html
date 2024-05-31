@@ -1,0 +1,18 @@
+{% load static %}
+<div class="row ">
+    <div class="col-md-2 ">
+        <div class="card card-body h-100 ">
+        {%comment%}
+        ESTE ES EL PANEL DE FILTROS POR CATEGORIA A IMPLEMENTAR
+        <div class="d-grid gap-1 col-6 p-1 mx-auto">
+            <button class="btn btn-secondary mb-2" type="button">0-5</button> 
+            <button class="btn btn-secondary mb-2" type="button">5-10</button> 
+            <button class="btn btn-secondary mb-2" type="button">10+</button> 
+        </div>    
+        {%endcomment%}
+        </div>
+    </div>
+    <div class="col-md-10 ">
+        {% include 'products/partial_listado_productos.html'%}
+    </div>
+</div>

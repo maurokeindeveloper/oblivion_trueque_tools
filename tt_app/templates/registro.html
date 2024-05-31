@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+{%comment%}
+<!--
 <style type="text/css">
     .card-register {
         width: 100%;
@@ -30,69 +31,70 @@
 </style>
 
 <div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="card card-register">
+    <div class="row">
+        <div class="card p-2 col-lg-4 offset-lg-4">
             <div class="card-body">
-                <form method="POST" >
-                    {% csrf_token %}
-                    <h1>Registrarse</h1>
-                    <div class="mb-3">
-                        <label class="mb-1">Correo electrónico *</label>
-                        <input type="text" name="email" id="input" class="form-control" placeholder="Ingresá tu correo electrónico">
-                    </div>
+                <form method="POST">
+                {% csrf_token %}
+                <h1>Registrarse</h1>
+                <div class="mb-3">
+                    <label class="mb-1">Correo electrónico *</label>
+                    <input type="text" name="email" id="input" class="form-control" placeholder="Ingresá tu correo electrónico">
+                </div>
 
-                    <div class="mb-3">
-                        <label class="mb-1">Nombre *</label>
-                        <input type="text" name="first_name" id="first_name" class="form-control mb-2" placeholder="Ingresá tu nombre">
-                    </div>
+                <div class="mb-3">
+                    <label class="mb-1">Nombre *</label>
+                    <input type="text" name="first_name" id="first_name" class="form-control mb-2" placeholder="Ingresá tu nombre">
+                </div>
 
-                    <div class="mb-3">
-                        <label class="mb-1">Apellido *</label>
-                        <input type="text" name="last_name" id="last_name" class="form-control mb-2" placeholder="Ingresá tu apellido">
-                    </div>
+                <div class="mb-3">
+                    <label class="mb-1">Apellido *</label>
+                    <input type="text" name="last_name" id="last_name" class="form-control mb-2" placeholder="Ingresá tu apellido">
+                </div>
 
-                    <div class="mb-3">
-                        <label class="mb-1">DNI</label>
-                        <input type="text" name="dni" id="dni" class="form-control mb-2" placeholder="Ingresá tu DNI">
-                    </div>
+                <div class="mb-3">
+                    <label class="mb-1">DNI</label>
+                    <input type="text" name="dni" id="dni" class="form-control mb-2" placeholder="Ingresá tu DNI">
+                </div>
 
-                    <div class="mb-3">
-                        <label class="mb-1">Teléfono</label>
-                        <input type="text" name="phone" id="phone" class="form-control mb-2" placeholder="Ingresá tu número de teléfono">
-                    </div>
+                <div class="mb-3">
+                    <label class="mb-1">Teléfono</label>
+                    <input type="text" name="phone" id="phone" class="form-control mb-2" placeholder="Ingresá tu número de teléfono">
+                </div>
 
-                    <div class="mb-3">
-                        <label class="mb-1">Fecha de Nacimiento</label>
-                        <input type="date" name="birthdate" id="birthdate" class="form-control mb-2">
-                    </div>
+                <div class="mb-3">
+                    <label class="mb-1">Fecha de Nacimiento</label>
+                    <input type="date" name="birthdate" id="birthdate" class="form-control mb-2">
+                </div>
 
-                    <div class="mb-3">
-                        <label class="mb-1">Contraseña</label>
-                        <input type="password" name="password1" id="password1" class="form-control mb-2" placeholder="Ingresá tu contraseña">
-                    </div>
+                <div class="mb-3">
+                    <label class="mb-1">Contraseña</label>
+                    <input type="password" name="password1" id="password1" class="form-control mb-2" placeholder="Ingresá tu contraseña">
+                </div>
 
-                    <div class="mb-3">
-                        <label class="mb-1">Confirmar contraseña</label>
-                        <input type="password" name="password2" id="password2" class="form-control mb-2" placeholder="Confirmá tu contraseña">
-                    </div>
+                <div class="mb-3">
+                    <label class="mb-1">Confirmar contraseña</label>
+                    <input type="password" name="password2" id="password2" class="form-control mb-2" placeholder="Confirmá tu contraseña">
+                </div>
 
-                    <button class="btn btn-primary" style="width: 100%;" type="submit">
-                        <b>Registrarse</b>
-                    </button>
+                <button class="btn btn-primary" style="width: 100%;" type="submit">
+                    <b>Registrarse</b>
+                </button>
 
-                    {% if registration_form.errors %}
-                            {% for field in registration_form %}
-                                {% for error in field.errors %}
-                                    <div class="alert alert-danger mt-4">
-                                        {{ error }}
-                                    </div>
-                                {% endfor %}
+                {% if registration_form.errors %}
+                        {% for field in registration_form %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger mt-4">
+                                    {{ error }}
+                                </div>
                             {% endfor %}
-                    {% endif %}
+                        {% endfor %}
+                {% endif %}
                 </form>
             </div>
         </div>
     </div>
-</div>                  
-
+</div>        -->          
+{%endcomment%}
+{% include 'partials/form_vista.html'%}
 {% endblock %}
