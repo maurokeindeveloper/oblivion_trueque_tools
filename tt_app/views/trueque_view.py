@@ -14,11 +14,10 @@ def trueques_entrantes(request):
     #trueques = Trueque.objects.all()
     trueques = Trueque.objects.exclude(activo=False).filter(producto_solicitado__usuario=usuario , estado=1)
 
-    return render(request, "perfil/trueques_entrantes.html", {"trueques": trueques})
+    return render(request, "trueques/trueques_entrantes.html", {"trueques": trueques})
 
 @login_required
 def trueques_salientes(request):
     usuario = request.user
     trueques = Trueque.objects.exclude(activo=False).filter(producto_solicitante__usuario=usuario , estado=1)
-
-    return render(request, "perfil/trueques_salientes.html", {"trueques": trueques, "nombre": usuario.first_name})
+    return render(request, "trueques/trueques_salientes.html", {"trueques": trueques, "nombre": usuario.first_name})
