@@ -1,4 +1,4 @@
-{#<!--ESTE PARTIAL RECIBE: "form","titulo" y "boton"  -->#}
+{#<!--ESTE PARTIAL RECIBE: "form","titulo", "boton" y "obligatorios" -->#}
 {#<!--Y SE USA EN crear_producto, registro_empleado, registro, ingreso -->#}
 <div class="offset-lg-4 col-lg-4 ">
     <div class="card p-1">
@@ -18,6 +18,6 @@
             <button class="btn btn-primary fw-medium mt-2 w-100" type="submit">{{boton}}</button>
         </form>
     </div>
-    <small class="text-muted fw-light">*: Este campo es obligatorio.</small>
+    {% if obligatorios%} <small class="text-muted fw-light mt-1">*: Este campo es obligatorio.</small> {%endif%}
 </div>
 {# para añadir clases al blue<label>: <label id="{{ field.auto_id }}" class="form-label TUSCLASES">{{ field.label }}</label> #}

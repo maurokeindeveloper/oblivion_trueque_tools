@@ -36,17 +36,18 @@ def registro_empleado(request):
             )
     else:
         form = RegistrarEmpleado()
-    return render(request, "registro_empleado.html", {
-        "form": form,
-        "titulo":"Registrar empleado",
-        "boton":"Registrar",
+    return render(request, "registro_empleado.html", {  # enviamos los siguientes parámetros:
+        "form": form,                                   # el form definido en forms.py
+        "titulo":"Registrar empleado",                  # el titulo del form
+        "boton":"Registrar",                            # el texto del botón de confirmación
+        "obligatorios": True, # mostrar la advertencia de campos obligatorios o no
     })
 
 def registro(request, *args, **kwargs):    
     user=request.user
     if request.user.is_authenticated:
         return HttpResponse(f"Ya estás registrado como {user.email}.")
-
+    
     if request.POST:
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -72,10 +73,11 @@ def registro(request, *args, **kwargs):
             )
     else:
         form = RegistrationForm()
-    return render(request, "registro.html", {
-        "form": form,
-        "titulo": "Registrarse",
-        "boton": "Registrarse"
+    return render(request, "registro.html", {   # enviamos los siguientes parámetros:
+        "form": form,                           # el form definido en forms.py
+        "titulo":"Registrarse",                 # el titulo del form
+        "boton":"Registrarse",                  # el texto del botón de confirmación
+        "obligatorios": True, # mostrar la advertencia de campos obligatorios o no
     })
 
 
@@ -85,8 +87,10 @@ def ingreso(request):
         return HttpResponse(f"Ya estás logeado como {user.email}.")
     
     parametros = {"form": AuthenticationForm, # el form a mostrar definido en forms.py
-                  "titulo":"Iniciar sesión", # el titulo del formulario
-                  "boton":"Iniciar sesión",} # el texto del botón de confirmación
+                  "titulo":"Iniciar sesión",# el titulo del formulario
+                  "boton":"Iniciar sesión", # el texto del botón de confirmación
+                  "obligatorios": False, # mostrar la advertencia de campos obligatorios o no
+    }
     if request.method =="GET":
         return render(request, "ingreso.html", parametros)
     else:
