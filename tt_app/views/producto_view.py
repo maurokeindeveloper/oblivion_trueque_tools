@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
-from ..forms import CreacionDeProducto, FormularioDePregunta
+from ..forms.producto_forms import CreacionDeProducto, FormularioDePregunta
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from ..models import Producto

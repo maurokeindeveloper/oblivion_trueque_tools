@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
-from ..forms import RegistrationForm, RegistrarEmpleado
+from ..forms.usuario_forms import RegistrarEmpleado,RegistrationForm
 from django.contrib.auth.forms import AuthenticationForm
 from ..models import Usuario, Producto
 from django.contrib.auth.decorators import login_required
@@ -26,6 +26,9 @@ def registro_empleado(request):
         if form.is_valid():
             empleado = form.save(commit=False)
             empleado.is_staff = True  # Marcar al empleado como staff
+            
+            empleado.first_name = form.cleaned_data.get("first_name").capitalize()
+            empleado.last_name = form.cleaned_data.get("last_name").capitalize()
             empleado.set_password(
                 form.cleaned_data["password"]
             )  # Establecer la contraseña correctamente
@@ -51,19 +54,20 @@ def registro(request, *args, **kwargs):
     if request.POST:
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            email = form.cleaned_data.get("email").lower()
+            cliente = form.save(commit=False)
+            cliente.email = form.cleaned_data.get("email").lower()
             raw_password = form.cleaned_data.get("password1")
-            first_name = form.cleaned_data.get("first_name")
-            last_name = form.cleaned_data.get("last_name")
+            cliente.first_name = form.cleaned_data.get("first_name").title()
+            cliente.last_name = form.cleaned_data.get("last_name").title()
             dni = form.cleaned_data.get("dni")
             phone = form.cleaned_data.get("phone")
             birthdate = form.cleaned_data.get("birthdate")
+            cliente.save()
             user = authenticate(
-                email=email,
+                email=cliente.email,
                 password=raw_password,
-                first_name=first_name,
-                last_name=last_name,
+                first_name=cliente.first_name,
+                last_name=cliente.last_name,
                 dni=dni,
                 phone=phone,
                 birthdate=birthdate,

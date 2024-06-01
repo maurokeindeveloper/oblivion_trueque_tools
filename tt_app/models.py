@@ -1,6 +1,5 @@
 from django.db import models
 from django.db.models.fields.files import ImageField
-from django.db.models.query import QuerySet
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
