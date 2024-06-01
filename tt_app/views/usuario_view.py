@@ -77,7 +77,7 @@ def registro(request, *args, **kwargs):
             )
     else:
         form = RegistrationForm()
-    return render(request, "usuario/registro.html", {   # enviamos los siguientes parámetros:
+    return render(request, "usuario/registro_cliente.html", {   # enviamos los siguientes parámetros:
         "form": form,                           # el form definido en forms.py
         "titulo":"Registrarse",                 # el titulo del form
         "boton":"Registrarse",                  # el texto del botón de confirmación
