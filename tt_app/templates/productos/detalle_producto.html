@@ -44,7 +44,7 @@
                 <p><small class="text-muted fw-light"> Publicado por: {{producto.usuario.first_name}}</small></p>
                 <p><small class="text-muted fw-light"> Fecha de publicación: {{producto.fecha_de_publicacion|date:'l j \d\e F \d\e Y'}} </small></p>
             </div>
-            {% include 'products/includes/formulario_de_pregunta.html' %}
+            {% include 'productos/includes/formulario_de_pregunta.html' %}
             {% with preguntas.count as total_de_preguntas %}
                 <h2>
                     {{ total_de_preguntas }} pregunta{{ total_de_preguntas|pluralize }}

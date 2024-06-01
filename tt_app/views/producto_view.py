@@ -24,7 +24,7 @@ def crear_producto(request):
             )
     else:
         form = CreacionDeProducto()
-    return render(request, "products/crear_producto.html", {    # enviamos los siguientes parámetros:
+    return render(request, "productos/crear_producto.html", {    # enviamos los siguientes parámetros:
         "form": form,   # el form definido en forms.py
         "titulo": "Publicar producto", # el titulo del form
         "boton": "Aceptar", # el texto del botón de confirmación
@@ -34,7 +34,7 @@ def crear_producto(request):
 
 def productos(request):
     productos = Producto.objects.exclude(activo=False).order_by("-promocionado")
-    return render(request, "products/productos.html", {"productos": productos})
+    return render(request, "productos/productos.html", {"productos": productos})
 
 
 def buscar_productos(request):
@@ -47,12 +47,12 @@ def buscar_productos(request):
             descripcion__icontains=cadena
         )
         productos = productos_nom.union(productos_desc).order_by("-promocionado")
-        return render(request,"products/buscar_productos.html",{
+        return render(request,"productos/buscar_productos.html",{
             "productos": productos,
             "cadena": cadena,
         })
     else:
-        return render(request, "products/productos.html", {"productos": productos})
+        return render(request, "productos/productos.html", {"productos": productos})
 
 
 def detalle_producto(request, id):
@@ -66,7 +66,7 @@ def detalle_producto(request, id):
 
     return render(
         request,
-        "products/detalle.html",
+        "productos/detalle_producto.html",
         {"producto": producto, "preguntas": preguntas, "formulario": form},
     )
 
@@ -87,6 +87,6 @@ def preguntar(request, id):
         pregunta.save()
     return render(
         request,
-        "products/pregunta.html",
+        "productos/pregunta.html",
         {"producto": producto, "form": form, "pregunta": pregunta},
     )
