@@ -39,7 +39,7 @@ def registro_empleado(request):
             )
     else:
         form = RegistrarEmpleado()
-    return render(request, "registro_empleado.html", {  # enviamos los siguientes parámetros:
+    return render(request, "usuario/registro_empleado.html", {  # enviamos los siguientes parámetros:
         "form": form,                                   # el form definido en forms.py
         "titulo":"Registrar empleado",                  # el titulo del form
         "boton":"Registrar",                            # el texto del botón de confirmación
@@ -77,7 +77,7 @@ def registro(request, *args, **kwargs):
             )
     else:
         form = RegistrationForm()
-    return render(request, "registro.html", {   # enviamos los siguientes parámetros:
+    return render(request, "usuario/registro.html", {   # enviamos los siguientes parámetros:
         "form": form,                           # el form definido en forms.py
         "titulo":"Registrarse",                 # el titulo del form
         "boton":"Registrarse",                  # el texto del botón de confirmación
@@ -96,7 +96,7 @@ def ingreso(request):
                   "obligatorios": False, # mostrar la advertencia de campos obligatorios o no
     }
     if request.method =="GET":
-        return render(request, "ingreso.html", parametros)
+        return render(request, "usuario/ingreso.html", parametros)
     else:
         usuario = authenticate(
             request,
@@ -107,7 +107,7 @@ def ingreso(request):
             print(parametros|{"error": "Usuario o contraseña inválidos"})
             return render(
                 request,
-                "ingreso.html", (parametros|{"error": "Usuario o contraseña inválidos"}), # agregamos el mensaje de error a los parámetros
+                "usuario/ingreso.html", (parametros|{"error": "Usuario o contraseña inválidos"}), # agregamos el mensaje de error a los parámetros
             )
         else:
             login(request, usuario)
