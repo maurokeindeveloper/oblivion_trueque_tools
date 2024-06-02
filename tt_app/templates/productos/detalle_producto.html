@@ -44,23 +44,6 @@
                 <p><small class="text-muted fw-light"> Publicado por: {{producto.usuario.first_name}}</small></p>
                 <p><small class="text-muted fw-light"> Fecha de publicación: {{producto.fecha_de_publicacion|date:'l j \d\e F \d\e Y'}} </small></p>
             </div>
-            {% include 'productos/partials/formulario_de_pregunta.html' %}
-            {% with preguntas.count as total_de_preguntas %}
-                <h2>
-                    {{ total_de_preguntas }} pregunta{{ total_de_preguntas|pluralize }}
-                </h2>
-            {% endwith %}
-            {% for pregunta in preguntas.all %}
-                <div class="preguntas">
-                    <p class="info">
-                        Pregunta {{ forloop.counter }} de {{ pregunta.cliente.first_name }} {{ pregunta.fecha }}
-                    </p>
-                    {{ pregunta.texto|linebreaks }}
-                </div>
-                {% empty %}
-                    <p>No hay preguntas.</p>
-            {% endfor %}
-
         </div>
     </div>
 </div>
@@ -73,5 +56,30 @@
 </p>
 {% endif %}
 </div>
+<h2>Preguntas</h2>
+{% for pregunta in preguntas %}
+    <div>
+        <p><strong>{{ pregunta.cliente.id }}</strong> preguntó:</p>
+        <p>{{ pregunta.texto }}</p>
+        {% if pregunta.respuesta %}
+            <p><strong>Respuesta:</strong> {{ pregunta.respuesta.texto }}</p>
+        {% else %}
+            {% if request.user == producto.usuario %}
+                <form action="{% url 'responder' pregunta.id %}" method="POST">
+                    {% csrf_token %}
+                    {{ formulario_pregunta.as_p }}
+                    <button type="submit">Preguntar</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endfor %}
+
+<h2>Responder una pregunta</h2>
+<form action="{% url 'preguntar' producto.id %}" method="POST">
+    {% csrf_token %}
+    {{ formulario_respuesta.as_p }}
+    <button type="submit">Responder</button>
+</form>
 
 {% endblock %}

@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Agregá tu consulta{% endblock %}
+{% block title %}Hacé tu consulta{% endblock %}
 
-{% block content %}
-    {% if pregunta %}
-        <h2>Ya se envió tu pregunta al dueño del producto.</h2>
-        <p><a href="{%url 'home'%}">Volver al inicio</a></p>
+{% blockcontent %}
+    {% if enviada %}
+        <h1>La consulta se hizo correctamente</h1>
     {% else %}
-        {% include 'productos/partials/formulario_de_pregunta.html' %}
+        <h1>Consultá lo que quieras sobre el producto</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Enviar consulta">
+        </form>
     {% endif %}
 {% endblock %}

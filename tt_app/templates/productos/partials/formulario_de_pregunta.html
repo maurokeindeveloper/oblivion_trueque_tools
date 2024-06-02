@@ -1,6 +1,0 @@
-<h2>Consultá sobre este producto</h2>
-<form action="{% url 'preguntar' producto.id %}" method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <p><input type="submit" value="Realizar consulta"></p>
-</form>
