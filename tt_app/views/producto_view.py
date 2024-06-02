@@ -25,7 +25,7 @@ def crear_producto(request):
     else:
         form = CreacionDeProducto()
     return render(request, "productos/crear_producto.html", {    # enviamos los siguientes parámetros:
-        "form": form,   # el form definido en forms.py
+        "form": form,   # el form definido en producto_forms.py
         "titulo": "Publicar producto", # el titulo del form
         "boton": "Aceptar", # el texto del botón de confirmación
         "obligatorios": True, # mostrar la advertencia de campos obligatorios o no

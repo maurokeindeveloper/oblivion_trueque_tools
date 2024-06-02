@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
-from ..forms.usuario_forms import RegistrarEmpleado,RegistrationForm
+from ..forms.usuario_forms import RegistrarEmpleado,RegistrationForm,IngresoForm
 from django.contrib.auth.forms import AuthenticationForm
 from ..models import Usuario, Producto
 from django.contrib.auth.decorators import login_required
@@ -40,7 +40,7 @@ def registro_empleado(request):
     else:
         form = RegistrarEmpleado()
     return render(request, "usuario/registro_empleado.html", {  # enviamos los siguientes parámetros:
-        "form": form,                                   # el form definido en forms.py
+        "form": form,                                   # el form definido en usuario_forms.py
         "titulo":"Registrar empleado",                  # el titulo del form
         "boton":"Registrar",                            # el texto del botón de confirmación
         "obligatorios": True, # mostrar la advertencia de campos obligatorios o no
@@ -78,40 +78,38 @@ def registro(request, *args, **kwargs):
     else:
         form = RegistrationForm()
     return render(request, "usuario/registro_cliente.html", {   # enviamos los siguientes parámetros:
-        "form": form,                           # el form definido en forms.py
+        "form": form,                           # el form definido en usuario_forms.py
         "titulo":"Registrarse",                 # el titulo del form
         "boton":"Registrarse",                  # el texto del botón de confirmación
         "obligatorios": True, # mostrar la advertencia de campos obligatorios o no
     })
-
 
 def ingreso(request):
     user = request.user
     if user.is_authenticated:
         return HttpResponse(f"Ya estás logeado como {user.email}.")
     
-    parametros = {"form": AuthenticationForm, # el form a mostrar definido en forms.py
+    parametros = {"form": IngresoForm(), # el form a mostrar definido en usuario_forms.py
                   "titulo":"Iniciar sesión",# el titulo del formulario
                   "boton":"Iniciar sesión", # el texto del botón de confirmación
                   "obligatorios": False, # mostrar la advertencia de campos obligatorios o no
     }
-    if request.method =="GET":
-        return render(request, "usuario/ingreso.html", parametros)
-    else:
-        usuario = authenticate(
-            request,
-            email=request.POST["username"],
-            password=request.POST["password"],
-        )
-        if usuario is None:
-            print(parametros|{"error": "Usuario o contraseña inválidos"})
-            return render(
+    if request.POST:
+        parametros["form"] = IngresoForm(request.POST)
+        if parametros["form"].is_valid():
+            usuario = authenticate(
                 request,
-                "usuario/ingreso.html", (parametros|{"error": "Usuario o contraseña inválidos"}), # agregamos el mensaje de error a los parámetros
+                email= parametros["form"].cleaned_data.get("email"),
+                password= parametros["form"].cleaned_data.get("password"),
             )
-        else:
-            login(request, usuario)
-            return redirect("home")
+            if usuario is None:
+                return render(request,"usuario/ingreso.html",
+                               (parametros|{"error": "Usuario o contraseña inválidos"}), # agregamos el mensaje de error a los parámetros
+                )
+            else:
+                login(request, usuario)
+                return redirect("home")
+    return render(request, "usuario/ingreso.html", parametros)
 
 @login_required
 def cerrar_sesion(request):

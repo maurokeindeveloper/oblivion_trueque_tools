@@ -11,10 +11,11 @@
                 {{ field }}
                 {% if field.errors %}
                     {% for error in field.errors %}
-                    <small class="text-danger fw-medium"><p>{{ error }}</p></small>
+                    <small class="text-danger fw-medium"><p>{{ error }}</p></small> {#errores de los campos#}
                     {% endfor %}
                 {% endif %}
             {% endfor %}
+            <small class="text-danger fw-medium my-1"><p>{{ error }}</p></small> {#errores del formulario entero#}
             <button class="btn btn-primary fw-medium mt-2 w-100" type="submit">{{boton}}</button>
         </form>
     </div>

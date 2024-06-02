@@ -166,7 +166,10 @@ class Trueque(models.Model):
         estado_6 = 6, _("Concretado")
 
     estado = models.IntegerField(choices=Estado.choices)
-
+    def __str__(self):
+        p1 = self.producto_solicitante
+        p2 = self.producto_solicitado
+        return "("+str(self.id)+")  "+p1.usuario.first_name+" quiere intercambiar "+ p1.nombre+" por "+p2.nombre+" de "+p2.usuario.first_name
 
 # Modelo de respuesta
 class Respuesta(models.Model):

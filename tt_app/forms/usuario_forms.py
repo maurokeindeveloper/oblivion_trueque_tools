@@ -4,6 +4,8 @@ from ..models import Usuario
 from django.core.exceptions import ValidationError
 import datetime
 
+from django.contrib.auth import authenticate,get_user_model
+
 
 def validate_age(value):
     birthdate = value
@@ -14,6 +16,32 @@ def validate_age(value):
     age = today.year - year - ((today.month, today.day) < (month, day))
     if age < 18:
         raise ValidationError("Debe ser mayor de edad para registrarte.")
+
+
+class IngresoForm(forms.Form):
+    email = forms.EmailField(
+        required=True,
+        label="Email",
+        widget=forms.TextInput(
+            attrs={"autofocus": True,
+                   "class":"form-control w-100 mt-2 mb-3"}
+        ),
+        error_messages={
+            "required":"Ingrese un email."
+        }
+    )
+    password = forms.CharField(
+        required=True,
+        label="Contraseña",
+        strip=False,
+        widget=forms.PasswordInput(
+            attrs={"autocomplete": "current-password",
+                   "class":"form-control w-100 mt-2 mb-3"}
+        ),
+        error_messages={
+            "required":"Ingrese una contraseña."
+        }
+    )
 
 class RegistrarEmpleado(forms.ModelForm):
     email = forms.EmailField(
