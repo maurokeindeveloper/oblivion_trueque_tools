@@ -1,12 +1,23 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.http import HttpResponse
 from ..models import Usuario
 from django.core.exceptions import ValidationError
 import datetime
 
-from django.contrib.auth import authenticate,get_user_model
 
+def check_cliente(user):
+    return {"ok":user.is_staff,
+            "return":HttpResponse("Debes ser cliente para acceder a esta página.")}
 
+def check_empleado(user):
+    return  {"ok":(not user.is_staff) or user.is_admin,
+            "return":HttpResponse("Debes ser empleado para acceder a esta página.")}
+    
+def check_administrador(user):
+    return{"ok":not user.is_admin,
+            "return":HttpResponse("Debes ser administrador para acceder a esta página.")}
+    
 def validate_age(value):
     birthdate = value
     day = int(birthdate.strftime("%d"))

@@ -1,15 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from django.contrib.auth import login, logout, authenticate
 from ..forms.producto_forms import CreacionDeProducto, FormularioDePregunta
+from ..forms.usuario_forms import check_cliente
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from ..models import Producto
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
+
 @login_required
 def crear_producto(request):
+    chk=check_cliente(request)
+    if chk["ok"]:
+        return chk["return"]
     if request.POST:
         form = CreacionDeProducto(request.POST, request.FILES)
         if form.is_valid():
@@ -70,8 +74,11 @@ def detalle_producto(request, id):
         {"producto": producto, "preguntas": preguntas, "formulario": form},
     )
 
-
+@login_required
 def preguntar(request, id):
+    chk=check_cliente(request.user)
+    if chk["ok"]:
+        return chk["return"]
     producto = get_object_or_404(Producto, id=id)
 
     pregunta = None
