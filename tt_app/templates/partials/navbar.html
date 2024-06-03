@@ -36,6 +36,9 @@
                         <li class="nav-item">
                             <a class="nav-link {%if url_actual == 'registro_empleado' %}active{%endif%}" href="{% url 'registro_empleado' %}">Registrar Empleado</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link {%if url_actual == 'listado_empleados' %}active{%endif%}" href="{% url 'listado_empleados' %}">Listado de Empleados</a>
+                        </li>
                         
                     {% else %}              {# PORCION PARA EMPLEADOS #}
                         <li class="nav-item">

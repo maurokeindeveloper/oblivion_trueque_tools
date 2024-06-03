@@ -19,4 +19,5 @@ urlpatterns = [
     path("trueques_entrantes/", trueque_view.trueques_entrantes, name="trueques_entrantes"),
     path("trueques_salientes/", trueque_view.trueques_salientes, name="trueques_salientes"),
     path("productos/id/<int:id>/preguntar", producto_view.preguntar, name="preguntar"),
+    path("listado_empleados/", usuario_view.listado_empleados, name="listado_empleados"),
 ]
