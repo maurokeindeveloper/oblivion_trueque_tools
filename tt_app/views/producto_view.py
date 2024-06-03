@@ -11,7 +11,7 @@ from django.urls import reverse
 
 @login_required
 def crear_producto(request):
-    chk=check_cliente(request)
+    chk=check_cliente(request.user)
     if chk["ok"]:
         return chk["return"]
     if request.POST:
