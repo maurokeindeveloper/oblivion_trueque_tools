@@ -84,7 +84,8 @@ def registro(request, *args, **kwargs):
     })
 
 def ingreso(request):
-    if request.user.is_authenticated:
+    user = request.user
+    if user.is_authenticated:
         return HttpResponse(f"Ya estás logeado como {user.email}.")
     
     parametros = {"form": IngresoForm(), # el form a mostrar definido en usuario_forms.py

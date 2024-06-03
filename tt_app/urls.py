@@ -12,20 +12,11 @@ urlpatterns = [
     path(
         "productos/id/<int:id>", producto_view.detalle_producto, name="detalle_producto"
     ),
-    path("productos/id/<int:id>/preguntar", producto_view.preguntar, name="preguntar"),
-    path("productos/id/<int:id>/responder", producto_view.responder, name="responder"),
     path(
         "registro_empleado/", usuario_view.registro_empleado, name="registro_empleado"
     ),
     path("gestion_trueque/", trueque_view.gestion_trueque, name="gestion_trueque"),
-    path(
-        "trueques_entrantes/",
-        trueque_view.trueques_entrantes,
-        name="trueques_entrantes",
-    ),
-    path(
-        "trueques_salientes/",
-        trueque_view.trueques_salientes,
-        name="trueques_salientes",
-    ),
+    path("trueques_entrantes/", trueque_view.trueques_entrantes, name="trueques_entrantes"),
+    path("trueques_salientes/", trueque_view.trueques_salientes, name="trueques_salientes"),
+    path("productos/id/<int:id>/preguntar", producto_view.preguntar, name="preguntar"),
 ]

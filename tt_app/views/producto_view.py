@@ -1,35 +1,26 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-<<<<<<< HEAD
-from django.contrib.auth import login, logout, authenticate
-from ..forms.producto_forms import CreacionDeProducto, PreguntaForm, RespuestaForm
-=======
 from ..forms.producto_forms import CreacionDeProducto, FormularioDePregunta
 from ..forms.usuario_forms import check_cliente
->>>>>>> 83c356f7ac3edb7066c2e9d9cd6656c9294a5c80
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from ..models import Producto, Pregunta, Respuesta
+from ..models import Producto
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
 
 @login_required
 def crear_producto(request):
-    chk=check_cliente(request)
+    chk=check_cliente(request.user)
     if chk["ok"]:
         return chk["return"]
     if request.POST:
         form = CreacionDeProducto(request.POST, request.FILES)
         if form.is_valid():
-            producto = form.save(commit=False)
-            producto.usuario = (
-                request.user
-            )  # Asignar el usuario autenticado al producto
-            producto.fecha_de_publicacion = (
-                timezone.now()
-            )  # Establecer la fecha de publicación antes de guardar
-            producto.save()  # guardamos el producto
+            producto = form.save(commit=False)  
+            producto.usuario = request.user # Asignar el usuario autenticado al producto
+            producto.fecha_de_publicacion = timezone.now()  # Establecer la fecha de publicación antes de guardar
+            producto.save() # guardamos el producto
             # Redirigir a la página de productos con mensaje de feedback
             return redirect(
                 reverse("productos")
@@ -37,16 +28,12 @@ def crear_producto(request):
             )
     else:
         form = CreacionDeProducto()
-    return render(
-        request,
-        "productos/crear_producto.html",
-        {  # enviamos los siguientes parámetros:
-            "form": form,  # el form definido en producto_forms.py
-            "titulo": "Publicar producto",  # el titulo del form
-            "boton": "Aceptar",  # el texto del botón de confirmación
-            "obligatorios": True,  # mostrar la advertencia de campos obligatorios o no
-        },
-    )
+    return render(request, "productos/crear_producto.html", {    # enviamos los siguientes parámetros:
+        "form": form,   # el form definido en producto_forms.py
+        "titulo": "Publicar producto", # el titulo del form
+        "boton": "Aceptar", # el texto del botón de confirmación
+        "obligatorios": True, # mostrar la advertencia de campos obligatorios o no
+    })
 
 
 def productos(request):
@@ -64,14 +51,10 @@ def buscar_productos(request):
             descripcion__icontains=cadena
         )
         productos = productos_nom.union(productos_desc).order_by("-promocionado")
-        return render(
-            request,
-            "productos/buscar_productos.html",
-            {
-                "productos": productos,
-                "cadena": cadena,
-            },
-        )
+        return render(request,"productos/buscar_productos.html",{
+            "productos": productos,
+            "cadena": cadena,
+        })
     else:
         return render(request, "productos/productos.html", {"productos": productos})
 
@@ -80,46 +63,37 @@ def detalle_producto(request, id):
     producto = get_object_or_404(Producto, id=id)
 
     # Lista de preguntas acerca del producto
-    preguntas = producto.preguntas.all().order_by("-fecha")
-    formularioPregunta = PreguntaForm()
-    context = {
-        "producto": producto,
-        "preguntas": preguntas,
-        "formularioPregunta": formularioPregunta,
-    }
-    # Formulario para las preguntas y respuestas de los clientes
-    return render(request, "productos/detalle_producto.html", context)
+    preguntas = producto.preguntas.order_by("-fecha")
 
-<<<<<<< HEAD
+    # Formulario para las preguntas de los clientes
+    form = FormularioDePregunta()
 
-@login_required
-def preguntar(request, producto_id):
-    producto = get_object_or_404(Producto, id=producto_id)
-    if request.method == "POST":
-        form = PreguntaForm(request.POST)
-        if form.is_valid():
-            pregunta = form.save(commit=False)
-            pregunta.producto = producto
-            pregunta.cliente = request.user
-            pregunta.save()
-    return redirect("detalle_producto", producto_id=producto.id)
-=======
+    return render(
+        request,
+        "productos/detalle_producto.html",
+        {"producto": producto, "preguntas": preguntas, "formulario": form},
+    )
+
 @login_required
 def preguntar(request, id):
     chk=check_cliente(request.user)
     if chk["ok"]:
         return chk["return"]
     producto = get_object_or_404(Producto, id=id)
->>>>>>> 83c356f7ac3edb7066c2e9d9cd6656c9294a5c80
 
-
-@login_required
-def responder(request, pregunta_id):
-    pregunta = get_object_or_404(Pregunta, id=pregunta_id)
-    if request.method == "POST":
-        form = RespuestaForm(request.POST)
-        if form.is_valid():
-            respuesta = form.save(commit=False)
-            respuesta.pregunta = pregunta
-            respuesta.save()
-    return redirect("detalle_producto", producto_id=pregunta.producto.id)
+    pregunta = None
+    # Se realiza una pregunta
+    form = FormularioDePregunta(data=request.POST)
+    if form.is_valid():
+        # Crea un objeto Pregunta sin guardarlo en la base de datos
+        pregunta = form.save(commit=False)
+        # Asigna el producto y el client a la pregunta - DEBEN SER LOS OBJETOS, NO LOS VALORES (O IDS)
+        pregunta.producto = producto
+        pregunta.cliente = producto.usuario
+        # Guarda la pregunta en la base de datos
+        pregunta.save()
+    return render(
+        request,
+        "productos/pregunta.html",
+        {"producto": producto, "form": form, "pregunta": pregunta},
+    )
