@@ -164,8 +164,19 @@ class Trueque(models.Model):
         estado_4 = 4, _("Cancelado por solicitante")
         estado_5 = 5, _("Cancelado por empleado")
         estado_6 = 6, _("Concretado")
+        estado_7 = 7, _("Pendiente")
+        estado_9 = 8, _("Cancelado por solicitado")
+        estado_10 = 10, _("Concreto otro  trueque")
 
     estado = models.IntegerField(choices=Estado.choices)
+
+    class OpcionRechazo(models.IntegerChoices):
+        rechazo_1 = 1, _("Producto ya no disponible")
+        rechazo_2 = 2, _("Falta de interes en el producto ofrecido")
+        rechazo_3 = 3, _("Falta de disponibilidad en horaria")
+        rechazo_4 = 4, _("Falta de disponibilidad en la fecha solicitada")
+        rechazo_5 = 5, _("Otros motivos")
+
     def __str__(self):
         p1 = self.producto_solicitante
         p2 = self.producto_solicitado

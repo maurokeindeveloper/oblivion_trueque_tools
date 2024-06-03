@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from ..forms.usuario_forms import RegistrarEmpleado,RegistrationForm,IngresoForm
-from django.contrib.auth.forms import AuthenticationForm
-from ..models import Usuario, Producto
+from ..forms.usuario_forms import check_cliente,check_empleado,check_administrador
+from ..models import Producto
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
@@ -19,14 +19,14 @@ def home(request):
 
 @login_required
 def registro_empleado(request):
-    if not request.user.is_admin:
-        return HttpResponse("No tienes permisos para entrar a esta página.")
+    chk=check_administrador(request.user)
+    if chk["ok"]:
+        return chk["return"]
     if request.POST:
         form = RegistrarEmpleado(request.POST)
         if form.is_valid():
             empleado = form.save(commit=False)
             empleado.is_staff = True  # Marcar al empleado como staff
-            
             empleado.first_name = form.cleaned_data.get("first_name").capitalize()
             empleado.last_name = form.cleaned_data.get("last_name").capitalize()
             empleado.set_password(
@@ -46,8 +46,7 @@ def registro_empleado(request):
         "obligatorios": True, # mostrar la advertencia de campos obligatorios o no
     })
 
-def registro(request, *args, **kwargs):    
-    user=request.user
+def registro(request, *args, **kwargs):   
     if request.user.is_authenticated:
         return HttpResponse(f"Ya estás registrado como {user.email}.")
     
@@ -85,8 +84,7 @@ def registro(request, *args, **kwargs):
     })
 
 def ingreso(request):
-    user = request.user
-    if user.is_authenticated:
+    if request.user.is_authenticated:
         return HttpResponse(f"Ya estás logeado como {user.email}.")
     
     parametros = {"form": IngresoForm(), # el form a mostrar definido en usuario_forms.py

@@ -1,5 +1,5 @@
-{#<!--ESTE PARTIAL RECIBE: "form","titulo", "boton" y "obligatorios" -->#}
-{#<!--Y SE USA EN crear_producto, registro_empleado, registro, ingreso -->#}
+{#<!--ESTE PARTIAL RECIBE: "form","titulo", "boton" y "obligatorios" como parámetro-->#}
+{#<!--Y SE USA EN crear_producto, registro_cliente, registro_empleado, registro_administrador(?), ingreso -->#}
 <div class="offset-lg-4 col-lg-4 ">
     <div class="card p-1">
         <form method="POST" class="card-body" enctype="multipart/form-data" novalidate>
@@ -15,7 +15,7 @@
                     {% endfor %}
                 {% endif %}
             {% endfor %}
-            <small class="text-danger fw-medium my-1"><p>{{ error }}</p></small> {#errores del formulario entero#}
+            {%if error%}<small class="text-danger fw-medium my-1"><p>{{error}}</p></small>{%endif%}     {#errores del formulario entero#}
             <button class="btn btn-primary fw-medium mt-2 w-100" type="submit">{{boton}}</button>
         </form>
     </div>
