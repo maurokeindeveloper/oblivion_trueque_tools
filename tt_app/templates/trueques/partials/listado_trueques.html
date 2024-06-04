@@ -1,18 +1,31 @@
 {% load static %}
+
 {% for trueque in trueques %}
-<div class="card mb-1">
-    <div class="ratio ratio-1x1">
-        <img src="" alt="xd">
-    </div>
-    <div class="card-body">
-        <div class="card-title">
-            {{trueque.producto_solicitante.nombre |capfirst}} por {{trueque.producto_solicitado.nombre |capfirst}}
+<div class="card d-flex mb-3">
+    <div class="row p-2" style="height:230px;">
+        <div class="container col-lg-5 d-flex mh-100 ">
+            <div class="d-flex flex-column align-items-center ">
+                <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class=" " style="height:200px;">
+                    <img src="{{trueque.producto_solicitante.imagen.url}}" alt="Tu producto" class="img-fluid rounded mh-100 ratio ratio-1x1">
+                </a>
+                <small class="text-muted">Tu producto</small>
+            </div>
+            <span class="material-symbols-outlined my-auto mx-2">sync_alt</span> {#icono#}
+            <div class="d-flex flex-column align-items-center ">
+                <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class=" " style="height:200px;">
+                    <img src="{{trueque.producto_solicitado.imagen.url}}" alt="Tu producto" class="img-fluid rounded mh-100 ratio ratio-1x1">
+                </a>
+                <small class="text-muted">{{trueque.producto_solicitado.usuario.first_name}}</small>
+            </div>
         </div>
-        <div class="card-text">
-
+        <div class="card-body col-lg-7 d-flex flex-column justify-content-around">
+            <h4 class="card-title flex-grow-1"><a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class="text-decoration-none text-reset">{{trueque.producto_solicitado.nombre|striptags|truncatechars:40}} por {{trueque.producto_solicitante.nombre|striptags|truncatechars:40}}?</a> </h4>
+            <p class="card-text text-decoration-none text-reset">
+                Quieres intercambiar tu {{trueque.producto_solicitante.nombre}} con {{trueque.producto_solicitado.usuario.first_name|upper}}  por su <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="text-decoration-none text-reset">{{trueque.producto_solicitado.nombre}}.</a>
+            </p>
+            <button class="btn btn-danger ms-auto" type="submit">Cancelar</button>
         </div>
     </div>
-
 </div>
 
 {%endfor%}
