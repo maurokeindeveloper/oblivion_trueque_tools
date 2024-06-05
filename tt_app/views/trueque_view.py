@@ -29,7 +29,7 @@ def aceptar_solicitud(request, trueque_id):
         # Obtener el objeto trueque
         trueque = get_object_or_404(Trueque, id=trueque_id)        
         # Actualizar el campo en la base de datos
-        trueque.estado = 2
+        trueque.estado = 3
         trueque.save()        
     return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se aceptó correctamente")
 
