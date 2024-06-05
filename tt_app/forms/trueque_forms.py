@@ -6,4 +6,4 @@ from django.core.exceptions import ValidationError
 import datetime
 from django.db import models
 
-class AceptarSolicitud(forms.ModelForm):
+# class AceptarSolicitud(forms.ModelForm):
