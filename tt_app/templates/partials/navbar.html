@@ -54,9 +54,10 @@
                             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark bg-dark" aria-labelledby="navbarDropdown"> {#Opciones del dropdown#}
                                 <li><a class="dropdown-item  {%if url_actual == '' %}active{%endif%}" href="#">Mis productos</a></li>
                                 <li><hr class="dropdown-divider"></li>                                      {# separador (barrita) #}
+                                <li><a class="dropdown-item {%if url_actual == 'trueques_entrantes' %}active{%endif%}" href="{% url 'trueques_entrantes' %}">Solicitudes recibidas</a></li>
                                 <li><a class="dropdown-item {%if url_actual == 'trueques_salientes' %}active{%endif%}" href="{% url 'trueques_salientes' %}">Solicitudes enviadas</a></li>
-                                <li><a class="dropdown-item {%if url_actual == 'trueques_entrantes' %}active{%endif%}" href="{% url 'trueques_entrantes' %}">Solicitudes entrantes</a></li>
-                                <li><a class="dropdown-item {%if url_actual == '' %}active{%endif%}" href="#">Trueques pendientes</a></li>
+                                <li><a class="dropdown-item {%if url_actual == 'trueques_por_concretar' %}active{%endif%}" href="{% url 'trueques_por_concretar' %}">Trueques por concretar</a></li>
+                                <li><a class="dropdown-item {%if url_actual == 'trueques_finalizados' %}active{%endif%}" href="{% url 'trueques_finalizados' %}">Trueques finalizados</a></li>
                             </ul>
                         </li>             
                     {% endif %}             {# PORCION PARA USUARIOS LOGEADOS(3 ROLES) #}
