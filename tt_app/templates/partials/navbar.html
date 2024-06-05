@@ -15,7 +15,7 @@
         
         <div class="collapse navbar-collapse col-lg-9" id="navbarSupportedContent">
             {# BARRA DE BUSQUEDA #}
-            <form class="d-flex my-2 ms-auto" action="{% url 'buscar_productos'%}" method="GET">
+            <form class="d-flex my-2 ms-auto" action="{% url 'buscar_productos'%}" method="GET">    
                 <input class="form-control me-2" type="search" placeholder="Buscar productos" name="cadena" aria-label="Search">
                 <button class="btn btn-primary" type="submit">Buscar</button>
             </form>
@@ -49,14 +49,15 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Mi espacio
+                                <span class="material-symbols-outlined">person</span> {#icono#}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark bg-dark" aria-labelledby="navbarDropdown"> {#Opciones del dropdown#}
                                 <li><a class="dropdown-item  {%if url_actual == '' %}active{%endif%}" href="#">Mis productos</a></li>
                                 <li><hr class="dropdown-divider"></li>                                      {# separador (barrita) #}
+                                <li><a class="dropdown-item {%if url_actual == 'trueques_entrantes' %}active{%endif%}" href="{% url 'trueques_entrantes' %}">Solicitudes recibidas</a></li>
                                 <li><a class="dropdown-item {%if url_actual == 'trueques_salientes' %}active{%endif%}" href="{% url 'trueques_salientes' %}">Solicitudes enviadas</a></li>
-                                <li><a class="dropdown-item {%if url_actual == 'trueques_entrantes' %}active{%endif%}" href="{% url 'trueques_entrantes' %}">Solicitudes entrantes</a></li>
-                                <li><a class="dropdown-item {%if url_actual == '' %}active{%endif%}" href="#">Trueques pendientes</a></li>
+                                <li><a class="dropdown-item {%if url_actual == 'trueques_por_concretar' %}active{%endif%}" href="{% url 'trueques_por_concretar' %}">Trueques por concretar</a></li>
+                                <li><a class="dropdown-item {%if url_actual == 'trueques_finalizados' %}active{%endif%}" href="{% url 'trueques_finalizados' %}">Trueques finalizados</a></li>
                             </ul>
                         </li>             
                     {% endif %}             {# PORCION PARA USUARIOS LOGEADOS(3 ROLES) #}

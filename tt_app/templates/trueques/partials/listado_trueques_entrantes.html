@@ -48,8 +48,12 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center mt-5" style="gap: 8px;">
-                    <button class="btn btn-success">Aceptar Trueque</button>
-                    <button class="btn btn-danger">Rechazar Trueque</button>
+                    <form method="POST" action="{% url 'aceptar-solicitud' trueque.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-success" type="submit">Aceptar Trueque</button>
+                    </form>
+                        <button class="btn btn-danger">Rechazar Trueque</button>
+                    </form>
                 </div>
                     
             </div>
