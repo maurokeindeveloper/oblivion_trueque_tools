@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div id="mensaje-feedback" class="alert alert-success" style="display: none;"></div>
 <main class="container my-5">
     <section class="card card-body">
         <strong class="text-center"><p class="display-5">Bienvenido a TruequeTools</p> <p class="display-6">la plataforma para intercambios presenciales</p></strong>
@@ -77,23 +76,4 @@
         
     </section>
 </main>
-<script>
-    // Función para mostrar el mensaje de feedback
-    function mostrarMensajeFeedback(mensaje) {
-        var mensajeElemento = document.getElementById("mensaje-feedback");
-        mensajeElemento.innerText = mensaje;
-        mensajeElemento.style.display = "block";
-        // Ocultar el mensaje después de 3 segundos (3000 milisegundos)
-        setTimeout(function() {
-            mensajeElemento.style.display = "none";
-        }, 3000);
-    }
-
-    // Obtener el mensaje de feedback de la URL (si lo hay)
-    var parametrosURL = new URLSearchParams(window.location.search);
-    var mensaje = parametrosURL.get("mensaje");
-    if (mensaje) {
-        mostrarMensajeFeedback(mensaje);
-    }
-</script>
 {% endblock %}

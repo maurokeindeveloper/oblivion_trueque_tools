@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from ..forms.usuario_forms import check_cliente,check_empleado
 from ..models import Trueque
 
@@ -21,6 +22,16 @@ def trueques_entrantes(request):
     trueques = Trueque.objects.exclude(activo=False).filter(producto_solicitado__usuario=usuario , estado=1)
 
     return render(request, "trueques/trueques_entrantes.html", {"trueques": trueques})
+
+def aceptar_solicitud(request, trueque_id):
+    if request.POST:
+        # Obtener el objeto trueque
+        trueque = get_object_or_404(Trueque, id=trueque_id)        
+        # Actualizar el campo en la base de datos
+        trueque.estado = 2
+        trueque.save()        
+    return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se aceptó correctamente")
+
 
 @login_required
 def trueques_salientes(request):

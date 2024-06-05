@@ -172,10 +172,12 @@ class Trueque(models.Model):
 
     class OpcionRechazo(models.IntegerChoices):
         rechazo_1 = 1, _("Producto ya no disponible")
-        rechazo_2 = 2, _("Falta de interes en el producto ofrecido")
-        rechazo_3 = 3, _("Falta de disponibilidad en horaria")
+        rechazo_2 = 2, _("Falta de interés en el producto ofrecido")
+        rechazo_3 = 3, _("Falta de disponibilidad horaria")
         rechazo_4 = 4, _("Falta de disponibilidad en la fecha solicitada")
         rechazo_5 = 5, _("Otros motivos")
+
+    opcion_rechazo = models.IntegerField(choices=OpcionRechazo.choices, null=True)
 
     def __str__(self):
         p1 = self.producto_solicitante

@@ -14,11 +14,33 @@
     {% include 'partials/navbar.html' %}
 
     <main class="container my-5">
+        <div id="mensaje-feedback" class="alert alert-success" style="display: none;"></div>
         {% block content %}
         {% endblock %}
     </main>
+    <footer class="align-items-end">
+        <small><a href=""class="text-decoration-none"><p class="text-end text-muted me-4 fw-light ">Oblivion - 2024</p></a></small>
+    </footer>
+
+    <!-- Script JavaScript -->
+    <script>
+        // Función para mostrar el mensaje de feedback
+        function mostrarMensajeFeedback(mensaje) {
+            var mensajeElemento = document.getElementById("mensaje-feedback");
+            mensajeElemento.innerText = mensaje;
+            mensajeElemento.style.display = "block";
+            // Ocultar el mensaje después de 3 segundos (3000 milisegundos)
+            setTimeout(function() {
+                mensajeElemento.style.display = "none";
+            }, 3000);
+        }
+
+        // Obtener el mensaje de feedback de la URL (si lo hay)
+        var parametrosURL = new URLSearchParams(window.location.search);
+        var mensaje = parametrosURL.get("mensaje");
+        if (mensaje) {
+            mostrarMensajeFeedback(mensaje);
+        }
+    </script>
 </body>
-<footer class="align-items-end">
-    <small><a href=""class="text-decoration-none"><p class="text-end text-muted me-4 fw-light ">Oblivion - 2024</p></a></small>
-</footer>
 </html>

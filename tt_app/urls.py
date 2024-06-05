@@ -17,6 +17,7 @@ urlpatterns = [
     ),
     path("gestion_trueque/", trueque_view.gestion_trueque, name="gestion_trueque"),
     path("trueques_entrantes/", trueque_view.trueques_entrantes, name="trueques_entrantes"),
+    path('aceptar-solicitud/<int:trueque_id>/', trueque_view.aceptar_solicitud, name='aceptar-solicitud'),
     path("trueques_salientes/", trueque_view.trueques_salientes, name="trueques_salientes"),
     path("productos/id/<int:id>/preguntar", producto_view.preguntar, name="preguntar"),
 ]
