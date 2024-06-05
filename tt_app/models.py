@@ -3,6 +3,7 @@ from django.db.models.fields.files import ImageField
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from datetime import datetime 
 
 
 # Create your models here.
@@ -133,18 +134,19 @@ class Producto(models.Model):
 # Modelo de trueque
 class Trueque(models.Model):
     producto_solicitante = models.ForeignKey(
-        Producto, on_delete=models.CASCADE, related_name="trueque"
+        Producto, on_delete=models.CASCADE, related_name="trueque", null=False, blank=False
     )
     producto_solicitado = models.ForeignKey(
-        Producto, on_delete=models.CASCADE, related_name="trueque_solicitado"
+        Producto, on_delete=models.CASCADE, related_name="trueque_solicitado", null=False, blank=False
     )
     sucursal = models.ForeignKey(
-        Sucursal, on_delete=models.CASCADE, related_name="trueques"
+        Sucursal, on_delete=models.CASCADE, related_name="trueques", null=False, blank=False
     )
-    activo = models.BooleanField()
-    fecha = models.DateTimeField(auto_now=True)
+    activo = models.BooleanField(default=True)
+    fecha = models.DateField(auto_now=True)
+    fecha_programada = models.DateField(default="2025-01-01", blank=True)
 
-    class Rango(models.IntegerChoices):
+    class Rango_Horario(models.IntegerChoices):
         rango_1 = 1, _("Turno Mañana: 8 AM")
         rango_2 = 2, _("Turno Mañana: 9 AM")
         rango_3 = 3, _("Turno Mañana: 10 AM")
@@ -155,27 +157,29 @@ class Trueque(models.Model):
         rango_8 = 8, _("Turno Tarde: 6 PM")
         rango_9 = 9, _("Turno Tarde: 7 PM")
 
-    rango_horario = models.IntegerField(choices=Rango.choices)
+    horario = models.IntegerField(choices=Rango_Horario.choices, blank=False, null=False, default=1)
 
     class Estado(models.IntegerChoices):
         estado_1 = 1, _("Solicitado")
-        estado_2 = 2, _("Aceptado")
-        estado_3 = 3, _("Rechazado")
-        estado_4 = 4, _("Cancelado por solicitante")
-        estado_5 = 5, _("Cancelado por empleado")
-        estado_6 = 6, _("Concretado")
-        estado_7 = 7, _("Pendiente")
-        estado_9 = 8, _("Cancelado por solicitado")
-        estado_10 = 10, _("Concreto otro  trueque")
+        estado_2 = 2, _("Pendiente")
+        estado_3 = 3, _("Aceptado")
+        estado_4 = 4, _("Concretado")
+        estado_5 = 5, _("Rechazado")
+        estado_6 = 6, _("Cancelado por empleado")
+        estado_7 = 7, _("Cancelado por solicitante")
+        estado_8 = 8, _("Cancelado por solicitado")
+        estado_9 = 9, _("Concretó otro trueque")
 
-    estado = models.IntegerField(choices=Estado.choices)
+    estado = models.IntegerField(choices=Estado.choices,default=1)
 
     class OpcionRechazo(models.IntegerChoices):
         rechazo_1 = 1, _("Producto ya no disponible")
         rechazo_2 = 2, _("Falta de interes en el producto ofrecido")
-        rechazo_3 = 3, _("Falta de disponibilidad en horaria")
+        rechazo_3 = 3, _("Falta de disponibilidad en el horario solicitado")
         rechazo_4 = 4, _("Falta de disponibilidad en la fecha solicitada")
         rechazo_5 = 5, _("Otros motivos")
+
+    motivo_rechazo = models.IntegerField(choices=OpcionRechazo.choices, blank=True, null=True, default=None)
 
     def __str__(self):
         p1 = self.producto_solicitante
