@@ -1,0 +1,12 @@
+<div class="container mt-2">
+    <div class="row">
+        <div class="card card-body">
+            <h4 class="mt-4">Respondé la pregunta</h4>
+            <form action="{% url 'responder' pregunta.id %}" method="POST"  class="mt-2">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <p><input type="submit" value="Responder consulta"></p>
+            </form>
+        </div>
+    </div>
+</div>
