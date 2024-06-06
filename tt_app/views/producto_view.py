@@ -20,6 +20,7 @@ def crear_producto(request):
             producto = form.save(commit=False)  
             producto.usuario = request.user # Asignar el usuario autenticado al producto
             producto.fecha_de_publicacion = timezone.now()  # Establecer la fecha de publicación antes de guardar
+            producto.nombre = producto.nombre.capitalize()
             producto.save() # guardamos el producto
             # Redirigir a la página de productos con mensaje de feedback
             return redirect(
