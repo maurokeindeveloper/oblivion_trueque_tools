@@ -1,6 +1,12 @@
-<h2>Consultá sobre este producto</h2>
-<form action="{% url 'preguntar' producto.id %}" method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <p><input type="submit" value="Realizar consulta"></p>
-</form>
+<div class="container mt-5">
+    <div class="row">
+        <div class="card card-body">
+            <h4 class="mt-4">Consultá sobre este producto</h4>
+            <form action="{% url 'preguntar' producto.id %}" method="POST"  class="mt-2">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <p><input type="submit" value="Enviar consulta"></p>
+            </form>
+        </div>
+    </div>
+</div>

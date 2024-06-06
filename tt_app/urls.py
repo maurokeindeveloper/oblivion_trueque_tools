@@ -19,6 +19,6 @@ urlpatterns = [
     path("trueques_por_concretar/", trueque_view.trueques_por_concretar, name="trueques_por_concretar"),
     path("trueques_finalizados/", trueque_view.trueques_finalizados, name="trueques_finalizados"),
     path("productos/id/<int:id>/preguntar", producto_view.preguntar, name="preguntar"),
-    path("trueques_por_concretar/", trueque_view.trueques_por_concretar, name="trueques_por_concretar"),
-    path("trueques_finalizados/", trueque_view.trueques_finalizados, name="trueques_finalizados")
+    path("productos/id/<int:id>/responder", producto_view.responder, name="responder"),
+    path("filtrar_productos/<int:categoria>",producto_view.filtrar_productos,name="filtrar_productos"),
 ]

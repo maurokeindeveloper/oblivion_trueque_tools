@@ -44,21 +44,32 @@
                 <p><small class="text-muted fw-light"> Publicado por: {{producto.usuario.first_name}}</small></p>
                 <p><small class="text-muted fw-light"> Fecha de publicación: {{producto.fecha_de_publicacion|date:'l j \d\e F \d\e Y'}} </small></p>
             </div>
-            {% include 'productos/partials/formulario_de_pregunta.html' %}
+            {% if user.is_authenticated %}
+                {% if not user == producto.usuario %}
+                    {% include 'productos/partials/formulario_de_pregunta.html' %}
+                {% endif %}
+            {% endif %}
             {% with preguntas.count as total_de_preguntas %}
-                <h2>
+                <h6 class="mt-4">
                     {{ total_de_preguntas }} pregunta{{ total_de_preguntas|pluralize }}
-                </h2>
+                </h6>
             {% endwith %}
             {% for pregunta in preguntas.all %}
-                <div class="preguntas">
+                <div class="preguntas card card-body">
                     <p class="info">
-                        Pregunta {{ forloop.counter }} de {{ pregunta.cliente.first_name }} {{ pregunta.fecha }}
+                        <strong>Pregunta de {{ pregunta.cliente.first_name }} - {{ pregunta.fecha }}</strong>
                     </p>
                     {{ pregunta.texto|linebreaks }}
+                    {% if pregunta.respuesta %}
+                        <div class="mx-4">{{ pregunta.respuesta.texto }}</div>
+                    {% else %}
+                        {% if user == producto.usuario %}
+                            {% include 'productos/partials/formulario_de_respuesta.html' %}
+                        {% endif %}
+                    {% endif %}
                 </div>
                 {% empty %}
-                    <p>No hay preguntas.</p>
+                    <p class="text-muted">No hay preguntas</p>
             {% endfor %}
 
         </div>

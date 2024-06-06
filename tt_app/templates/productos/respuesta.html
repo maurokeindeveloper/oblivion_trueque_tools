@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Respondé la consulta{% endblock %}
+
+{% block content %}
+    {% if enviada %}
+        <div class="container">
+            <div class="row">
+                <div class="card card-body">
+                    <h4 class="display-6">Ya enviamos tu respuesta al interesado en tu producto</h4>
+                    <p><a href="{%url 'home'%}">Volver al inicio</a></p>
+                </div>
+            </div>
+        </div>
+        {% else %}
+            <div class="container">
+                <div class="row">
+                    <div class="card card-body">
+                        <strong>Pregunta de {{pregunta.cliente.first_name}}:</strong> {{ pregunta.texto }}
+                        {% include 'productos/partials/formulario_de_respuesta.html' %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+{% endblock %}
