@@ -58,9 +58,14 @@
                     <small class="fw-light"><b>Fecha</b>: {{trueque.fecha_programada|date:'l j \d\e F, Y'|capfirst}}</small>
                     <small class="fw-light"><b>Horario</b>: {{trueque.get_horario_display}}</small>
                 </div>
-                <div class="mt-auto">
+                {%if trueque.producto_solicitante.usuario == user%}
+                <form method="POST" action="{% url 'cancelar_trueque' id=trueque.id estado=7 ret='p_c'%}" class="mt-auto">
+                {%else%}
+                <form method="POST" action="{% url 'cancelar_trueque' id=trueque.id estado=8 ret='p_c'%}" class="mt-auto">
+                {%endif%}
+                    {% csrf_token %}
                     <button class="btn btn-danger ms-auto " type="submit">Cancelar</button>
-                </div>
+                </form>
             </span>
         </div>
     </div>
