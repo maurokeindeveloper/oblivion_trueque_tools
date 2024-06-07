@@ -3,8 +3,9 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from ..forms.trueque_forms import SolicitarForm
 from ..forms.usuario_forms import check_cliente,check_empleado
-from ..models import Trueque
+from ..models import Producto, Trueque
 
 @login_required
 def gestion_trueque(request):
@@ -74,3 +75,30 @@ def trueques_finalizados(request):
         return chk["return"]
     trueques = Trueque.objects.exclude(activo=False).filter(Q(producto_solicitante__usuario=usuario) | Q(producto_solicitado__usuario=usuario), estado__gte=4).order_by('-fecha')
     return render(request, "trueques/trueques_finalizados.html", {"trueques": trueques})
+
+@login_required
+def solicitar(request,id):
+    usuario = request.user
+    chk=check_cliente(usuario)
+    if chk["ok"]:
+        return chk["return"]
+    
+    producto_solicitado =  get_object_or_404(Producto,id=id)
+    if request.POST:
+        form = SolicitarForm(request.POST,user=request.user,id=id)
+        if form.is_valid():
+            trueque = form.save(commit=False)
+            trueque.producto_solicitado = producto_solicitado
+            trueque.sucursal = producto_solicitado.sucursal
+            trueque.save()
+            return redirect(
+                reverse("trueques_salientes") + "?mensaje=Se envió la solicitud."
+            )
+    else:
+        form = SolicitarForm(user=request.user,id=id)
+    return render(request, "trueques/solicitar.html", {   # enviamos los siguientes parámetros:
+        "form": form,                           # el form definido en usuario_forms.py
+        "titulo":"Solicitar intercambio",                 # el titulo del form
+        "boton":"Solicitar",                  # el texto del botón de confirmación
+        "obligatorios": False, # mostrar la advertencia de campos obligatorios o no
+    })

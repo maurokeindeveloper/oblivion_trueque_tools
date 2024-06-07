@@ -4,43 +4,49 @@
 {% block content %}
 <div class="card ">
 {% if producto.activo %}
-<span class="d-flex align-items-center m-4">
-    <h3 class="card-title">{{producto.nombre|capfirst}}</h3> 
-    <div class="mx-2">
-        <a href="#" class="badge badge-primary bg-primary text-decoration-none text-white">Categoria {{producto.get_categoria_display}}</a>{#LINK A BUSQUEDA FILTRADA #}
 
-        {% if producto.promocionado %}
+<div class="row m-4">
+    <span class="d-flex align-items-center mb-3">
+        <h3 class="">{{producto.nombre|capfirst}}</h3> 
+        <div class="mx-2">
+            <a href="#" class="badge badge-primary bg-primary text-decoration-none text-white">Categoria {{producto.get_categoria_display}}</a>{#LINK A BUSQUEDA FILTRADA #}
 
-            <a href="#" class="badge badge-primary bg-warning text-decoration-none text-dark">Promocionado</a>{#LINK A HU PROMOCIONAR UN PRODUCTO #}
-        {% else %}
+            {% if producto.promocionado %}
 
-            <a href="#" class="badge badge-secondary bg-secondary text-decoration-none text-white">No promocionado</a>{#LINK A HU PROMOCIONAR UN PRODUCTO #}
-        {% endif %}
-    </div>
-</span>
-<div class="row mx-4">
-    <div class="col-5 p-0">
-        <div class="me-auto">
-        {% if producto.imagen %}
-        <img src="{{producto.imagen.url}}" alt="Imagen del producto" class="img-fluid border border-2 " />
-        {% else %}
-        <img src="{%static 'images/default-image-missing.png'%}" alt="El producto no tiene imagenes" class="img-thumbnail" />
-        {% endif %}
+                <a href="#" class="badge badge-primary bg-warning text-decoration-none text-dark">Promocionado</a>{#LINK A HU PROMOCIONAR UN PRODUCTO #}
+            {% else %}
+
+                <a href="#" class="badge badge-secondary bg-secondary text-decoration-none text-white">No promocionado</a>{#LINK A HU PROMOCIONAR UN PRODUCTO #}
+            {% endif %}
         </div>
-        
+    </span>
+    <div class="col-5 ">
+        <div class="d-flex align-items-center justify-content-center w-100">
+            {% if producto.imagen %}
+            <img src="{{producto.imagen.url}}" alt="Imagen del producto" class="img-fluid border border-2 w-100" />
+            {% else %}
+            <img src="{%static 'images/default-image-missing.png'%}" alt="El producto no tiene imagenes" class="img-thumbnail" />
+            {% endif %}
+        </div>
     </div>
-    <div class="col-7 d-flex flex-column">
-        <p >{{producto.descripcion|capfirst}}</p>
+    <div class="col-7 d-flex flex-column ps-4">
+        <p class="mt-1">{{producto.descripcion|capfirst}}</p>
         <span class="d-flex mt-auto">
             <div class="text-muted fw-light">
                 <small>Sucursal del intercambio: {{producto.sucursal.ciudad}} - {{producto.sucursal.direccion}}</small><br>
                 <small>Publicado por: {{producto.usuario.first_name}}</small><br>
                 <small>Fecha de publicación: {{producto.fecha_de_publicacion|date:'l j \d\e F \d\e Y'|capfirst}} </small><br>
             </div>
-            <form method="POST" action="{% url 'solicitar' id=producto.id %}" class="my-auto ms-auto">
-                {% csrf_token %}
-                <button class="btn btn-primary text-dark " type="submit">Solicitar intercambio</button>
-            </form>
+            {%if producto.usuario != user%}
+            {%if producto.disponible%}
+            {%if producto.reservado%}
+            <button type="button" class="btn btn-secondary" disabled>Solicitar intercambio</button>
+            <p>Este producto está reservado para un trueque de momento.</p>
+            {%else%}
+            <a href="{% url 'solicitar' id=producto.id %}" class="btn btn-primary btn-lg mt-auto ms-auto">Solicitar intercambio</a>
+            {%endif%}
+            {%endif%}
+            {%endif%}
         </span>
     </div>
     {% if user.is_authenticated %}

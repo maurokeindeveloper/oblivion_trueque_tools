@@ -20,7 +20,7 @@
           <div class="col-lg d-flex">
             <div class="card-body d-flex flex-column justify-content-around">
                 <div class="d-flex">
-                    <h4 class="card-title flex-grow-1"><a href="{% url 'detalle_producto' producto.id%}" class=" text-decoration-none text-reset">{{producto.nombre|striptags|truncatechars:40}}</a></h4>
+                    <h4 class="card-title flex-grow-1"><a href="{% url 'detalle_producto' producto.id%}" class=" text-decoration-none text-reset">{{producto.nombre|striptags|truncatechars:40|capfirst}}</a></h4>
                     <span class="align-self-stretch">
                         {% if producto.promocionado %}
                         <a href="#" class="badge badge-primary bg-warning text-decoration-none text-dark">Promocionado</a>{# LINK A HU PROMOCIONAR UN PRODUCTO #}
@@ -28,7 +28,7 @@
                         <a class="badge badge-primary bg-primary text-decoration-none text-white">Categoria {{producto.get_categoria_display}}</a>  
                     </span> 
                 </div>
-                <div><p class="card-text">{{producto.descripcion|striptags|truncatechars:90}}</p></div>
+                <div><p class="card-text">{{producto.descripcion|striptags|truncatechars:90|capfirst}}</p></div>
                 <div><p class="card-text"><small class="text-body-secondary">{{producto.fecha_de_publicacion|date:'d M Y'|upper}}</small></p></div>
             </div>
           </div>
