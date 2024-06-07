@@ -1,62 +1,116 @@
 {% load static %}
-{% for trueque in trueques %}
-    <div class="card-group"> 
-            <div class="row mh-100">                 
 
-                <div class="d-flex">
-                    <div class="align-self-stretch">
-                        <span class="badge badge-primary bg-warning">
-                            <a href="#" class="text-decoration-none text-dark">Estado: {{trueque.get_estado_display}}</a>    {# AGREGAR LINK A HU PROMOCIONAR UN PRODUCTO #}
-                        </span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">                            
-                        <h3>
-                            Producto Solicitante: {{trueque.producto_solicitante.nombre}}
-                        </h3>
-                        <div>
-                            {% if trueque.producto_solicitante.imagen %}
-                                <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}">
-                                    <img src="{{trueque.producto_solicitante.imagen.url}}" alt="Imagen del producto" class="img-fluid border border-2" />
-                                </a>
-                            {% else %}
-                                <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}">
-                                    <img src="{%static 'images/default-image-missing.png'%}" alt="El producto no tiene imagenes" class="img-thumbnail" />
-                                </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <h5>{{trueque.producto_solicitante.usuario.first_name}} quiere intercambiar contigo</h4>
-                    </div>
-                    <div class="col-md-4">
-                        <h3>
-                            Producto Solcitado: {{trueque.producto_solicitado.nombre}}
-                        </h3>
-                        <div>
-                            {% if trueque.producto_solicitado.imagen %}
-                                <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}">
-                                    <img src="{{trueque.producto_solicitado.imagen.url}}" alt="Imagen del producto" class="img-fluid border border-2" />
-                                </a>
-                            {% else %}
-                                <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}"></a>
-                                    <img src="{%static 'images/default-image-missing.png'%}" alt="El producto no tiene imagenes" class="img-thumbnail" />
-                                </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-center mt-5" style="gap: 8px;">
-                    <form method="POST" action="{% url 'aceptar-solicitud' trueque.id %}">
-                        {% csrf_token %}
-                        <button class="btn btn-success" type="submit">Aceptar Trueque</button>
-                    </form>
-                        <button class="btn btn-danger">Rechazar Trueque</button>
-                    </form>
-                </div>
-                    
+{% for trueque in trueques %}
+{%if trueque.estado == 1%}  {#solicitado#} 
+<div class="card d-flex mb-3 ms-4 ">
+{%elif trueque.estado == 2%}  {#pendiente#} 
+<div class="card d-flex mb-3 ms-4 border border-2 bg-warning border-warning bg-opacity-10">
+{%endif%}
+    <div class="row p-2" style="height:230px;">
+        <div class="container col-lg-5 d-flex m-auto mh-100">
+            <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center ">
+                <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class="d-flex" style="height:190px;">
+                    <img src="{{trueque.producto_solicitado.imagen.url}}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border  
+                    {%if trueque.estado == 1%}{#solicitado#}border-dark
+                    {%elif trueque.estado == 2%}{#pendiente#}border-warning
+                    {%endif%}
+                    ">
+                </a>
+                <small class="text-muted">Tu producto</small>
+            </div>
+            <div class="col-lg-2 d-flex my-auto">{#icono#}
+                {%if trueque.estado == 2 %}
+                <span class="material-symbols-outlined mx-auto text-warning">sync_problem</span>
+                {%elif trueque.estado > 4%}
+                <span class="material-symbols-outlined mx-auto text-danger">sync_disabled</span>
+                {%else%}
+                <span class="material-symbols-outlined mx-auto 
+                {%if trueque.estado == 4 %}text-success{%endif%}">sync</span>
+                {%endif%}
+            </div>
+            <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center">
+                <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="d-flex" style="height:190px;">
+                    <img src="{{trueque.producto_solicitante.imagen.url}}" alt="{{trueque.producto_solicitante.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border  
+                    {%if trueque.estado == 1%}{#solicitado#}border-dark
+                    {%elif trueque.estado == 2%}{#pendiente#}border-warning
+                    {%endif%}
+                    ">
+                </a>
+                <small class="text-muted">{{trueque.producto_solicitante.usuario.first_name}}</small>
             </div>
         </div>
+        <div class="card-body col-lg-7 d-flex flex-column justify-content-around">
+            <h4 class="card-title"><a href="#" class="text-decoration-none text-reset">Intercambiar {{trueque.producto_solicitante.nombre|striptags|truncatechars:40}} por {{trueque.producto_solicitado.nombre|striptags|truncatechars:40}}</a> </h4>
+
+            {%if trueque.estado == 1%}
+            <p class="card-title text-muted">SOLICITADO: {{trueque.producto_solicitante.usuario.first_name|title}} está esperando tu respuesta.</p>
+            {%elif trueque.estado == 2%} 
+            <p class="card-title text-warning fw-medium">PENDIENTE: Aceptaste otro intercambio por tu {{trueque.producto_solicitado.nombre|capfirst}}. Si cancelas el <a class="text-reset" href="{%url 'trueques_por_concretar'%}">intercambio vigente</a> podrás aceptar esta solicitud.</p>
+            {%endif%}
+
+            <p class="card-text">
+                Recibiste una solicitud de {{trueque.producto_solicitante.usuario.first_name|title}} para intercambiar su <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="text-decoration-none text-reset">{{trueque.producto_solicitante.nombre}}</a> por tu {{trueque.producto_solicitado.nombre}}.
+            </p>
+            <span class="card-text d-flex">
+                <div class="d-flex flex-column me-auto">
+                    <small class="fw-light"><b>Sucursal</b>: {{trueque.sucursal}}</small>
+                    <small class="fw-light"><b>Fecha</b>: {{trueque.fecha_programada|date:'l j \d\e F, Y'|capfirst}}</small>
+                    <small class="fw-light"><b>Horario</b>: {{trueque.get_horario_display}}</small>
+                </div>
+                <div class="d-flex align-items-end justify-content-end">
+                    
+                {%if trueque.estado != 2%}
+                <form method="POST" action="{% url 'aceptar-solicitud' trueque.id %}" class="">
+                    {% csrf_token %}
+                    <button class="btn btn-success " type="submit">Aceptar</button>
+                </form>
+                {%endif%}
+                <div class="btn-group ms-2 ">
+                    <form type="button" class="btn btn-danger" class="d-flex " method="POST" action="{% url 'rechazar-solicitud' trueque_id=trueque.id  %}">{#motivo_rechazo=2#}
+                        {% csrf_token %}
+                        <button  class="dropdown-item" type="submit">Rechazar</button>
+                    </form>
+                    <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="visually-hidden">Motivos</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end bg-danger">
+                        <li>
+                            <form class="d-flex w-100 h-100" method="POST" action="{% url 'rechazar-solicitud' trueque_id=trueque.id%}">
+                                {% csrf_token %}
+                                <button class="dropdown-item text-white w-100 h-100" type="submit">Producto ya no disponible</button>
+                            </form>
+                        </li>
+                        <li>
+                            <form class="d-flex w-100 h-100" method="POST" action="{% url 'rechazar-solicitud' trueque_id=trueque.id%}">
+                                {% csrf_token %}
+                                <button class="dropdown-item text-white w-100 h-100" type="submit">Falta de interés en el producto ofrecido</button>
+                            </form>
+                        </li>
+                        <li>
+                            <form class="d-flex w-100 h-100" method="POST" action="{% url 'rechazar-solicitud' trueque_id=trueque.id%}">
+                                {% csrf_token %}
+                                <button class="dropdown-item text-white" type="submit">Falta de disponibilidad en el horario solicitado</button>
+                            </form>
+                        </li>
+                        <li>
+                            <form class="d-flex w-100 h-100" method="POST" action="{% url 'rechazar-solicitud' trueque_id=trueque.id%}">
+                                {% csrf_token %}
+                                <button class="dropdown-item text-white" type="submit">Falta de disponibilidad en la fecha solicitada</button>
+                            </form>
+                        </li>
+                        <li>
+                            <form class="d-flex w-100 h-100" method="POST" action="{% url 'rechazar-solicitud' trueque_id=trueque.id%}">
+                                {% csrf_token %}
+                                <button class="dropdown-item text-white" type="submit">Otros motivos</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                </div>
+            </span>
+        </div>
     </div>
-{% endfor %}
+</div>
+</div>
+
+{%endfor%}
