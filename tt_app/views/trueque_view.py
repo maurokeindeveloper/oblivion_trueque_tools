@@ -26,10 +26,19 @@ def trueques_entrantes(request):
 
 def aceptar_solicitud(request, trueque_id):
     if request.POST:
+
         # Obtener el objeto trueque
-        trueque = get_object_or_404(Trueque, id=trueque_id)        
-        # Actualizar el campo en la base de datos
+        trueque = get_object_or_404(Trueque, id=trueque_id)   
+
+        #trueques del solicitado (el que acepta la solicutud) que esten en estado solicitado para asignar en pendiente
+        trueques = Trueque.objects.exclude(activo=False).filter(producto_solicitado=trueque.producto_solicitante, estado=1)     
+        for tr in trueques:
+            tr.estado = 2 #pendiente
+
+        # Actualizar el trueque en la base de datos
         trueque.estado = 3
+
+
         trueque.save()        
     return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se aceptó correctamente")
 
