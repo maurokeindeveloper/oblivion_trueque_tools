@@ -2,9 +2,9 @@
 
 {% for trueque in trueques %}
 {%if trueque.estado == 1%}  {#solicitado#} 
-<div class="card d-flex mb-3 ms-4">
+<div class="card d-flex mb-3 ms-4 ">
 {%elif trueque.estado == 2%}  {#pendiente#} 
-<div class="card d-flex mb-3 ms-4 border border-2 border-warning opacity-75">
+<div class="card d-flex mb-3 ms-4 border border-2 bg-warning border-warning bg-opacity-10">
 {%endif%}
     <div class="row p-2" style="height:230px;">
         <div class="container col-lg-5 d-flex m-auto mh-100">
@@ -45,7 +45,7 @@
             {%if trueque.estado == 1%}
             <p class="card-title text-muted">SOLICITADO: Esperando respuesta del solicitado.</p>
             {%elif trueque.estado == 2%} 
-            <p class="card-title text-warning">PENDIENTE: El producto al que solicitaste está considerando otro intercambio.</p>
+            <p class="card-title text-warning fw-medium">PENDIENTE: El producto al que solicitaste está considerando otro intercambio.</p>
             {%endif%}
 
             <p class="card-text">
@@ -57,9 +57,10 @@
                     <small class="fw-light"><b>Fecha</b>: {{trueque.fecha_programada|date:'l j \d\e F, Y'|capfirst}}</small>
                     <small class="fw-light"><b>Horario</b>: {{trueque.get_horario_display}}</small>
                 </div>
-                <div class="mt-auto">
+                <form method="POST" action="{% url 'cancelar_trueque' id=trueque.id estado=7 ret='s'%}" class="mt-auto">
+                    {% csrf_token %}
                     <button class="btn btn-danger ms-auto " type="submit">Cancelar</button>
-                </div>
+                </form>
             </span>
         </div>
     </div>

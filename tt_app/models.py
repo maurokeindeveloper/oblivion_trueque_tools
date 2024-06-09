@@ -118,7 +118,7 @@ class Producto(models.Model):
     imagen = ImageField(blank=True, upload_to="media/")
     promocionado = models.BooleanField(default=False)
     reservado = models.BooleanField(default=False)
-    disponible = models.BooleanField(default=False)
+    disponible = models.BooleanField(default=True)
     activo = models.BooleanField(default=True)
     usuario = models.ForeignKey(
         Usuario, on_delete=models.CASCADE, related_name="productos"
