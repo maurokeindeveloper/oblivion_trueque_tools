@@ -25,26 +25,26 @@ def trueques_entrantes(request):
     trueques = Trueque.objects.exclude(activo=False).filter(Q(estado=1) | Q(estado=2),producto_solicitado__usuario=usuario).order_by("producto_solicitado")
     return render(request, "trueques/trueques_entrantes.html", {"trueques": trueques})
 
-@login_required
-def aceptar_solicitud(request, trueque_id):
-    if request.POST:
-        # Obtener el objeto trueque
-        trueque = get_object_or_404(Trueque, id=trueque_id)   
+# @login_required
+# def aceptar_solicitud(request, trueque_id):
+#     if request.POST:
+#         # Obtener el objeto trueque
+#         trueque = get_object_or_404(Trueque, id=trueque_id)   
 
-        #trueques del solicitado (el que acepta la solicutud) que esten en estado solicitado para asignar en pendiente
-        trueques = Trueque.objects.exclude(activo=False).filter(producto_solicitado=trueque.producto_solicitante, estado=1)     
-        for tr in trueques:
-            tr.estado = 2 #pendiente
-            tr.save()
+#         #trueques del solicitado (el que acepta la solicutud) que esten en estado solicitado para asignar en pendiente
+#         trueques = Trueque.objects.exclude(activo=False).filter(producto_solicitado=trueque.producto_solicitante, estado=1)     
+#         for tr in trueques:
+#             tr.estado = 2 #pendiente
+#             tr.save()
 
-        producto = Producto.objects.first(id=trueque.producto_solicitado.id)
-        producto.reservado = True
-        producto.save()
+#         producto = Producto.objects.first(id=trueque.producto_solicitado.id)
+#         producto.reservado = True
+#         producto.save()
 
-        # Actualizar el trueque en la base de datos
-        trueque.estado = 3
-        trueque.save()        
-    return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se aceptó correctamente")
+#         # Actualizar el trueque en la base de datos
+#         trueque.estado = 3
+#         trueque.save()        
+#     return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se aceptó correctamente")
 
 @login_required
 def trueques_salientes(request):
@@ -75,7 +75,7 @@ def trueques_finalizados(request):
 
 @login_required
 def aceptar_solicitud(request, trueque_id):
-    if request.POST:
+    if request.method == 'POST':
         # Obtener el objeto trueque
         trueque = get_object_or_404(Trueque, id=trueque_id)        
         # Actualizar el campo en la base de datos
