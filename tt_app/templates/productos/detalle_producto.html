@@ -6,10 +6,10 @@
 {% if producto.activo %}
 
 <div class="row m-4">
-    <span class="d-flex align-items-center mb-3">
-        <h3 class="">{{producto.nombre|capfirst}}</h3> 
+    <span class="d-flex align-items-center mb-4 ">
+        <h3 class="me-3">{{producto.nombre|capfirst}}</h3> 
         <div class="mx-2">
-            <a href="#" class="badge badge-primary bg-primary text-decoration-none text-white">Categoria {{producto.get_categoria_display}}</a>{#LINK A BUSQUEDA FILTRADA #}
+            <a href="#" class="badge badge-primary bg-primary text-decoration-none text-white me-1">Categoria {{producto.get_categoria_display}}</a>{#LINK A BUSQUEDA FILTRADA #}
 
             {% if producto.promocionado %}
 
@@ -32,7 +32,7 @@
     <div class="col-7 d-flex flex-column ps-4 pe-0">
         <p class="mt-1">{{producto.descripcion|capfirst}}</p>
         <span class="d-flex mt-auto">
-            <div class="text-muted fw-light">
+            <div class=" fw-light">
                 <small>Sucursal del intercambio: {{producto.sucursal.ciudad}} - {{producto.sucursal.direccion}}</small><br>
                 <small>Publicado por: {{producto.usuario.first_name}}</small><br>
                 <small>Fecha de publicación: {{producto.fecha_de_publicacion|date:'l j \d\e F \d\e Y'|capfirst}} </small><br>
@@ -40,8 +40,10 @@
             {%if producto.usuario != user%}
             {%if producto.disponible%}
             {%if producto.reservado%}
-            <button type="button" class="btn btn-secondary btn-lg" disabled>Solicitar intercambio</button>
-            <p>Este producto está reservado para un trueque de momento.</p>
+            <div class="d-flex flex-column justify-content-end align-items-center my-auto ms-auto">
+                <button class="btn btn-secondary btn-lg" disabled>Solicitar intercambio</button>
+                <small class="fw-light text-muted text-wrap opacity-75">Este producto está reservado de momento.</small>
+            </div>
             {%else%}
             <a href="{% url 'solicitar' id=producto.id %}" class="btn btn-primary btn-lg my-auto ms-auto">Solicitar intercambio</a>
             {%endif%}

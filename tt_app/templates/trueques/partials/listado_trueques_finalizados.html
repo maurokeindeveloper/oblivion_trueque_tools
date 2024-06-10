@@ -6,12 +6,16 @@
 {%else%} {#rechazado o cancelado#}
 <div class="card d-flex mb-3 ms-4 border border-2 border-danger  bg-danger bg-opacity-10">
 {%endif%}
-    <div class="row p-2" style="height:230px;">
+    <div class="row p-2" style="height:250px;">
         <div class="container col-lg-5 d-flex m-auto mh-100">
             <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center ">
                 {%if trueque.producto_solicitante.usuario == request.user%}
                 <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="d-flex" style="height:190px;">
-                    <img src="{{trueque.producto_solicitante.imagen.url}}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border  
+                    <img src="{%if trueque.producto_solicitante.imagen%}
+                    {{trueque.producto_solicitante.imagen.url}}
+                    {%else%}
+                    {% static 'images/default-image-missing.png' %}
+                    {%endif%}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border  
                     {%if trueque.estado == 4%}{#concretado#}border-success
                     {%else%} {#rechazado o cancelado#}border-danger 
                     {%endif%}
@@ -19,7 +23,12 @@
                 </a>
                 {%else%}
                 <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class="d-flex" style="height:190px;">
-                    <img src="{{trueque.producto_solicitado.imagen.url}}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border  
+                    <img src="
+                    {%if trueque.producto_solicitado.imagen%}
+                    {{trueque.producto_solicitado.imagen.url}}
+                    {%else%}
+                    {% static 'images/default-image-missing.png' %}
+                    {%endif%}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border  
                     {%if trueque.estado == 4%}{#concretado#}border-success
                     {%else%} {#rechazado o cancelado#}border-danger 
                     {%endif%}
@@ -38,7 +47,12 @@
             <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center">
                 {%if trueque.producto_solicitante.usuario == request.user%}
                 <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class="d-flex" style="height:190px;">
-                    <img src="{{trueque.producto_solicitado.imagen.url}}" alt="{{trueque.producto_solicitado.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border  
+                    <img src="
+                    {%if trueque.producto_solicitado.imagen%}
+                    {{trueque.producto_solicitado.imagen.url}}
+                    {%else%}
+                    {% static 'images/default-image-missing.png' %}
+                    {%endif%}" alt="{{trueque.producto_solicitado.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border  
                     {%if trueque.estado == 4%}{#concretado#}border-success
                     {%else%}{#rechazado o cancelado#}border-danger 
                     {%endif%}
@@ -47,7 +61,12 @@
                 <small class="text-muted">{{trueque.producto_solicitado.usuario.first_name}}</small>
                 {%else%}
                 <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="d-flex"style="height:190px;">
-                    <img src="{{trueque.producto_solicitante.imagen.url}}" alt="{{trueque.producto_solicitante.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border  
+                    <img src="
+                    {%if trueque.producto_solicitante.imagen%}
+                    {{trueque.producto_solicitante.imagen.url}}
+                    {%else%}
+                    {% static 'images/default-image-missing.png' %}
+                    {%endif%}" alt="{{trueque.producto_solicitante.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border  
                     {%if trueque.estado == 4%}{#concretado#}border-success
                     {%else%}{#rechazado o cancelado#}border-danger 
                     {%endif%}

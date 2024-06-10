@@ -57,13 +57,15 @@ def aceptar_solicitud(request, trueque_id):
         # Obtener el objeto trueque
         trueque = get_object_or_404(Trueque, id=trueque_id)        
         # Actualizar el campo en la base de datos
-        if trueque.producto_solicitado.reservado:
-            return redirect(reverse("trueques_entrantes") + "?mensaje=No se puede aceptar la solicitud. (Tu producto está reservado para otro trueque)")
         trueque.producto_solicitado.reservado = True
         trueque.producto_solicitado.save()
         s_pendientes = Trueque.objects.exclude(activo=False).exclude(id=trueque.id).filter(producto_solicitado = trueque.producto_solicitado,estado=1)
         for otra_solicitud in s_pendientes:
-            otra_solicitud.estado = 2
+            otra_solicitud.estado = 2 #se le asigna estado pendiente
+            otra_solicitud.save()
+        trueques_enviados_anteriormente = Trueque.objects.exclude(activo=False).exclude(id=trueque.id).filter(producto_solicitante = trueque.producto_solicitado,estado=1)
+        for otra_solicitud in trueques_enviados_anteriormente:
+            otra_solicitud.estado = 7 #se le asigna estado 'cancelado por solicitante'
             otra_solicitud.save()
         trueque.estado = 3
         trueque.save()        
@@ -73,20 +75,22 @@ def aceptar_solicitud(request, trueque_id):
 def cancelar_trueque(request,id,estado,ret):
     if request.POST:
         trueque = get_object_or_404(Trueque,id=id)
-        if trueque.estado == 3:
+        if trueque.estado == 3: #3 = aceptado
             s_pendientes = Trueque.objects.exclude(activo=False).exclude(id=id).filter(producto_solicitado = trueque.producto_solicitado,estado=2)
             for otra_solicitud in s_pendientes:  
                 otra_solicitud.estado = 1   #retorna todos los otros trueques pendientes a solicitados
                 otra_solicitud.save()
-            trueque.producto_solicitado.reservado = False        
+            trueque.producto_solicitado.reservado = False #se debe guardar con un save() inmediatamente despues del cambio para simular un 'efecto cascada' en las tablas que no perte 
             trueque.producto_solicitado.save()
-        trueque.producto_solicitante.reservado = False
+        trueque.producto_solicitante.reservado = False 
         trueque.producto_solicitante.save()
         trueque.estado = estado
         trueque.save() 
+        """se debe guardar a mano la tabla productos asociada a la tabla trueque tanto para los productos solicitantes como para los solicitados. Al final se termina guardando la tabla trueque"""
+        """Cada referencia a la que se le apliquen cambios (como trueque.producto_solicitado o trueque.producto_solicitante) requiere hacer un save() inmediatamente después para reflejar los cambios en la base de datos"""
         return {
-            's':redirect('trueques_salientes'),
-            'p_c':redirect('trueques_por_concretar')
+            'salientes':redirect('trueques_salientes'),
+            'por_concretar':redirect('trueques_por_concretar'),
         }.get(ret)
     else:
         return redirect('home')

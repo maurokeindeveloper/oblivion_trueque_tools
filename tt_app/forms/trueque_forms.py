@@ -65,15 +65,20 @@ class SolicitarForm(forms.ModelForm):
     )
     class Meta:
         model = Trueque
-        fields = ["producto_solicitante", "producto_solicitado", "fecha_programada", "horario", "sucursal"]
+        fields = ["producto_solicitante", 
+                  "producto_solicitado",
+                  "fecha_programada",
+                  "horario",
+                  "sucursal"
+                  ]
     
     def __init__ (self,*args, **kwargs):
         usuario = kwargs.pop('user')
         id_p = kwargs.pop('id')
         p = get_object_or_404(Producto,id=id_p)
         super().__init__(*args, **kwargs) 
-        self.fields['producto_solicitante'].queryset = Producto.objects.exclude(activo=False).filter(usuario=usuario,categoria=p.categoria)
-        self.fields['producto_solicitado'].queryset = Producto.objects.exclude(activo=False).filter(id=id_p).all()
+        self.fields['producto_solicitante'].queryset = Producto.objects.exclude(activo=False).exclude(reservado=True).exclude(disponible=False).filter(usuario=usuario,categoria=p.categoria)
+        self.fields['producto_solicitado'].queryset = Producto.objects.exclude(activo=False).exclude(reservado=True).exclude(disponible=False).filter(id=id_p).all()
         self.fields['sucursal'].queryset = Sucursal.objects.exclude(activo=False).filter(id=p.sucursal.id).all()
         for field in self.fields:                       #Aca van las clases bootstrap a aplicar en todos los widgets de este form
             self.fields[field].widget.attrs["class"] += " " + "w-100 mt-2 mb-3" #IMPORTANTE: += para que no sobreesrciba las clases individuales de cada uno, Y MUY IMPORTANTE el primer espacio en " " porque sino se aplica mal.(se concatena con la ultima letra de la ultima clase individualmente definida)
