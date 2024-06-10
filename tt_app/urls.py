@@ -14,7 +14,10 @@ urlpatterns = [
     path("gestion_trueque/", trueque_view.gestion_trueque, name="gestion_trueque"),
     path("trueques_entrantes/", trueque_view.trueques_entrantes, name="trueques_entrantes"),
     path('aceptar-solicitud/<int:trueque_id>/', trueque_view.aceptar_solicitud, name='aceptar-solicitud'),
-    path('rechazar-solicitud/<int:trueque_id>/', trueque_view.aceptar_solicitud, name='rechazar-solicitud'),#<int:motivo_rechazo
+    path('rechazar-solicitud-interes/<int:trueque_id>/', trueque_view.rechazar_solicitud_interes, name='rechazar-solicitud-interes'),
+    path('rechazar-solicitud-horario/<int:trueque_id>/', trueque_view.rechazar_solitud_horario, name='rechazar-solicitud-horario'),
+    path('rechazar-solicitud-fecha/<int:trueque_id>/', trueque_view.rechazar_solicitud_fecha, name='rechazar-solicitud-fecha'),
+    path('rechazar-solicitud-otros/<int:trueque_id>/', trueque_view.rechazar_solicitud_otros, name='rechazar-solicitud-otros'),
     path('cancelar_trueque/<int:id>/<int:estado>/<str:ret>', trueque_view.cancelar_trueque, name='cancelar_trueque'),
     path('solicitar/<int:id>/', trueque_view.solicitar, name='solicitar'),
     path("trueques_salientes/", trueque_view.trueques_salientes, name="trueques_salientes"),
@@ -23,4 +26,5 @@ urlpatterns = [
     path("productos/id/<int:id>/preguntar", producto_view.preguntar, name="preguntar"),
     path("productos/id/<int:id>/responder", producto_view.responder, name="responder"),
     path("filtrar_productos/<int:categoria>",producto_view.filtrar_productos,name="filtrar_productos"),
+    path("empleados/", usuario_view.listado_empleados, name="empleados"),
 ]

@@ -78,8 +78,8 @@
         </div>
         <div class="card-body col-lg-7 d-flex flex-column ">
 
-            <h4 class="card-title {%if trueque.estado > 4%}text-danger{%else%}text-success{%endif%}">
-                <a href="#" class="text-decoration-none text-reset my-2 mb-2">Intercambio de {{trueque.producto_solicitante.nombre|striptags|truncatechars:40}} por {{trueque.producto_solicitado.nombre|striptags|truncatechars:40}}</a>
+            <h4 class="card-title my-2 mb-2 {%if trueque.estado > 4%}text-danger{%else%}text-success{%endif%}">
+                Intercambio de <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="text-decoration-none text-reset">{{trueque.producto_solicitante.nombre|striptags|truncatechars:40}}</a> por <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class="text-decoration-none text-reset">{{trueque.producto_solicitado.nombre|striptags|truncatechars:40}}</a>
             </h4>
 
             {%if trueque.estado == 4%} 

@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from ..forms.usuario_forms import RegistrarEmpleado,RegistrationForm,IngresoForm
 from ..forms.usuario_forms import check_cliente,check_empleado,check_administrador
-from ..models import Producto
+from ..models import Producto,Usuario
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
@@ -114,3 +114,13 @@ def ingreso(request):
 def cerrar_sesion(request):
     logout(request)
     return redirect(reverse("home") + "?mensaje=La sesión se cerró con éxito.")
+'''
+def listado_empleados(request):
+    empleados = Usuario.objects.exclude(is_active=False,is_staff = False)
+    return render(request, "usuario/listado_empleados.html", {  "empleados":empleados
+    })
+'''
+def listado_empleados(request):
+    empleados = Usuario.objects.filter(is_staff=True, is_active=True, is_admin=False, is_superuser=False)
+    return render(request, "usuario/empleados.html", {"empleados": empleados})
+

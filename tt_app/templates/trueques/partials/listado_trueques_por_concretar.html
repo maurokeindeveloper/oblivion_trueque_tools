@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="card-body col-lg-7 d-flex flex-column justify-content-around">
-            <h4 class="card-title"><a href="#" class="text-decoration-none text-reset">Intercambiar {{trueque.producto_solicitante.nombre|striptags|truncatechars:40}} por {{trueque.producto_solicitado.nombre|striptags|truncatechars:40}}</a> </h4>
+            <h4 class="card-title">Intercambiar <a href="{%url 'detalle_producto' trueque.producto_solicitante.id%}" class="text-decoration-none text-reset">{{trueque.producto_solicitante.nombre|striptags|truncatechars:40}}</a> por <a href="{%url 'detalle_producto' trueque.producto_solicitado.id%}" class="text-decoration-none text-reset">{{trueque.producto_solicitado.nombre|striptags|truncatechars:40}}</a> </h4>
 
             {%if trueque.estado == 3%}
             <p class="card-title text-success">ACEPTADO: Sólo falta presentarte para realizar el intercambio!</p>

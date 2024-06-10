@@ -75,48 +75,43 @@
                     <button class="btn btn-success " type="submit">Aceptar</button>
                 </form>
                 {%endif%}
-                <div class="btn-group ms-2 ">
-                    <form type="button" class="btn btn-danger" class="d-flex " method="POST" action="{% url 'rechazar-solicitud' trueque_id=trueque.id  %}">{#motivo_rechazo=2#}
-                        {% csrf_token %}
-                        <button  class="dropdown-item" type="submit">Rechazar</button>
-                    </form>
-                    <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="visually-hidden">Motivos</span>
+
+                <div class="btn-group mx-2">                    
+                    <button class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Rechazar
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-light dropdown-menu-end ">
+                    <ul class="dropdown-menu">
                         <li>
-                            <form class="d-flex w-100 h-100" method="POST" action="{% url 'rechazar-solicitud' trueque_id=trueque.id%}">
-                                {% csrf_token %}
-                                <button class="dropdown-item w-100 h-100" type="submit">Producto ya no disponible</button>
-                            </form>
+                            <button class="dropdown-item w-100 h-100 rechazar-trueque" 
+                                data-bs-toggle="modal" data-bs-target="#modal-interes"
+                                data-trueque-id="{{ trueque.id }}" data-motivo-rechazo="2">
+                                Falta de interés en el producto ofrecido
+                            </button>                          
                         </li>
                         <li>
-                            <form class="d-flex w-100 h-100" method="POST" action="{% url 'rechazar-solicitud' trueque_id=trueque.id%}">
-                                {% csrf_token %}
-                                <button class="dropdown-item w-100 h-100" type="submit">Falta de interés en el producto ofrecido</button>
-                            </form>
+                            <button class="dropdown-item w-100 h-100 rechazar-trueque" 
+                                data-bs-toggle="modal" data-bs-target="#modal-interes"
+                                data-trueque-id="{{ trueque.id }}" data-motivo-rechazo="3">
+                                Falta de disponibilidad en el horario solicitado
+                            </button>    
                         </li>
                         <li>
-                            <form class="d-flex w-100 h-100" method="POST" action="{% url 'rechazar-solicitud' trueque_id=trueque.id%}">
-                                {% csrf_token %}
-                                <button class="dropdown-item " type="submit">Falta de disponibilidad en el horario solicitado</button>
-                            </form>
+                            <button class="dropdown-item w-100 h-100 rechazar-trueque" 
+                                data-bs-toggle="modal" data-bs-target="#modal-interes"
+                                data-trueque-id="{{ trueque.id }}" data-motivo-rechazo="4">
+                                Falta de disponibilidad en la fecha solicitada
+                            </button>
                         </li>
                         <li>
-                            <form class="d-flex w-100 h-100" method="POST" action="{% url 'rechazar-solicitud' trueque_id=trueque.id%}">
-                                {% csrf_token %}
-                                <button class="dropdown-item " type="submit">Falta de disponibilidad en la fecha solicitada</button>
-                            </form>
-                        </li>
-                        <li>
-                            <form class="d-flex w-100 h-100" method="POST" action="{% url 'rechazar-solicitud' trueque_id=trueque.id%}">
-                                {% csrf_token %}
-                                <button class="dropdown-item " type="submit">Otros motivos</button>
-                            </form>
+                            <button class="dropdown-item w-100 h-100 rechazar-trueque" 
+                                data-bs-toggle="modal" data-bs-target="#modal-interes"
+                                data-trueque-id="{{ trueque.id }}" data-motivo-rechazo="5">
+                                Otros motivos
+                            </button>
                         </li>
                     </ul>
                 </div>
-                </div>
+                
             </span>
         </div>
     </div>
@@ -124,3 +119,86 @@
 </div>
 
 {%endfor%}
+
+<!-- Modals -->
+<div class="modal fade" id="modal-interes" tabindex="-1" role="dialog" 
+    aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-static" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Estás seguro de rechazar el trueque?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id=bodyModal></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="rechazarTrueque()">Rechazar la solicitud</button>
+            </div>
+        </div>
+    </div>  
+</div>
+
+{% block scripts %}
+<script>
+    var truequeId = null;
+    var motivoRechazo = null;
+    var urlRechazo, motivo;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var buttons = document.querySelectorAll('.rechazar-trueque');
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                truequeId = this.getAttribute('data-trueque-id');
+                motivoRechazo = this.getAttribute('data-motivo-rechazo');
+                console.log(motivoRechazo)
+                if (motivoRechazo==2){
+                    urlRechazo = "/rechazar-solicitud-interes/";
+                    motivo = 'falta de interes en el producto ofrecido'
+                }
+                else if (motivoRechazo == 3) {
+                    urlRechazo = "/rechazar-solicitud-horario/";
+                    motivo = 'falta de disponibilidad en el horario solicitado'
+                }
+                else if (motivoRechazo == 4) {
+                    urlRechazo = "/rechazar-solicitud-fecha/";
+                    motivo = 'falta de disponibilidad en la fecha solicitada'
+                }
+                else {
+                    urlRechazo = "/rechazar-solicitud-otros/";
+                    motivo = 'otros motivos'
+                }
+
+                let preguntaModal = document.getElementById('bodyModal')
+                preguntaModal.innerHTML= "<p>El rechazo es permante. <br/> ¿Quiere realmente rechazar la solicitud de trueque por " + motivo + "?</p>";
+             
+                
+            });           
+        });
+       
+    });
+
+    function rechazarTrueque() {
+        
+        fetch(urlRechazo + truequeId + "/", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            //body: JSON.stringify({'trueque_id': truequeId})
+        })
+        .then(function (response) {
+            if (response.ok) {
+                console.log('Trueque rechazado exitosamente.');
+                window.location.href = '{% url "trueques_entrantes" %}?mensaje=La solicitud se rechazo correctamente';
+            } else {
+                console.error('Error al rechazar el trueque. Código de estado: ' + response.status);
+            }
+        })
+        .catch(function (error) {
+            console.error('Error de red:', error);
+        });
+    }
+
+</script>
+{% endblock %}
