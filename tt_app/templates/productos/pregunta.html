@@ -4,9 +4,16 @@
 
 {% block content %}
     {% if pregunta %}
-        <h2>Ya se envió tu pregunta al dueño del producto.</h2>
-        <p><a href="{%url 'home'%}">Volver al inicio</a></p>
-    {% else %}
-        {% include 'productos/partials/formulario_de_pregunta.html' %}
-    {% endif %}
+        <div class="container">
+            <div class="row">
+                <div class="card card-body">
+                    <h4 class="display-6">Ya se envió tu pregunta al dueño del producto</h4>
+                    <p><a href="{%url 'detalle_producto' producto.id%}">Volver al producto</a></p>
+                    <p><a href="{%url 'home'%}">Volver al inicio</a></p>
+                </div>
+            </div>
+        </div>
+        {% else %}
+            {% include 'productos/partials/formulario_de_pregunta.html' %}
+        {% endif %}
 {% endblock %}

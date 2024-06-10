@@ -118,7 +118,7 @@ class Producto(models.Model):
     imagen = ImageField(blank=True, upload_to="media/")
     promocionado = models.BooleanField(default=False)
     reservado = models.BooleanField(default=False)
-    disponible = models.BooleanField(default=False)
+    disponible = models.BooleanField(default=True)
     activo = models.BooleanField(default=True)
     usuario = models.ForeignKey(
         Usuario, on_delete=models.CASCADE, related_name="productos"
@@ -174,7 +174,7 @@ class Trueque(models.Model):
 
     class OpcionRechazo(models.IntegerChoices):
         rechazo_1 = 1, _("Producto ya no disponible")
-        rechazo_2 = 2, _("Falta de interes en el producto ofrecido")
+        rechazo_2 = 2, _("Falta de interés en el producto ofrecido")
         rechazo_3 = 3, _("Falta de disponibilidad en el horario solicitado")
         rechazo_4 = 4, _("Falta de disponibilidad en la fecha solicitada")
         rechazo_5 = 5, _("Otros motivos")

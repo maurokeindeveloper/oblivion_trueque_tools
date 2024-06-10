@@ -2,9 +2,9 @@
 
 {% for trueque in trueques %}
 {%if trueque.estado == 4%}  {#concretado#} 
-<div class="card d-flex mb-3 ms-4 border border-2 border-success">
+<div class="card d-flex mb-3 ms-4 border border-2 border-success bg-success bg-opacity-10">
 {%else%} {#rechazado o cancelado#}
-<div class="card d-flex mb-3 ms-4 border border-2 border-danger">
+<div class="card d-flex mb-3 ms-4 border border-2 border-danger  bg-danger bg-opacity-10">
 {%endif%}
     <div class="row p-2" style="height:230px;">
         <div class="container col-lg-5 d-flex m-auto mh-100">
@@ -13,7 +13,7 @@
                 <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="d-flex" style="height:190px;">
                     <img src="{{trueque.producto_solicitante.imagen.url}}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border  
                     {%if trueque.estado == 4%}{#concretado#}border-success
-                    {%else%} {#rechazado o cancelado#}border-danger opacity-75
+                    {%else%} {#rechazado o cancelado#}border-danger 
                     {%endif%}
                     ">
                 </a>
@@ -21,7 +21,7 @@
                 <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class="d-flex" style="height:190px;">
                     <img src="{{trueque.producto_solicitado.imagen.url}}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border  
                     {%if trueque.estado == 4%}{#concretado#}border-success
-                    {%else%} {#rechazado o cancelado#}border-danger opacity-75
+                    {%else%} {#rechazado o cancelado#}border-danger 
                     {%endif%}
                     ">
                 </a>
@@ -40,7 +40,7 @@
                 <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class="d-flex" style="height:190px;">
                     <img src="{{trueque.producto_solicitado.imagen.url}}" alt="{{trueque.producto_solicitado.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border  
                     {%if trueque.estado == 4%}{#concretado#}border-success
-                    {%else%}{#rechazado o cancelado#}border-danger opacity-75
+                    {%else%}{#rechazado o cancelado#}border-danger 
                     {%endif%}
                     ">
                 </a>
@@ -49,7 +49,7 @@
                 <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="d-flex"style="height:190px;">
                     <img src="{{trueque.producto_solicitante.imagen.url}}" alt="{{trueque.producto_solicitante.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border  
                     {%if trueque.estado == 4%}{#concretado#}border-success
-                    {%else%}{#rechazado o cancelado#}border-danger opacity-75
+                    {%else%}{#rechazado o cancelado#}border-danger 
                     {%endif%}
                     ">
                 </a>
