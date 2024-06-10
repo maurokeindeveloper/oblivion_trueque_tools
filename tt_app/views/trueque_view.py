@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
@@ -24,10 +25,9 @@ def trueques_entrantes(request):
     trueques = Trueque.objects.exclude(activo=False).filter(Q(estado=1) | Q(estado=2),producto_solicitado__usuario=usuario).order_by("producto_solicitado")
     return render(request, "trueques/trueques_entrantes.html", {"trueques": trueques})
 
-<<<<<<< HEAD
+@login_required
 def aceptar_solicitud(request, trueque_id):
     if request.POST:
-
         # Obtener el objeto trueque
         trueque = get_object_or_404(Trueque, id=trueque_id)   
 
@@ -35,17 +35,17 @@ def aceptar_solicitud(request, trueque_id):
         trueques = Trueque.objects.exclude(activo=False).filter(producto_solicitado=trueque.producto_solicitante, estado=1)     
         for tr in trueques:
             tr.estado = 2 #pendiente
+            tr.save()
+
+        producto = Producto.objects.first(id=trueque.producto_solicitado.id)
+        producto.reservado = True
+        producto.save()
 
         # Actualizar el trueque en la base de datos
         trueque.estado = 3
-
-
         trueque.save()        
     return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se aceptó correctamente")
 
-
-=======
->>>>>>> e5bbf37711ee0a42191b998d7cd7b081c540605a
 @login_required
 def trueques_salientes(request):
     usuario = request.user
@@ -73,23 +73,23 @@ def trueques_finalizados(request):
     trueques = Trueque.objects.exclude(activo=False).filter(Q(producto_solicitante__usuario=usuario) | Q(producto_solicitado__usuario=usuario), estado__gte=4).order_by('-fecha')
     return render(request, "trueques/trueques_finalizados.html", {"trueques": trueques})
 
-@login_required
-def aceptar_solicitud(request, trueque_id):
-    if request.POST:
-        # Obtener el objeto trueque
-        trueque = get_object_or_404(Trueque, id=trueque_id)        
-        # Actualizar el campo en la base de datos
-        if trueque.producto_solicitado.reservado:
-            return redirect(reverse("trueques_entrantes") + "?mensaje=No se puede aceptar la solicitud. (Tu producto está reservado para otro trueque)")
-        trueque.producto_solicitado.reservado = True
-        trueque.producto_solicitado.save()
-        s_pendientes = Trueque.objects.exclude(activo=False).exclude(id=trueque.id).filter(producto_solicitado = trueque.producto_solicitado,estado=1)
-        for otra_solicitud in s_pendientes:
-            otra_solicitud.estado = 2
-            otra_solicitud.save()
-        trueque.estado = 3
-        trueque.save()        
-    return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se aceptó correctamente")
+# @login_required
+# def aceptar_solicitud(request, trueque_id):
+#     if request.POST:
+#         # Obtener el objeto trueque
+#         trueque = get_object_or_404(Trueque, id=trueque_id)        
+#         # Actualizar el campo en la base de datos
+#         if trueque.producto_solicitado.reservado:
+#             return redirect(reverse("trueques_entrantes") + "?mensaje=No se puede aceptar la solicitud. (Tu producto está reservado para otro trueque)")
+#         trueque.producto_solicitado.reservado = True
+#         trueque.producto_solicitado.save()
+#         s_pendientes = Trueque.objects.exclude(activo=False).exclude(id=trueque.id).filter(producto_solicitado = trueque.producto_solicitado,estado=1)
+#         for otra_solicitud in s_pendientes:
+#             otra_solicitud.estado = 2
+#             otra_solicitud.save()
+#         trueque.estado = 3
+#         trueque.save()        
+#     return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se aceptó correctamente")
 
 @login_required
 def cancelar_trueque(request,id,estado,ret):
@@ -145,3 +145,53 @@ def solicitar(request,id):
         "boton":"Solicitar",                  # el texto del botón de confirmación
         "obligatorios": False, # mostrar la advertencia de campos obligatorios o no
     })
+
+@login_required
+def rechazar_solicitud_interes(request, trueque_id):
+    if request.method == 'POST':
+        trueque = get_object_or_404(Trueque, id=trueque_id)
+        trueque.estado = 5
+        trueque.motivo_rechazo = 2
+        trueque.save()
+        
+        producto = get_object_or_404(Producto,id=trueque.producto_solicitante.id)
+        producto.reservado = False
+        producto.save()
+    return JsonResponse({'mensaje': 'La solicitud se rechazó correctamente'}, status=200)
+    #return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se rechazo correctamente")
+
+def rechazar_solitud_horario(request, trueque_id):
+    if request.method == 'POST':
+        trueque = get_object_or_404(Trueque, id=trueque_id)
+        trueque.estado = 5
+        trueque.motivo_rechazo = 3
+        trueque.save()
+        
+        producto = get_object_or_404(Producto,id=trueque.producto_solicitante.id)
+        producto.reservado = False
+        producto.save()
+    return JsonResponse({'mensaje': 'La solicitud se rechazó correctamente'}, status=200)
+
+def rechazar_solicitud_fecha(request, trueque_id):
+    if request.method == 'POST':
+        trueque = get_object_or_404(Trueque, id=trueque_id)
+        trueque.estado = 5
+        trueque.motivo_rechazo = 4
+        trueque.save()
+        
+        producto = get_object_or_404(Producto,id=trueque.producto_solicitante.id)
+        producto.reservado = False
+        producto.save()
+    return JsonResponse({'mensaje': 'La solicitud se rechazó correctamente'}, status=200)
+
+def rechazar_solicitud_otros(request, trueque_id):
+    if request.method == 'POST':
+        trueque = get_object_or_404(Trueque, id=trueque_id)
+        trueque.estado = 5
+        trueque.motivo_rechazo = 5
+        trueque.save()
+        
+        producto = get_object_or_404(Producto,id=trueque.producto_solicitante.id)
+        producto.reservado = False
+        producto.save()
+    return JsonResponse({'mensaje': 'La solicitud se rechazó correctamente'}, status=200)
