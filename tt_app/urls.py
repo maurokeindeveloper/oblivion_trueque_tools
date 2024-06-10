@@ -17,5 +17,5 @@ urlpatterns = [
     path("trueques_por_concretar/", trueque_view.trueques_por_concretar, name="trueques_por_concretar"),
     path("trueques_finalizados/", trueque_view.trueques_finalizados, name="trueques_finalizados"),
     path("productos/id/<int:id>/preguntar", producto_view.preguntar, name="preguntar"),
-    path("listado_empleados/", usuario_view.listado_empleados, name="listado_empleados"),
+    path("empleados/", usuario_view.listado_empleados, name="empleados"),
 ]

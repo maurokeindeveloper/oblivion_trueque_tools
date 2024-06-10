@@ -122,5 +122,5 @@ def listado_empleados(request):
 '''
 def listado_empleados(request):
     empleados = Usuario.objects.filter(is_staff=True, is_active=True, is_admin=False, is_superuser=False)
-    return render(request, "usuario/listado_empleados.html", {"empleados": empleados})
+    return render(request, "usuario/empleados.html", {"empleados": empleados})
 
