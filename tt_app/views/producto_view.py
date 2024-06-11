@@ -79,12 +79,14 @@ def detalle_producto(request, id):
     preguntas = producto.preguntas.all().order_by("-fecha")
 
     # Formulario para las preguntas de los clientes
-    form = FormularioDePregunta()
-
+    form_pregunta = FormularioDePregunta()
+    # Formulario para las respuestas de los dueños 
+    
+    form_respuesta = FormularioDeRespuesta()
     return render(
         request,
         "productos/detalle_producto.html",
-        {"producto": producto, "preguntas": preguntas, "formulario": form},
+        {"producto": producto, "preguntas": preguntas, "form_pregunta": form_pregunta, "form_respuesta": form_respuesta},
     )
 
 
@@ -106,10 +108,8 @@ def preguntar(request, id):
         pregunta.cliente = request.user
         # Guarda la pregunta en la base de datos
         pregunta.save()
-    return render(
-        request,
-        "productos/pregunta.html",
-        {"producto": producto, "form": form, "pregunta": pregunta},
+    return redirect(
+        'detalle_producto', producto.id
     )
 
 
@@ -134,12 +134,9 @@ def responder(request, id):
         # Asigna la respuesta a la pregunta correspondiente y actualiza la BD
         pregunta.respuesta = respuesta
         pregunta.save()
-    return render(
-        request,
-        "productos/respuesta.html",
-        {"form": form_respuesta, "pregunta": pregunta, "enviada": enviada},
+    return redirect(
+        "detalle_producto", pregunta.producto.id
     )
-
 
 def filtrar_productos(request, categoria):
     nombre_categoria = {
