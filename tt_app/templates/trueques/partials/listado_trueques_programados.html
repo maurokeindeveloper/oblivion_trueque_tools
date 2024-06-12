@@ -49,11 +49,13 @@
                             <small class="fw-light"><b>Fecha</b>: {{trueque.fecha_programada|date:'l j \d\e F, Y'|capfirst}}</small>
                             <small class="fw-light"><b>Horario</b>: {{trueque.get_horario_display}}</small>
                         </div>
-                        {# cargar url de formulario de ventas, en action #}
-                        <form method="POST" action="#" class="mt-auto">
-                            {% csrf_token %}
-                            <button class="btn btn-success ms-auto " type="submit">Confirmar</button>
-                        </form>
+                        
+                        <button class="btn btn-success confirmar-trueque" 
+                            data-bs-toggle="modal" data-bs-target="#modal-confirmar"
+                            data-trueque-id="{{ trueque.id }}">
+                            Confirmar
+                        </button>
+                        
                     </span>
 
                     
@@ -67,4 +69,20 @@
     <h5 class="mt-5 my-3 text-center">No tiene trueques programados para hoy.</h5> 
     <p class="p-2 text-center"><a href="{% url 'home' %}">Volver al inicio</a></p>
 {% endif %}
+
+<div class="modal fade" id="modal-confirmar" tabindex="-1" role="dialog" 
+    aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-static" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Antes de confirmar ¿Querés agregar ventas a este trueque?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="aceptarTrueque()">Aceptar la solicitud</button>
+            </div>
+        </div>
+    </div>  
+</div>
 

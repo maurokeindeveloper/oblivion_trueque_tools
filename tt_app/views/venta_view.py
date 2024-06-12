@@ -73,7 +73,7 @@ def listar_ventas(request, trueque_id):
     
     return render(
         request,
-        "ventas/listado_ventas.html",
+        "ventas/listado_ventas_trueque.html",
         {
             "ventas": ventas,
             "trueque": trueque,
