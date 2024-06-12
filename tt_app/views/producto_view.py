@@ -70,6 +70,27 @@ def buscar_productos(request):
         )
     else:
         return render(request, "productos/productos.html", {"productos": productos})
+    
+def buscar_productos_trueques_programados(request):
+    if request.method == "GET":
+        cadena = request.GET.get("cadena")
+        productos_nom = Producto.objects.exclude(activo=False).filter(
+            nombre__icontains=cadena
+        )
+        productos_desc = Producto.objects.exclude(activo=False).filter(
+            descripcion__icontains=cadena
+        )
+        productos = productos_nom.union(productos_desc).order_by("-promocionado")
+        return render(
+            request,
+            "productos/buscar_productos.html",
+            {
+                "productos": productos,
+                "cadena": cadena,
+            },
+        )
+    else:
+        return render(request, "productos/productos.html", {"productos": productos})
 
 
 def detalle_producto(request, id):
