@@ -7,6 +7,8 @@ from django.urls import reverse
 from ..forms.trueque_forms import SolicitarForm
 from ..forms.usuario_forms import check_cliente,check_empleado
 from ..models import Producto, Trueque
+from datetime import timedelta
+from datetime import date
 
 @login_required
 def gestion_trueque(request):
@@ -199,3 +201,29 @@ def rechazar_solicitud_otros(request, trueque_id):
         producto.reservado = False
         producto.save()
     return JsonResponse({'mensaje': 'La solicitud se rechazó correctamente'}, status=200)
+
+@login_required
+def trueques_programados(request):
+    usuario = request.user
+    chk = check_empleado(usuario)
+    if chk["ok"]:
+        return chk["return"]
+    hoy = date.today()
+    print('fecha de hoy:', hoy)
+    trueques_filtrados = Trueque.objects.exclude(activo=False).filter(fecha_programada=hoy, estado=3)
+    print('coleccion de truques: ', trueques_filtrados)
+    return render(request, "trueques/trueques_programados.html", {"trueques": trueques_filtrados,'hoy':hoy})
+'''
+@login_required
+def trueques_hoy(request):
+    hoy = date.today()
+    trueques_filtrados = Trueque.objects.filter(fecha_programada=hoy)
+    return render(request, 'trueques/partials/listado_trueques_programados.html', {'trueques': trueques_filtrados, 'hoy':hoy})
+'''
+'''
+@login_required
+def trueques_ayer(request):
+    ayer = date.today() - timedelta(days=1)
+    trueques_filtrados = Trueque.objects.filter(fecha_programada=ayer)
+    return render(request, 'trueques/partials/listado_trueques_programados.html', {'trueques': trueques_filtrados,'hoy':ayer})
+'''
