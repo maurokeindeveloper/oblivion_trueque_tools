@@ -1,0 +1,42 @@
+{%extends 'base.html'%}
+
+{% load static %}
+
+{%block content%}
+
+{% if trueque %}
+    <h3 class="ms-4 mt-3 mb-5 text-start ">Ventas del truque {{trueque.id}}: </h3>
+{% endif %}
+
+{% if ventas %}
+<h5>Empleado a cargo de la venta: {{nombre_vendedor}}</h5>
+<table class="table table-hover table-striped">
+    <thead>
+    <tr class="table-primary">
+        <th scope="col">Nombre del producto</th>
+        <th scope="col">Cantidad de unidades</th>
+        <th scope="col" class="text-end">Precio unitario</th>
+        <th scope="col" class="text-end">Total</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for venta in ventas %}
+        <tr>
+            <th>{{venta.nombre_producto}}</th>
+            <td>{{venta.cantidad_unidades}}</td>
+            <td class="text-end">${{venta.precio_unitario}}</td>
+            <td class="text-end">${{venta.get_total}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+        <th colspan="3"></th>
+        <th class="text-end">Total: ${{total}}</th>
+    </tfoot>
+    
+</table>
+{% else %}
+    <h3>No hay ventas agregadas</h3>
+{% endif %}   
+
+{%endblock%}
