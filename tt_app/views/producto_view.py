@@ -8,11 +8,12 @@ from ..forms.producto_forms import (
 from ..forms.usuario_forms import check_cliente
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from ..models import Producto, Pregunta, Respuesta
+from ..models import Producto, Pregunta, Respuesta,Trueque
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-
-
+from datetime import timedelta
+from datetime import date
+from django.db.models import Q
 @login_required
 def crear_producto(request):
     chk = check_cliente(request.user)
@@ -74,23 +75,19 @@ def buscar_productos(request):
 def buscar_productos_trueques_programados(request):
     if request.method == "GET":
         cadena = request.GET.get("cadena")
-        productos_nom = Producto.objects.exclude(activo=False).filter(
-            nombre__icontains=cadena
-        )
-        productos_desc = Producto.objects.exclude(activo=False).filter(
-            descripcion__icontains=cadena
-        )
-        productos = productos_nom.union(productos_desc).order_by("-promocionado")
+        print(cadena)
+        trueques_filtrados = Trueque.objects.exclude(activo=False).filter( Q(producto_solicitante__nombre__icontains=cadena) | Q(producto_solicitado__nombre__icontains=cadena)|Q(producto_solicitante__usuario__first_name__icontains=cadena)|Q(producto_solicitado__usuario__first_name__icontains=cadena),estado=3,fecha_programada=date.today())
+        
         return render(
             request,
-            "productos/buscar_productos.html",
+            "trueques/trueques_programados.html",
             {
-                "productos": productos,
+                "trueques": trueques_filtrados,
                 "cadena": cadena,
             },
         )
     else:
-        return render(request, "productos/productos.html", {"productos": productos})
+        return render(request, "productos/productos.html", {"trueques": trueques_filtrados})
 
 
 def detalle_producto(request, id):

@@ -4,7 +4,7 @@
               
         <div class="collapse navbar-collapse col-lg-9" id="navbarSupportedContent">
             {# BARRA DE BUSQUEDA #}
-            <form class="d-flex my-2 ms-auto" action="{% url 'buscar_productos'%}" method="GET">    
+            <form class="d-flex my-2 ms-auto" action="{% url 'buscar_productos_trueques_programados'%}" method="GET">    
                 <input class="form-control me-2" type="search" placeholder="Buscar productos" name="cadena" aria-label="Search">
                 <button class="btn btn-primary" type="submit">Buscar</button>
             </form>
@@ -12,11 +12,11 @@
             {# ELEMENTOS SELECCIONABLES #}
             {% with request.resolver_match.url_name as url_actual %} 
             {#esto sirve para comparar la url actual a cada url pattern definido en urls.py#}
-            <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+           <!-- <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
                 <li class="nav-item">
                     <a class="nav-link {%if url_actual == 'home' %}active{%endif%} " href="{% url 'home' %}">Inicio</a>
                 </li>
-            </ul>
+            </ul>-->
             {%endwith%}
         </div>
     </div>
