@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import producto_view, usuario_view, trueque_view
+from .views import producto_view, usuario_view, trueque_view, venta_view
 
 urlpatterns = [
     path("", usuario_view.home, name="home"),
@@ -31,4 +31,7 @@ urlpatterns = [
    # path('trueques_hoy/', trueque_view.trueques_hoy, name='trueques_hoy'),
    # path('trueques_ayer/', trueque_view.trueques_ayer, name='trueques_ayer'),
     path('trueques_programados/', trueque_view.trueques_programados, name='trueques_programados'),
+    path("registrar-ventas/<int:trueque_id>", venta_view.registrar_ventas, name="registrar_ventas"),
+    path("concretar-trueque/<int:trueque_id>", trueque_view.concretar_trueque, name="concretar_trueque"),
+    path("listar-ventas-trueque/<int:trueque_id>", venta_view.listar_ventas, name="listar_ventas_trueque")
 ]

@@ -208,4 +208,8 @@ class Venta(models.Model):
     cantidad_unidades = models.IntegerField()
     precio_unitario = models.FloatField()
     nombre_producto = models.CharField(max_length=200)
-    trueque = models.ForeignKey(Trueque, on_delete=models.CASCADE)
+    trueque = models.ForeignKey(Trueque, on_delete=models.CASCADE, blank=True, null=True)
+    vendedor = models.ForeignKey(Usuario, on_delete=models.CASCADE, blank=True, null=True)
+    fecha = models.DateTimeField(auto_now=True)
+    def get_total(self):
+        return (self.cantidad_unidades * self.precio_unitario)

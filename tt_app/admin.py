@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Usuario, Producto, Trueque, Sucursal
+from .models import Usuario, Producto, Trueque, Sucursal, Venta
 
 # Register your models here.
 
@@ -19,4 +19,5 @@ admin.site.register(Usuario, CustomUserAdmin)
 admin.site.register(Producto)
 admin.site.register(Trueque)
 admin.site.register(Sucursal)
+admin.site.register(Venta)
 

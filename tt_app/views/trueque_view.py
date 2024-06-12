@@ -227,3 +227,21 @@ def trueques_ayer(request):
     trueques_filtrados = Trueque.objects.filter(fecha_programada=ayer)
     return render(request, 'trueques/partials/listado_trueques_programados.html', {'trueques': trueques_filtrados,'hoy':ayer})
 '''
+
+def concretar_trueque(request, trueque_id):
+    print("Hast acá llego!")
+    if request.method == 'POST':
+        trueque = get_object_or_404(Trueque, id=trueque_id)
+
+        solicitudes_del_producto_solicitado = Trueque.objects.exclude(activo=False).filter(producto_solicitado_id=trueque.producto_solicitado.id, estado=2)
+        for solicitud in solicitudes_del_producto_solicitado:
+            solicitud.estado = 9
+            solicitud.save()
+
+        #trueque.producto_solicitado.usuario.reputacion++
+        #trueque.producto_solicitante.usuario.reputacion++
+        
+        trueque.estado = 4
+        trueque.save()
+
+    return redirect(reverse("listar_ventas_trueque") + "?mensaje=El trueque se concretó correctamente")
