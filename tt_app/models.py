@@ -128,7 +128,7 @@ class Producto(models.Model):
     )
 
     def __str__(self):
-        return self.nombre + "\t(" + str(self.usuario.id) + ")"
+        return self.nombre + "\t(" + str(self.categoria) + ")"
 
 
 # Modelo de trueque
