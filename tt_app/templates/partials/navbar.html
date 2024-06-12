@@ -43,6 +43,9 @@
                     {% else %}              {# PORCION PARA EMPLEADOS #}
                         <li class="nav-item">
                             <a class="nav-link {%if url_actual == 'gestion_trueque' %}active{%endif%}" href="{% url 'gestion_trueque' %}">gestion trueque</a>
+                            <li class="nav-item">
+                                <a class="nav-link {%if url_actual == 'trueques_programados' %}active{%endif%}" href="{% url 'trueques_programados' %}">trueques programados</a>
+                            </li>
                         </li>
                         
                     {% endif %}
