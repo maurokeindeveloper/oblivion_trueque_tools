@@ -32,5 +32,5 @@ urlpatterns = [
     path("registrar-ventas/<int:trueque_id>", venta_view.registrar_ventas, name="registrar_ventas"),
     path('concretar-trueque/<int:trueque_id>/', trueque_view.confirmar_trueque, name="concretar_trueque"),
     path("listar-ventas-trueque/<int:trueque_id>", venta_view.listar_ventas, name="listar_ventas_trueque"),
-    path("cancelar-trueques-programados", trueque_view.cancelar_trueque_programado, name="cancelar_trueques_programados"),
+    path("cancelar-trueques-programados/", trueque_view.cancelar_trueque_programado, name="cancelar_trueques_programados"),
 ]
