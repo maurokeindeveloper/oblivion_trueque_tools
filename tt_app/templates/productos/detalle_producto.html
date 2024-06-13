@@ -53,12 +53,11 @@
             {%endif%}
         </span>
     </div>
-    <h6 class="mt-5 display-6">Preguntas y respuestas</h6>
+    <h4 class="mt-5 mb-4">Preguntas y respuestas</h4>
     {% if user.is_authenticated %}
         {% if not user == producto.usuario %}
-            <form action="{% url 'preguntar' producto.id %}" method="POST" class="card card-body" enctype="multipart/form-data" novalidate>
+            <form action="{% url 'preguntar' producto.id %}" method="POST" class="d-flex flex-column" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
-                {#<!-- Iterar sobre cada campo(field) del formulario -->#}
                 {% for field in form_pregunta %} 
                     {{ field }}
                     {% if field.errors %}
@@ -68,28 +67,27 @@
                     {% endif %}
                 {% endfor %}
                 {%if error%}<small class="text-danger fw-medium my-1"><p>{{error}}</p></small>{%endif%}     {#errores del formulario entero#}
-                <button class="btn btn-info fw-medium mt-2 w-100" type="submit">Preguntar</button>
+                <button class="btn btn-info fw-medium mt-2 ms-auto" type="submit">Preguntar</button>
             </form>
         {% endif %}
     {% endif %}
+    {%if preguntas%}
     {% with preguntas.count as total_de_preguntas %}
         <h6 class="mt-4">
             {{ total_de_preguntas }} pregunta{{ total_de_preguntas|pluralize }}
         </h6>
     {% endwith %}
+    {%endif%}
     {% for pregunta in preguntas.all %}
         <div class="preguntas card card-body mt-2">
-            <p class="info">
-                <strong class="text-muted">Pregunta de {{ pregunta.cliente.first_name }} - {{ pregunta.fecha }}</strong>
-            </p>
-            {{ pregunta.texto|linebreaks }}
+            <p class="info text-muted"><b>{{ pregunta.cliente.first_name }}</b> <small>- {{pregunta.fecha|date:'j/n/y \a \l\a\s H:i'}}</small></p>
+            <p class="mb-3">{{ pregunta.texto|capfirst}}</p>
             {% if pregunta.respuesta %}
-                <div class="mx-3 text-muted">{{ pregunta.respuesta.texto }}</div>
+                <div class="mx-3 text-muted">{{ pregunta.respuesta.texto|capfirst}}</div>
             {% else %}
                 {% if user == producto.usuario %}
-                    <form action="{% url 'responder' pregunta.id %}" method="POST" class="card card-body mt-3" enctype="multipart/form-data" novalidate>
+                    <form action="{% url 'responder' pregunta.id %}" method="POST" class="d-flex flex-column" enctype="multipart/form-data" novalidate>
                         {% csrf_token %}
-                        {#<!-- Iterar sobre cada campo(field) del formulario -->#}
                         {% for field in form_respuesta %} 
                             {{ field }}
                             {% if field.errors %}
@@ -99,7 +97,7 @@
                             {% endif %}
                         {% endfor %}
                         {%if error%}<small class="text-danger fw-medium my-1"><p>{{error}}</p></small>{%endif%}{#errores del formulario entero#}
-                        <button class="btn btn-info fw-medium mt-2 w-100" type="submit">Responder</button>
+                        <button class="btn btn-info fw-medium mt-2 ms-auto" type="submit">Responder</button>
                     </form>
                 {% endif %}
             {% endif %}

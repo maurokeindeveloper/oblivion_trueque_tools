@@ -1,7 +1,12 @@
 
 {% load static %}
 
+
 {% if trueques %}
+    <form method="POST" action="{% url 'cancelar_trueques_programados' %}">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Cancelar trueques vencidos</button>
+    </form>
     {% for trueque in trueques %}
         <div class="card d-flex mb-3 ms-4 ">
             <div class="row p-2" style="height:250px;">
@@ -48,17 +53,16 @@
                             <small class="fw-light"><b>Sucursal</b>: {{trueque.sucursal}}</small>
                             <small class="fw-light"><b>Fecha</b>: {{trueque.fecha_programada|date:'l j \d\e F, Y'|capfirst}}</small>
                             <small class="fw-light"><b>Horario</b>: {{trueque.get_horario_display}}</small>
-                        </div>
-                        
+                        </div>      
+                    </span>     
+                    <div class="d-flex justify-content-end">                                                        
                         <button class="btn btn-success confirmar-trueque" 
                             data-bs-toggle="modal" data-bs-target="#modal-confirmar"
                             data-trueque-id="{{ trueque.id }}">
                             Confirmar
                         </button>
+                    </div>    
                         
-                    </span>
-
-                    
                     
                 </div>
                
@@ -79,10 +83,51 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" onclick="aceptarTrueque()">Aceptar la solicitud</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="confirmarTrueque()">Confirmar</button>
+                <button type="button" class="btn btn-secondary" onclick="irAVentas()">Agregar ventas</button>
             </div>
         </div>
     </div>  
 </div>
 
+{% block scripts %}
+<script>
+    var truequeId = null;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var buttons = document.querySelectorAll('.confirmar-trueque');
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                truequeId = this.getAttribute('data-trueque-id');
+            })
+        })
+    });
+
+    function confirmarTrueque() {        
+        fetch("/concretar-trueque/" + truequeId + "/", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(function (response) {
+            if (response.ok) {
+                console.log('Trueque aceptado exitosamente.');
+                window.location.href = `/listar-ventas-trueque/${truequeId}?mensaje=La solicitud se aceptó correctamente`;
+            } else {
+                console.error('Error al aceptar el trueque. Código de estado: ' + response.status);
+            }
+        })
+        .catch(function (error) {
+            console.error('Error de red:', error);
+        });
+    }
+
+    function irAVentas() {        
+        window.location.href = `/registrar-ventas/${truequeId}`;
+    }
+
+</script>
+{% endblock %}
