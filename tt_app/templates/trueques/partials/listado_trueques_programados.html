@@ -5,10 +5,7 @@
 {% if trueques %}
     <span class="ms-4 mt-3 mb-5 d-flex align-items-center justify-content-between">
         <h3 class=" text-start">Listado de trueques programados para hoy</h3>
-        <form method="POST" action="{% url 'cancelar_trueques_programados' %}">
-            {% csrf_token %}
-            <button class="btn btn-danger ms-auto" type="submit">Cancelar todos los trueques de hoy</button>
-        </form>
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-cancelar">Cancelar trueques vencidos</button>
     </span>
     {% for trueque in trueques %}
         <div class="card d-flex mb-3 ms-4 ">
@@ -92,6 +89,22 @@
     </div>  
 </div>
 
+<div class="modal fade" id="modal-cancelar" tabindex="-1" role="dialog" 
+    aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-static" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Estás seguro de cancelar los trueques vencidos?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-success" onclick="cancelarTrueques()">Cancelar Trueques</button>
+            </div>
+        </div>
+    </div>  
+</div>
+
 {% block scripts %}
 <script>
     var truequeId = null;
@@ -126,9 +139,32 @@
         });
     }
 
+    function cancelarTrueques() {        
+        fetch("/cancelar-trueques-programados/", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(function (response) {
+            if (response.ok) {
+                console.log('Trueque aceptado exitosamente.');
+                window.location.href = `/trueques_programados/?mensaje=El proceso de cancelación de trueques vencidos fue exitoso.`;
+            } else {
+                console.error('Error al aceptar el trueque. Código de estado: ' + response.status);
+            }
+        })
+        .catch(function (error) {
+            console.error('Error de red:', error);
+        });
+    }
+
     function irAVentas() {        
         window.location.href = `/registrar-ventas/${truequeId}`;
     }
+
+    
 
 </script>
 {% endblock %}
