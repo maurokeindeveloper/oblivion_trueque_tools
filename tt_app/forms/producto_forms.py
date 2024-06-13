@@ -92,10 +92,9 @@ class CreacionDeProducto(forms.ModelForm):
 class FormularioDePregunta(forms.ModelForm):
     texto = forms.CharField(
         required=True,
-        label="",
-        max_length=250,
-        widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Escribí tu pregunta sobre este producto *"}
+        max_length=1000,
+        widget=forms.Textarea(
+            attrs={"class": "form-control", "placeholder": "Escribí tu pregunta sobre este producto"}
         ),
         error_messages={
             "required": "Debe ingresar un texto para registrar la pregunta",
@@ -109,10 +108,9 @@ class FormularioDePregunta(forms.ModelForm):
 class FormularioDeRespuesta(forms.ModelForm):
     texto = forms.CharField(
         required=True,
-        label="",
-        max_length=250,
-        widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Respondé la consulta que hicieron sobre tu producto *"}
+        max_length=1000,
+        widget=forms.Textarea(
+            attrs={"class": "form-control", "placeholder": "Respondé la consulta que hicieron sobre tu producto"}
         ),
         error_messages={
             "required": "Debe ingresar un texto para registrar la respuesta",
