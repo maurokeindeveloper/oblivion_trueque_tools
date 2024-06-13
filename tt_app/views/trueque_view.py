@@ -213,6 +213,7 @@ def trueques_programados(request):
     trueques_filtrados = Trueque.objects.exclude(activo=False).filter(fecha_programada=hoy, estado=3)
     print('coleccion de truques: ', trueques_filtrados)
     return render(request, "trueques/trueques_programados.html", {"trueques": trueques_filtrados,'hoy':hoy})
+
 '''
 @login_required
 def trueques_hoy(request):
@@ -228,15 +229,17 @@ def trueques_ayer(request):
     return render(request, 'trueques/partials/listado_trueques_programados.html', {'trueques': trueques_filtrados,'hoy':ayer})
 '''
 
-def concretar_trueque(request, trueque_id):
-    print("Hast acá llego!")
+@login_required
+def confirmar_trueque(request, trueque_id):
     if request.method == 'POST':
+        print("entrooo")
+        print(trueque_id)
         trueque = get_object_or_404(Trueque, id=trueque_id)
-
         solicitudes_del_producto_solicitado = Trueque.objects.exclude(activo=False).filter(producto_solicitado_id=trueque.producto_solicitado.id, estado=2)
-        for solicitud in solicitudes_del_producto_solicitado:
-            solicitud.estado = 9
-            solicitud.save()
+        if solicitudes_del_producto_solicitado:
+            for solicitud in solicitudes_del_producto_solicitado:
+                solicitud.estado = 9
+                solicitud.save()
 
         #trueque.producto_solicitado.usuario.reputacion++
         #trueque.producto_solicitante.usuario.reputacion++
@@ -244,4 +247,19 @@ def concretar_trueque(request, trueque_id):
         trueque.estado = 4
         trueque.save()
 
-    return redirect(reverse("listar_ventas_trueque") + "?mensaje=El trueque se concretó correctamente")
+        return redirect(reverse("listar_ventas_trueque", args=[trueque.id]) + "?mensaje=El trueque se concretó correctamente")
+
+def cancelar_trueque_programado(request):
+    if request.method == 'POST':
+        trueques = Trueque.objects.filter(fecha_programada__lte=date.today(), estado=3)
+        if trueques:
+            for t in trueques:
+                t.estado = 6 #cancelado por empleado
+                t.producto_solicitado.reservado = False
+                t.producto_solicitante.reservado = False
+                t.save()
+                solicitudes_producto_solicitado = Trueque.objects.filter(producto_solicitado=t.producto_solicitado, estado=2)
+                for s in solicitudes_producto_solicitado:
+                    s.estado = 1
+                    s.save()
+        return redirect(reverse("trueques_programados") + "?mensaje=El proceso de cancelación de trueques vencidos fue exitoso.")

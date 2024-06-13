@@ -28,10 +28,9 @@ urlpatterns = [
     path("productos/id/<int:id>/responder", producto_view.responder, name="responder"),
     path("filtrar_productos/<int:categoria>",producto_view.filtrar_productos,name="filtrar_productos"),
     path("empleados/", usuario_view.listado_empleados, name="empleados"),
-   # path('trueques_hoy/', trueque_view.trueques_hoy, name='trueques_hoy'),
-   # path('trueques_ayer/', trueque_view.trueques_ayer, name='trueques_ayer'),
     path('trueques_programados/', trueque_view.trueques_programados, name='trueques_programados'),
     path("registrar-ventas/<int:trueque_id>", venta_view.registrar_ventas, name="registrar_ventas"),
-    path("concretar-trueque/<int:trueque_id>", trueque_view.concretar_trueque, name="concretar_trueque"),
-    path("listar-ventas-trueque/<int:trueque_id>", venta_view.listar_ventas, name="listar_ventas_trueque")
+    path('concretar-trueque/<int:trueque_id>/', trueque_view.confirmar_trueque, name="concretar_trueque"),
+    path("listar-ventas-trueque/<int:trueque_id>", venta_view.listar_ventas, name="listar_ventas_trueque"),
+    path("cancelar-trueques-programados", trueque_view.cancelar_trueque_programado, name="cancelar_trueques_programados"),
 ]

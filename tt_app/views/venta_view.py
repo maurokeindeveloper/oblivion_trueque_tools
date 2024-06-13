@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import get_list_or_404, render
 import json
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
@@ -10,6 +10,7 @@ from django.db.models import Sum
 
 @login_required
 def registrar_ventas(request, trueque_id):
+    print("entro")
     try:
         trueque = Trueque.objects.get(id=trueque_id)
     except Trueque.DoesNotExist:
@@ -54,22 +55,17 @@ def registrar_ventas(request, trueque_id):
         }
     )
 
+@login_required
 def listar_ventas(request, trueque_id):
+    #ventas = get_list_or_404(Venta, trueque_id=trueque_id)
     ventas = Venta.objects.filter(trueque_id=trueque_id)
     trueque = get_object_or_404(Trueque, id=trueque_id)
     if trueque.estado!=4:
         return redirect(reverse("home"))
     
-    #total = ventas.aggregate(Sum('get_total'))
     total = 0
     for venta in ventas:
-        total = total + venta.get_total()
-
-    nombre_vendedor = ""
-    if ventas:
-        id_vendedor = ventas.first().vendedor
-        usuario = get_object_or_404(Usuario, id=id_vendedor.id)
-        nombre_vendedor = usuario.first_name
+        total = total + venta.get_total()  
     
     return render(
         request,
@@ -77,7 +73,6 @@ def listar_ventas(request, trueque_id):
         {
             "ventas": ventas,
             "trueque": trueque,
-            "total": total,
-            "nombre_vendedor": nombre_vendedor
+            "total": total
         }
     )

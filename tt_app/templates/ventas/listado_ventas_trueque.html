@@ -5,11 +5,12 @@
 {%block content%}
 
 {% if trueque %}
-    <h3 class="ms-4 mt-3 mb-5 text-start ">Ventas del truque {{trueque.id}}: </h3>
+    <h3 class="ms-4 mt-3 mb-5 text-start ">Ventas del trueque {{trueque.id}}: </h3>
+
 {% endif %}
 
 {% if ventas %}
-<h5>Empleado a cargo de la venta: {{nombre_vendedor}}</h5>
+<h5>Empleado a cargo de la venta: {{ventas.0.vendedor.first_name}}</h5>
 <table class="table table-hover table-striped">
     <thead>
     <tr class="table-primary">
