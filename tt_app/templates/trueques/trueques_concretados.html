@@ -1,0 +1,141 @@
+{%extends 'base.html'%}
+
+{% load static %}
+
+{%block content%}
+
+{% if trueques %}
+    <h3 class="ms-4 mt-2 mb-4 text-start ">Trueques concretados: </h3>
+    
+    {% for trueque in trueques %}
+    {%if trueque.estado == 4%}  {#concretado#} 
+    <div class="card d-flex mb-3 ms-4 border border-2 border-primary  bg-opacity-10">
+    {%else%} {#rechazado o cancelado#}
+    <div class="card d-flex mb-3 ms-4 border border-2 border-danger  bg-danger bg-opacity-10">
+    {%endif%}
+        <div class="row p-2" style="height:250px;">
+            <div class="container col-lg-5 d-flex m-auto mh-100">
+                <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center ">
+                    {%if trueque.producto_solicitante.usuario == request.user%}
+                    <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="d-flex" style="height:190px;">
+                        <img src="{%if trueque.producto_solicitante.imagen%}
+                        {{trueque.producto_solicitante.imagen.url}}
+                        {%else%}
+                        {% static 'images/default-image-missing.png' %}
+                        {%endif%}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border  
+                        {%if trueque.estado == 4%}{#concretado#}border-primary
+                        {%else%} {#rechazado o cancelado#}border-danger 
+                        {%endif%}
+                        ">
+                    </a>
+                    {%else%}
+                    <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class="d-flex" style="height:190px;">
+                        <img src="
+                        {%if trueque.producto_solicitado.imagen%}
+                        {{trueque.producto_solicitado.imagen.url}}
+                        {%else%}
+                        {% static 'images/default-image-missing.png' %}
+                        {%endif%}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border  
+                        {%if trueque.estado == 4%}{#concretado#}border-primary
+                        {%else%} {#rechazado o cancelado#}border-danger 
+                        {%endif%}
+                        ">
+                    </a>
+                    {%endif%}
+                    <small class="text-muted">Tu producto</small>
+                </div>
+                <div class="col-lg-2 d-flex my-auto">{#icono#}
+                    {%if trueque.estado > 4%}
+                    <span class="material-symbols-outlined mx-auto text-danger">sync_disabled</span>
+                    {%else%}
+                    <span class="material-symbols-outlined mx-auto text-primary">sync_lock</span>
+                    {%endif%}
+                </div>
+                <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center">
+                    {%if trueque.producto_solicitante.usuario == request.user%}
+                    <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class="d-flex" style="height:190px;">
+                        <img src="
+                        {%if trueque.producto_solicitado.imagen%}
+                        {{trueque.producto_solicitado.imagen.url}}
+                        {%else%}
+                        {% static 'images/default-image-missing.png' %}
+                        {%endif%}" alt="{{trueque.producto_solicitado.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border  
+                        {%if trueque.estado == 4%}{#concretado#}border-primary
+                        {%else%}{#rechazado o cancelado#}border-danger 
+                        {%endif%}
+                        ">
+                    </a>
+                    <small class="text-muted">{{trueque.producto_solicitado.usuario.first_name}}</small>
+                    {%else%}
+                    <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="d-flex"style="height:190px;">
+                        <img src="
+                        {%if trueque.producto_solicitante.imagen%}
+                        {{trueque.producto_solicitante.imagen.url}}
+                        {%else%}
+                        {% static 'images/default-image-missing.png' %}
+                        {%endif%}" alt="{{trueque.producto_solicitante.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border  
+                        {%if trueque.estado == 4%}{#concretado#}border-primary
+                        {%else%}{#rechazado o cancelado#}border-danger 
+                        {%endif%}
+                        ">
+                    </a>
+                    <small class="text-muted">{{trueque.producto_solicitante.usuario.first_name}}</small>
+                    {%endif%}
+                </div>
+            </div>
+            <div class="card-body col-lg-7 d-flex flex-column ">
+
+                <h4 class="card-title my-2 mb-2 {%if trueque.estado > 4%}text-danger{%else%}text-primary{%endif%}"><a href="{% url 'detalle_trueque' trueque.id%}" class="text-decoration-none text-reset">
+                    Intercambio de {{trueque.producto_solicitante.nombre|striptags|truncatechars:40}} por {{trueque.producto_solicitado.nombre|striptags|truncatechars:40}}</a>
+                </h4>
+
+                {%if trueque.estado == 4%} 
+                <p class="card-title text-primary my-4">Se confirmó el trueque exitosamente!</p>
+                {%elif trueque.estado == 9%}
+                <p class="card-title text-danger my-4">{{trueque.producto_solicitado.usuario.first_name|title}} {{trueque.get_estado_display|lower}} por su {{trueque.producto_solicitado.nombre}}.</p>
+                {%elif trueque.estado == 5%}
+                <p class="card-title text-danger my-4">RECHAZADO: {{trueque.get_motivo_rechazo_display}}</p>
+                {%elif trueque.estado == 7%}
+                <p class="card-title text-danger my-4">
+                    {%if request.user == trueque.producto_solicitante.usuario%}
+                    Cancelaste este trueque.
+                    {%else%}
+                    Cancelado por {{trueque.producto_solicitante.usuario.first_name|title}}.
+                    {%endif%}
+                </p>
+                {%elif trueque.estado == 8%}
+                <p class="card-title text-danger my-4">
+                    {%if request.user == trueque.producto_solicitado.usuario%}
+                    Cancelaste este trueque.
+                    {%else%}
+                    Cancelado por {{trueque.producto_solicitado.usuario.first_name|title}}.
+                    {%endif%}
+                </p>
+                {%else%}
+                <p class="card-title text-danger my-4">{{trueque.get_estado_display}}.</p>
+                {%endif%}
+
+                <span class="card-text d-flex ">
+                    <div class="d-flex flex-column me-auto">
+                        <small class="fw-light"><b>Sucursal</b>: {{trueque.sucursal}}</small>
+                        <small class="fw-light"><b>Fecha</b>: {{trueque.fecha_programada|date:'l j \d\e F, Y'|capfirst}}</small>
+                        <small class="fw-light"><b>Horario</b>: {{trueque.get_horario_display}}</small>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    {%endfor%}
+
+
+
+
+{% else %}
+    <h5 class="mt-5 my-3 text-center">No tiene trueques finalizados.</h5> 
+    <p class="p-2 text-center"><a href="{%url 'home'%}">Volver al inicio</a></p>
+{% endif %}
+
+{%endblock%}
+
+

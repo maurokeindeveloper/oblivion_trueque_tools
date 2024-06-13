@@ -1,0 +1,56 @@
+{%extends 'base.html'%}
+
+{% load static %}
+{%block content%}
+{%if trueque.estado == 4%}
+<div class="card border border-2 p-4">
+    <h4 class="card-title my-4 text-center text-primary fs-2">Intercambio concretado <br><small>{{trueque.producto_solicitante.nombre|capfirst}} por {{trueque.producto_solicitado.nombre|capfirst}}</small></h4>
+    <div class="d-flex align-items-center justify-content-evenly p-2 text-center">
+        <div class="d-flex flex-column  col-5">
+            <div class="d-flex mb-2" style="height:350px;">
+                <img src="{%if trueque.producto_solicitante.imagen%}
+                        {{trueque.producto_solicitante.imagen.url}}
+                        {%else%}
+                        {% static 'images/default-image-missing.png' %}
+                        {%endif%}" 
+                        class="img-fluid rounded mh-100 m-auto border border-3 border-primary " 
+                        alt="Producto de {{trueque.producto_solicitante.usuario.first_name}}">
+            </div>
+            
+            <p class="mb-1 fw-medium">{{trueque.producto_solicitante.usuario.first_name|capfirst}}</p>
+            <p class="text-muted">{{trueque.producto_solicitante.nombre|capfirst}}</p>
+        </div>
+        <div class="d-flex col-2 align-items-center justify-content-center">
+            <h1><span class="material-symbols-outlined text-primary" style="font-size:60px;">sync_lock</span></h1>
+        </div>
+        <div class="d-flex flex-column  col-5">
+            <div class="d-flex mb-2" style="height:350px;">
+                <img src="{%if trueque.producto_solicitado.imagen%}
+                        {{trueque.producto_solicitado.imagen.url}}
+                        {%else%}
+                        {% static 'images/default-image-missing.png' %}
+                        {%endif%}" 
+                        class="img-fluid rounded mh-100 m-auto  border border-3 border-primary " 
+                        alt="Producto de {{trueque.producto_solicitado.usuario.first_name}}">
+            </div>
+            <p class="mb-1 fw-medium">{{trueque.producto_solicitado.usuario.first_name|capfirst}}</p>
+            <p class="text-muted">{{trueque.producto_solicitado.nombre|capfirst}}</p>
+        </div>
+    </div>
+    <div class="row mt-3 p-2 text-center ">
+        <p class="fs-5 "><span class="fw-light">SUCURSAL DONDE SE LLEVÓ A CABO: {{trueque.sucursal|upper}}</span></p>
+        <p class="fs-5 mb-4 fw-light">SE CONCRETÓ EL DÍA {{trueque.fecha|date:'j \D\E F \D\E Y'|upper}}</p>
+        
+        {%if ventas%}
+        <p class="fs-3">-VENTAS-</p>
+        {%else%}
+        <p class="fs-5 text-muted">-NO SE REGISTRARON VENTAS-</p>
+        {%endif%}
+    </div>
+    {%include 'ventas/partials/partial_listado_ventas.html'%}
+</div>
+{%else%}
+    <h5 class="mt-5 my-3 text-center">Este trueque no ha sido concretado.</h5> 
+    <p class="p-2 text-center"><a href="{%url 'home'%}">Volver al inicio</a></p>
+{% endif %}
+{%endblock%}

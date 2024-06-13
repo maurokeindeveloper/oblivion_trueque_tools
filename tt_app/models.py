@@ -225,6 +225,7 @@ class Trueque(models.Model):
 class Respuesta(models.Model):
     texto = models.CharField(max_length=200)
     fecha = models.DateField(auto_now=True)
+    activo = models.BooleanField(default=True)
 
 
 # Modelo de pregunta
@@ -236,6 +237,7 @@ class Pregunta(models.Model):
     texto = models.CharField(max_length=200)
     respuesta = models.ForeignKey(Respuesta, on_delete=models.CASCADE, null=True)
     fecha = models.DateTimeField(auto_now=True)
+    activo = models.BooleanField(default=True)
 
 
 # Modelo de venta
@@ -250,6 +252,7 @@ class Venta(models.Model):
         Usuario, on_delete=models.CASCADE, blank=True, null=True
     )
     fecha = models.DateTimeField(auto_now=True)
+    activo = models.BooleanField(default=True)
 
     def get_total(self):
         return self.cantidad_unidades * self.precio_unitario

@@ -11,7 +11,7 @@ class CrearVenta(forms.ModelForm):
         label="Nombre del producto vendido *",
         max_length=50,
         widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Ingresá un nombre"}
+            attrs={"class": "", "placeholder": "Ingresá un nombre"}
         ),
         error_messages={
             "required": "Debe ingresar nombre del producto",
@@ -22,7 +22,7 @@ class CrearVenta(forms.ModelForm):
         label="Precio unitario*",
         min_value=0,
         widget=forms.NumberInput(
-            attrs={"class": "form-control", "placeholder": "Ingrese el precio"}
+            attrs={"class": "", "placeholder": "Ingrese el precio"}
         ),
         error_messages={
             "required": "Debe ingresar un precio.",
@@ -35,7 +35,7 @@ class CrearVenta(forms.ModelForm):
         label="Cantidad de unidades*",
         min_value=0,
         widget=forms.NumberInput(
-            attrs={"class": "form-control", "placeholder": "Ingrese la cantidad de unidades"}
+            attrs={"class": "", "placeholder": "Ingrese la cantidad de unidades"}
         ),
         error_messages={
             "required": "Debe ingresar una cantidad.",
@@ -47,3 +47,9 @@ class CrearVenta(forms.ModelForm):
     class Meta:
         model = Venta
         fields = ["nombre_producto", "precio_unitario", "cantidad_unidades"]
+
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] += " " + "form-control w-100 mt-2 mb-3" 
+

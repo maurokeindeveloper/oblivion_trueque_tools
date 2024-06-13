@@ -55,7 +55,7 @@
     </div>
     <h4 class="mt-5 mb-4">Preguntas y respuestas</h4>
     {% if user.is_authenticated %}
-        {% if not user == producto.usuario %}
+        {% if not user == producto.usuario and not user.is_staff%}
             <form action="{% url 'preguntar' producto.id %}" method="POST" class="d-flex flex-column" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
                 {% for field in form_pregunta %} 
@@ -85,7 +85,7 @@
             {% if pregunta.respuesta %}
                 <div class="mx-3 text-muted">{{ pregunta.respuesta.texto|capfirst}}</div>
             {% else %}
-                {% if user == producto.usuario %}
+                {% if user == producto.usuario and not user.is_staff%}
                     <form action="{% url 'responder' pregunta.id %}" method="POST" class="d-flex flex-column" enctype="multipart/form-data" novalidate>
                         {% csrf_token %}
                         {% for field in form_respuesta %} 

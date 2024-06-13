@@ -1,11 +1,11 @@
 {% load static %}
 <div class="row ">
     <div class="col-md-2 ">
-        <div class="card card-body h-100 ">
-            <div class="d-grid gap-1 col-6 p-1 mx-auto">
-                <a class="btn btn-primary" href="{% url 'filtrar_productos' 1 %}">0-5</a>
-                <a class="btn btn-primary" href="{% url 'filtrar_productos' 2 %}">5-10</a>
-                <a class="btn btn-primary" href="{% url 'filtrar_productos' 3 %}">10+</a>
+        <div class="card card-body h-100 justify-content-start align-items-start">
+            <div class="d-flex flex-column">
+                <a class="btn btn-light mb-2" href="{% url 'filtrar_productos' 1 %}">$0 - $5000</a>
+                <a class="btn btn-light mb-2" href="{% url 'filtrar_productos' 2 %}">$5000 - $10000</a>
+                <a class="btn btn-light mb-2" href="{% url 'filtrar_productos' 3 %}">$10000+</a>
             </div> 
         </div>
     </div>

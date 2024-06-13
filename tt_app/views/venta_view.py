@@ -39,19 +39,23 @@ def registrar_ventas(request, trueque_id):
             except json.JSONDecodeError:
                 return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
             
-    else:
-        form = CrearVenta()
+    
+    form = CrearVenta()
         #return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
+    total=0
+    for venta in ventas:
+        total+=venta.get_total()
     return render(
         request,
         "ventas/venta.html",
         {  # enviamos los siguientes parámetros:
-            "form": form,  # el form definido en producto_forms.py
+            "form": form,  # el form definido en venta_forms.py
             "titulo": "Agregar venta",  # el titulo del form
-            "boton": "Aceptar",  # el texto del botón de confirmación
+            "boton": "Agregar",  # el texto del botón de confirmación
             "obligatorios": True,  # mostrar la advertencia de campos obligatorios o no
             "ventas": ventas,
-            "trueque_id": trueque_id
+            "trueque_id": trueque_id,
+            "total": total
         }
     )
 
