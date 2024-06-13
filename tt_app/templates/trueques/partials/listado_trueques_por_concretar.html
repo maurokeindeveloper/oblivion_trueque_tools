@@ -6,16 +6,26 @@
 {%else%}
 <div class="card d-flex mb-3 ms-4">
 {%endif%}
-    <div class="row p-2" style="height:230px;">
+    <div class="row p-2" style="height:250px;">
         <div class="container col-lg-5 d-flex m-auto mh-100">
             <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center ">
                 {%if trueque.producto_solicitante.usuario == request.user%}
                 <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="d-flex"style="height:190px;">
-                    <img src="{{trueque.producto_solicitante.imagen.url}}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border border-dark">
+                    <img src="
+                    {%if trueque.producto_solicitante.imagen%}
+                    {{trueque.producto_solicitante.imagen.url}}
+                    {%else%}
+                    {%static 'images/default-image-missing.png'%}
+                    {%endif%}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border border-dark">
                 </a>
                 {%else%}
                 <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class="d-flex" style="height:190px;">
-                    <img src="{{trueque.producto_solicitado.imagen.url}}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border border-dark">
+                    <img src="
+                    {%if trueque.producto_solicitado.imagen%}
+                    {{trueque.producto_solicitado.imagen.url}}
+                    {%else%}
+                    {%static 'images/default-image-missing.png'%}
+                    {%endif%}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border border-dark">
                 </a>
                 {%endif%}
                 <small class="text-muted">Tu producto</small>
@@ -26,19 +36,29 @@
             <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center">
                 {%if trueque.producto_solicitante.usuario == request.user%}
                 <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class="d-flex" style="height:190px;">
-                    <img src="{{trueque.producto_solicitado.imagen.url}}" alt="{{trueque.producto_solicitado.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border border-dark">
+                    <img src="
+                    {%if trueque.producto_solicitado.imagen%}
+                    {{trueque.producto_solicitado.imagen.url}}
+                    {%else%}
+                    {%static 'images/default-image-missing.png'%}
+                    {%endif%}" alt="{{trueque.producto_solicitado.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border border-dark">
                 </a>
                 <small class="text-muted">{{trueque.producto_solicitado.usuario.first_name}}</small>
                 {%else%}
                 <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="d-flex"style="height:190px;">
-                    <img src="{{trueque.producto_solicitante.imagen.url}}" alt="{{trueque.producto_solicitante.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border border-dark">
+                    <img src="
+                    {%if trueque.producto_solicitante.imagen%}
+                    {{trueque.producto_solicitante.imagen.url}}
+                    {%else%}
+                    {%static 'images/default-image-missing.png'%}
+                    {%endif%}" alt="{{trueque.producto_solicitante.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border border-dark">
                 </a>
                 <small class="text-muted">{{trueque.producto_solicitante.usuario.first_name}}</small>
                 {%endif%}
             </div>
         </div>
         <div class="card-body col-lg-7 d-flex flex-column justify-content-around">
-            <h4 class="card-title"><a href="#" class="text-decoration-none text-reset">Intercambiar {{trueque.producto_solicitante.nombre|striptags|truncatechars:40}} por {{trueque.producto_solicitado.nombre|striptags|truncatechars:40}}</a> </h4>
+            <h4 class="card-title">Intercambiar <a href="{%url 'detalle_producto' trueque.producto_solicitante.id%}" class="text-decoration-none text-reset">{{trueque.producto_solicitante.nombre|striptags|truncatechars:40}}</a> por <a href="{%url 'detalle_producto' trueque.producto_solicitado.id%}" class="text-decoration-none text-reset">{{trueque.producto_solicitado.nombre|striptags|truncatechars:40}}</a> </h4>
 
             {%if trueque.estado == 3%}
             <p class="card-title text-success">ACEPTADO: Sólo falta presentarte para realizar el intercambio!</p>
@@ -59,9 +79,9 @@
                     <small class="fw-light"><b>Horario</b>: {{trueque.get_horario_display}}</small>
                 </div>
                 {%if trueque.producto_solicitante.usuario == user%}
-                <form method="POST" action="{% url 'cancelar_trueque' id=trueque.id estado=7 ret='p_c'%}" class="mt-auto">
+                <form method="POST" action="{% url 'cancelar_trueque' id=trueque.id estado=7 ret='por_concretar'%}" class="mt-auto">
                 {%else%}
-                <form method="POST" action="{% url 'cancelar_trueque' id=trueque.id estado=8 ret='p_c'%}" class="mt-auto">
+                <form method="POST" action="{% url 'cancelar_trueque' id=trueque.id estado=8 ret='por_concretar'%}" class="mt-auto">
                 {%endif%}
                     {% csrf_token %}
                     <button class="btn btn-danger ms-auto " type="submit">Cancelar</button>

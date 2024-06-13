@@ -3,11 +3,23 @@ from django.db.models.fields.files import ImageField
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from datetime import datetime 
+from datetime import datetime
 
 
 # Create your models here.
 # Creating users and superusers
+
+
+# Modelo de sucursal
+class Sucursal(models.Model):
+    ciudad = models.CharField(max_length=50)
+    direccion = models.CharField(max_length=200)
+    activo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.ciudad + " - " + self.direccion
+
+
 class MyCustomUserManager(BaseUserManager):
     def create_cliente(
         self, email, first_name, last_name, dni, phone, birthdate, password=None
@@ -26,13 +38,14 @@ class MyCustomUserManager(BaseUserManager):
         cliente.save(using=self._db)
         return cliente
 
-    def create_empleado(self, email, first_name, last_name, password):
+    def create_empleado(self, email, first_name, last_name, password, sucursal):
         if not email:
             raise ValueError("El nombre de usuario debe ser tu correo electrónico.")
         empleado = self.model(
             email=self.normalize_email(email),
             first_name=first_name,
             last_name=last_name,
+            sucursal=sucursal,
         )
         empleado.is_staff = True
         empleado.set_password(password)
@@ -72,6 +85,9 @@ class Usuario(AbstractBaseUser):
     phone = models.CharField(max_length=30, blank=True)
     birthdate = models.DateField(default="1990-01-01", blank=True)
     hide_email = models.BooleanField(default=True)
+    sucursal = models.ForeignKey(
+        Sucursal, on_delete=models.CASCADE, related_name="empleados", null=True
+    )
 
     objects = MyCustomUserManager()
 
@@ -85,15 +101,6 @@ class Usuario(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
-
-
-# Modelo de sucursal
-class Sucursal(models.Model):
-    ciudad = models.CharField(max_length=50)
-    direccion = models.CharField(max_length=200)
-    activo = models.BooleanField(default=True)
-    def __str__(self):
-        return self.ciudad +" - "+ self.direccion
 
 
 # Product model
@@ -128,19 +135,31 @@ class Producto(models.Model):
     )
 
     def __str__(self):
-        return self.nombre + "\t(" + str(self.usuario.id) + ")"
+        return self.nombre + "\t(" + str(self.categoria) + ")"
 
 
 # Modelo de trueque
 class Trueque(models.Model):
     producto_solicitante = models.ForeignKey(
-        Producto, on_delete=models.CASCADE, related_name="trueque", null=False, blank=False
+        Producto,
+        on_delete=models.CASCADE,
+        related_name="trueque",
+        null=False,
+        blank=False,
     )
     producto_solicitado = models.ForeignKey(
-        Producto, on_delete=models.CASCADE, related_name="trueque_solicitado", null=False, blank=False
+        Producto,
+        on_delete=models.CASCADE,
+        related_name="trueque_solicitado",
+        null=False,
+        blank=False,
     )
     sucursal = models.ForeignKey(
-        Sucursal, on_delete=models.CASCADE, related_name="trueques", null=False, blank=False
+        Sucursal,
+        on_delete=models.CASCADE,
+        related_name="trueques",
+        null=False,
+        blank=False,
     )
     activo = models.BooleanField(default=True)
     fecha = models.DateField(auto_now=True)
@@ -157,7 +176,9 @@ class Trueque(models.Model):
         rango_8 = 8, _("Turno Tarde: 6 PM")
         rango_9 = 9, _("Turno Tarde: 7 PM")
 
-    horario = models.IntegerField(choices=Rango_Horario.choices, blank=False, null=False, default=1)
+    horario = models.IntegerField(
+        choices=Rango_Horario.choices, blank=False, null=False, default=1
+    )
 
     class Estado(models.IntegerChoices):
         estado_1 = 1, _("Solicitado")
@@ -170,7 +191,7 @@ class Trueque(models.Model):
         estado_8 = 8, _("Cancelado por solicitado")
         estado_9 = 9, _("Concretó otro trueque")
 
-    estado = models.IntegerField(choices=Estado.choices,default=1)
+    estado = models.IntegerField(choices=Estado.choices, default=1)
 
     class OpcionRechazo(models.IntegerChoices):
         rechazo_1 = 1, _("Producto ya no disponible")
@@ -179,12 +200,26 @@ class Trueque(models.Model):
         rechazo_4 = 4, _("Falta de disponibilidad en la fecha solicitada")
         rechazo_5 = 5, _("Otros motivos")
 
-    motivo_rechazo = models.IntegerField(choices=OpcionRechazo.choices, blank=True, null=True, default=None)
+    motivo_rechazo = models.IntegerField(
+        choices=OpcionRechazo.choices, blank=True, null=True, default=None
+    )
 
     def __str__(self):
         p1 = self.producto_solicitante
         p2 = self.producto_solicitado
-        return "("+str(self.id)+")  "+p1.usuario.first_name+" quiere intercambiar "+ p1.nombre+" por "+p2.nombre+" de "+p2.usuario.first_name
+        return (
+            "("
+            + str(self.id)
+            + ")  "
+            + p1.usuario.first_name
+            + " quiere intercambiar "
+            + p1.nombre
+            + " por "
+            + p2.nombre
+            + " de "
+            + p2.usuario.first_name
+        )
+
 
 # Modelo de respuesta
 class Respuesta(models.Model):
@@ -208,4 +243,13 @@ class Venta(models.Model):
     cantidad_unidades = models.IntegerField()
     precio_unitario = models.FloatField()
     nombre_producto = models.CharField(max_length=200)
-    trueque = models.ForeignKey(Trueque, on_delete=models.CASCADE)
+    trueque = models.ForeignKey(
+        Trueque, on_delete=models.CASCADE, blank=True, null=True
+    )
+    vendedor = models.ForeignKey(
+        Usuario, on_delete=models.CASCADE, blank=True, null=True
+    )
+    fecha = models.DateTimeField(auto_now=True)
+
+    def get_total(self):
+        return self.cantidad_unidades * self.precio_unitario

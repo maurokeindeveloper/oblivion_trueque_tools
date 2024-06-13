@@ -10,7 +10,11 @@
 </head>
 <body>
     {% include 'partials/navbar.html' %}
-
+    {% with request.resolver_match.url_name as url_actual %}
+        {%if url_actual == 'trueques_programados' %}
+            {%include 'trueques/partials/navbar_empleado.html'%}
+        {%endif%}
+    {%endwith%}
     <main class="container my-5">
         <div id="mensaje-feedback" class="alert alert-success" style="display: none;"></div>
         {% block content %}
@@ -30,7 +34,7 @@
             // Ocultar el mensaje después de 3 segundos (3000 milisegundos)
             setTimeout(function() {
                 mensajeElemento.style.display = "none";
-            }, 3000);
+            }, 6000);
         }
 
         // Obtener el mensaje de feedback de la URL (si lo hay)

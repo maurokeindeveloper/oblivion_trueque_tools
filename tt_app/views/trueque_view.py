@@ -7,6 +7,8 @@ from django.urls import reverse
 from ..forms.trueque_forms import SolicitarForm
 from ..forms.usuario_forms import check_cliente,check_empleado
 from ..models import Producto, Trueque
+from datetime import timedelta
+from datetime import date
 
 @login_required
 def gestion_trueque(request):
@@ -25,26 +27,26 @@ def trueques_entrantes(request):
     trueques = Trueque.objects.exclude(activo=False).filter(Q(estado=1) | Q(estado=2),producto_solicitado__usuario=usuario).order_by("producto_solicitado")
     return render(request, "trueques/trueques_entrantes.html", {"trueques": trueques})
 
-@login_required
-def aceptar_solicitud(request, trueque_id):
-    if request.POST:
-        # Obtener el objeto trueque
-        trueque = get_object_or_404(Trueque, id=trueque_id)   
+# @login_required
+# def aceptar_solicitud(request, trueque_id):
+#     if request.POST:
+#         # Obtener el objeto trueque
+#         trueque = get_object_or_404(Trueque, id=trueque_id)   
 
-        #trueques del solicitado (el que acepta la solicutud) que esten en estado solicitado para asignar en pendiente
-        trueques = Trueque.objects.exclude(activo=False).filter(producto_solicitado=trueque.producto_solicitante, estado=1)     
-        for tr in trueques:
-            tr.estado = 2 #pendiente
-            tr.save()
+#         #trueques del solicitado (el que acepta la solicutud) que esten en estado solicitado para asignar en pendiente
+#         trueques = Trueque.objects.exclude(activo=False).filter(producto_solicitado=trueque.producto_solicitante, estado=1)     
+#         for tr in trueques:
+#             tr.estado = 2 #pendiente
+#             tr.save()
 
-        producto = Producto.objects.first(id=trueque.producto_solicitado.id)
-        producto.reservado = True
-        producto.save()
+#         producto = Producto.objects.first(id=trueque.producto_solicitado.id)
+#         producto.reservado = True
+#         producto.save()
 
-        # Actualizar el trueque en la base de datos
-        trueque.estado = 3
-        trueque.save()        
-    return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se aceptó correctamente")
+#         # Actualizar el trueque en la base de datos
+#         trueque.estado = 3
+#         trueque.save()        
+#     return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se aceptó correctamente")
 
 @login_required
 def trueques_salientes(request):
@@ -73,42 +75,46 @@ def trueques_finalizados(request):
     trueques = Trueque.objects.exclude(activo=False).filter(Q(producto_solicitante__usuario=usuario) | Q(producto_solicitado__usuario=usuario), estado__gte=4).order_by('-fecha')
     return render(request, "trueques/trueques_finalizados.html", {"trueques": trueques})
 
-# @login_required
-# def aceptar_solicitud(request, trueque_id):
-#     if request.POST:
-#         # Obtener el objeto trueque
-#         trueque = get_object_or_404(Trueque, id=trueque_id)        
-#         # Actualizar el campo en la base de datos
-#         if trueque.producto_solicitado.reservado:
-#             return redirect(reverse("trueques_entrantes") + "?mensaje=No se puede aceptar la solicitud. (Tu producto está reservado para otro trueque)")
-#         trueque.producto_solicitado.reservado = True
-#         trueque.producto_solicitado.save()
-#         s_pendientes = Trueque.objects.exclude(activo=False).exclude(id=trueque.id).filter(producto_solicitado = trueque.producto_solicitado,estado=1)
-#         for otra_solicitud in s_pendientes:
-#             otra_solicitud.estado = 2
-#             otra_solicitud.save()
-#         trueque.estado = 3
-#         trueque.save()        
-#     return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se aceptó correctamente")
+@login_required
+def aceptar_solicitud(request, trueque_id):
+    if request.method == 'POST':
+        # Obtener el objeto trueque
+        trueque = get_object_or_404(Trueque, id=trueque_id)        
+        # Actualizar el campo en la base de datos
+        trueque.producto_solicitado.reservado = True
+        trueque.producto_solicitado.save()
+        s_pendientes = Trueque.objects.exclude(activo=False).exclude(id=trueque.id).filter(producto_solicitado = trueque.producto_solicitado,estado=1)
+        for otra_solicitud in s_pendientes:
+            otra_solicitud.estado = 2 #se le asigna estado pendiente
+            otra_solicitud.save()
+        trueques_enviados_anteriormente = Trueque.objects.exclude(activo=False).exclude(id=trueque.id).filter(producto_solicitante = trueque.producto_solicitado,estado=1)
+        for otra_solicitud in trueques_enviados_anteriormente:
+            otra_solicitud.estado = 7 #se le asigna estado 'cancelado por solicitante'
+            otra_solicitud.save()
+        trueque.estado = 3
+        trueque.save()        
+    return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se aceptó correctamente")
 
 @login_required
 def cancelar_trueque(request,id,estado,ret):
     if request.POST:
         trueque = get_object_or_404(Trueque,id=id)
-        if trueque.estado == 3:
+        if trueque.estado == 3: #3 = aceptado
             s_pendientes = Trueque.objects.exclude(activo=False).exclude(id=id).filter(producto_solicitado = trueque.producto_solicitado,estado=2)
             for otra_solicitud in s_pendientes:  
                 otra_solicitud.estado = 1   #retorna todos los otros trueques pendientes a solicitados
                 otra_solicitud.save()
-            trueque.producto_solicitado.reservado = False        
+            trueque.producto_solicitado.reservado = False #se debe guardar con un save() inmediatamente despues del cambio para simular un 'efecto cascada' en las tablas que no perte 
             trueque.producto_solicitado.save()
-        trueque.producto_solicitante.reservado = False
+        trueque.producto_solicitante.reservado = False 
         trueque.producto_solicitante.save()
         trueque.estado = estado
         trueque.save() 
+        """se debe guardar a mano la tabla productos asociada a la tabla trueque tanto para los productos solicitantes como para los solicitados. Al final se termina guardando la tabla trueque"""
+        """Cada referencia a la que se le apliquen cambios (como trueque.producto_solicitado o trueque.producto_solicitante) requiere hacer un save() inmediatamente después para reflejar los cambios en la base de datos"""
         return {
-            's':redirect('trueques_salientes'),
-            'p_c':redirect('trueques_por_concretar')
+            'salientes':redirect('trueques_salientes'),
+            'por_concretar':redirect('trueques_por_concretar'),
         }.get(ret)
     else:
         return redirect('home')
@@ -195,3 +201,47 @@ def rechazar_solicitud_otros(request, trueque_id):
         producto.reservado = False
         producto.save()
     return JsonResponse({'mensaje': 'La solicitud se rechazó correctamente'}, status=200)
+
+@login_required
+def trueques_programados(request):
+    usuario = request.user
+    chk = check_empleado(usuario)
+    if chk["ok"]:
+        return chk["return"]
+    hoy = date.today()
+    print('fecha de hoy:', hoy)
+    trueques_filtrados = Trueque.objects.exclude(activo=False).filter(fecha_programada=hoy, estado=3)
+    print('coleccion de truques: ', trueques_filtrados)
+    return render(request, "trueques/trueques_programados.html", {"trueques": trueques_filtrados,'hoy':hoy})
+'''
+@login_required
+def trueques_hoy(request):
+    hoy = date.today()
+    trueques_filtrados = Trueque.objects.filter(fecha_programada=hoy)
+    return render(request, 'trueques/partials/listado_trueques_programados.html', {'trueques': trueques_filtrados, 'hoy':hoy})
+'''
+'''
+@login_required
+def trueques_ayer(request):
+    ayer = date.today() - timedelta(days=1)
+    trueques_filtrados = Trueque.objects.filter(fecha_programada=ayer)
+    return render(request, 'trueques/partials/listado_trueques_programados.html', {'trueques': trueques_filtrados,'hoy':ayer})
+'''
+
+def concretar_trueque(request, trueque_id):
+    print("Hast acá llego!")
+    if request.method == 'POST':
+        trueque = get_object_or_404(Trueque, id=trueque_id)
+
+        solicitudes_del_producto_solicitado = Trueque.objects.exclude(activo=False).filter(producto_solicitado_id=trueque.producto_solicitado.id, estado=2)
+        for solicitud in solicitudes_del_producto_solicitado:
+            solicitud.estado = 9
+            solicitud.save()
+
+        #trueque.producto_solicitado.usuario.reputacion++
+        #trueque.producto_solicitante.usuario.reputacion++
+        
+        trueque.estado = 4
+        trueque.save()
+
+    return redirect(reverse("listar_ventas_trueque") + "?mensaje=El trueque se concretó correctamente")

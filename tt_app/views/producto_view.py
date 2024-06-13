@@ -8,11 +8,12 @@ from ..forms.producto_forms import (
 from ..forms.usuario_forms import check_cliente
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from ..models import Producto, Pregunta, Respuesta
+from ..models import Producto, Pregunta, Respuesta,Trueque
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-
-
+from datetime import timedelta
+from datetime import date
+from django.db.models import Q
 @login_required
 def crear_producto(request):
     chk = check_cliente(request.user)
@@ -70,6 +71,23 @@ def buscar_productos(request):
         )
     else:
         return render(request, "productos/productos.html", {"productos": productos})
+    
+def buscar_productos_trueques_programados(request):
+    if request.method == "GET":
+        cadena = request.GET.get("cadena")
+        print(cadena)
+        trueques_filtrados = Trueque.objects.exclude(activo=False).filter( Q(producto_solicitante__nombre__icontains=cadena) | Q(producto_solicitado__nombre__icontains=cadena)|Q(producto_solicitante__usuario__first_name__icontains=cadena)|Q(producto_solicitado__usuario__first_name__icontains=cadena),estado=3,fecha_programada=date.today())
+        
+        return render(
+            request,
+            "trueques/trueques_programados.html",
+            {
+                "trueques": trueques_filtrados,
+                "cadena": cadena,
+            },
+        )
+    else:
+        return render(request, "productos/productos.html", {"trueques": trueques_filtrados})
 
 
 def detalle_producto(request, id):
@@ -79,12 +97,14 @@ def detalle_producto(request, id):
     preguntas = producto.preguntas.all().order_by("-fecha")
 
     # Formulario para las preguntas de los clientes
-    form = FormularioDePregunta()
-
+    form_pregunta = FormularioDePregunta()
+    # Formulario para las respuestas de los dueños 
+    
+    form_respuesta = FormularioDeRespuesta()
     return render(
         request,
         "productos/detalle_producto.html",
-        {"producto": producto, "preguntas": preguntas, "formulario": form},
+        {"producto": producto, "preguntas": preguntas, "form_pregunta": form_pregunta, "form_respuesta": form_respuesta},
     )
 
 
@@ -106,10 +126,8 @@ def preguntar(request, id):
         pregunta.cliente = request.user
         # Guarda la pregunta en la base de datos
         pregunta.save()
-    return render(
-        request,
-        "productos/pregunta.html",
-        {"producto": producto, "form": form, "pregunta": pregunta},
+    return redirect(
+        'detalle_producto', producto.id
     )
 
 
@@ -134,12 +152,9 @@ def responder(request, id):
         # Asigna la respuesta a la pregunta correspondiente y actualiza la BD
         pregunta.respuesta = respuesta
         pregunta.save()
-    return render(
-        request,
-        "productos/respuesta.html",
-        {"form": form_respuesta, "pregunta": pregunta, "enviada": enviada},
+    return redirect(
+        "detalle_producto", pregunta.producto.id
     )
-
 
 def filtrar_productos(request, categoria):
     nombre_categoria = {

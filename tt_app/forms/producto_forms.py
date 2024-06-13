@@ -90,12 +90,34 @@ class CreacionDeProducto(forms.ModelForm):
 
 
 class FormularioDePregunta(forms.ModelForm):
+    texto = forms.CharField(
+        required=True,
+        label="",
+        max_length=250,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Escribí tu pregunta sobre este producto *"}
+        ),
+        error_messages={
+            "required": "Debe ingresar un texto para registrar la pregunta",
+        },
+    )
     class Meta:
         model = Pregunta
         fields = ["texto"]
 
 
 class FormularioDeRespuesta(forms.ModelForm):
+    texto = forms.CharField(
+        required=True,
+        label="",
+        max_length=250,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Respondé la consulta que hicieron sobre tu producto *"}
+        ),
+        error_messages={
+            "required": "Debe ingresar un texto para registrar la respuesta",
+        },
+    )
     class Meta:
         model = Respuesta
         fields = ["texto"]

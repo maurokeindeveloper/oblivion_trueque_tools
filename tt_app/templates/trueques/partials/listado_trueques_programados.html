@@ -1,0 +1,88 @@
+
+{% load static %}
+
+{% if trueques %}
+    {% for trueque in trueques %}
+        <div class="card d-flex mb-3 ms-4 ">
+            <div class="row p-2" style="height:250px;">
+                <div class="container col-lg-5 d-flex m-auto mh-100">
+                    <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center">
+                        {% if trueque.producto_solicitante.usuario == request.user %}
+                        <a href="{% url 'detalle_producto' trueque.producto_solicitante.id %}" class="d-flex" style="height:190px;">
+                            <img src="{% if trueque.producto_solicitante.imagen %}{{ trueque.producto_solicitante.imagen.url }}{% else %}{% static 'images/default-image-missing.png' %}{% endif %}" alt="{{ trueque.producto_solicitante.nombre }}" class="img-fluid rounded mh-100 m-auto border border-dark">
+                        </a>
+                        {% else %}
+                        <a href="{% url 'detalle_producto' trueque.producto_solicitado.id %}" class="d-flex" style="height:190px;">
+                            <img src="{% if trueque.producto_solicitado.imagen %}{{ trueque.producto_solicitado.imagen.url }}{% else %}{% static 'images/default-image-missing.png' %}{% endif %}" alt="{{ trueque.producto_solicitado.nombre }}" class="img-fluid rounded mh-100 m-auto border border-dark">
+                        </a>
+                        {% endif %}
+                        <small class="text-muted">{{ trueque.producto_solicitado.usuario.first_name }}</small>
+                    </div>
+                    <div class="col-lg-2 d-flex my-auto">
+                        <span class="material-symbols-outlined mx-auto">sync</span>
+                    </div>
+                    <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center">
+                        {% if trueque.producto_solicitante.usuario == request.user %}
+                        <a href="{% url 'detalle_producto' trueque.producto_solicitado.id %}" class="d-flex" style="height:190px;">
+                            <img src="{% if trueque.producto_solicitado.imagen %}{{ trueque.producto_solicitado.imagen.url }}{% else %}{% static 'images/default-image-missing.png' %}{% endif %}" alt="{{ trueque.producto_solicitado.usuario.first_name }} producto" class="img-fluid rounded mh-100 m-auto border border-dark">
+                        </a>
+                        <small class="text-muted">{{ trueque.producto_solicitado.usuario.first_name }}</small>
+                        {% else %}
+                        <a href="{% url 'detalle_producto' trueque.producto_solicitante.id %}" class="d-flex" style="height:190px;">
+                            <img src="{% if trueque.producto_solicitante.imagen %}{{ trueque.producto_solicitante.imagen.url }}{% else %}{% static 'images/default-image-missing.png' %}{% endif %}" alt="{{ trueque.producto_solicitante.usuario.first_name }} producto" class="img-fluid rounded mh-100 m-auto border border-dark">
+                        </a>
+                        <small class="text-muted">{{ trueque.producto_solicitante.usuario.first_name }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body col-lg-7 d-flex flex-column justify-content-around">
+                    <h4 class="card-title">Intercambiar <a href="{% url 'detalle_producto' trueque.producto_solicitante.id %}" class="text-decoration-none text-reset">{{ trueque.producto_solicitante.nombre|striptags|truncatechars:40 }}</a> por <a href="{% url 'detalle_producto' trueque.producto_solicitado.id %}" class="text-decoration-none text-reset">{{ trueque.producto_solicitado.nombre|striptags|truncatechars:40 }}</a> </h4>
+                    {% if trueque.estado == 3 %}
+                    <p class="card-title text-success">ACEPTADO: Sólo falta presentarte para realizar el intercambio!</p>
+                    {%else%}
+                    <p class="card-title text-success">Error: no tiene que aparecer este mensaje!</p>
+                    {% endif %}
+                    <span class="card-text d-flex">
+                        <div class="d-flex flex-column me-auto">
+                            <p>  {{trueque.producto_solicitado.usuario.first_name }} aceptó la solicitud de {{trueque.producto_solicitante.usuario.first_name }}</p>
+                            <small class="fw-light"><b>Sucursal</b>: {{trueque.sucursal}}</small>
+                            <small class="fw-light"><b>Fecha</b>: {{trueque.fecha_programada|date:'l j \d\e F, Y'|capfirst}}</small>
+                            <small class="fw-light"><b>Horario</b>: {{trueque.get_horario_display}}</small>
+                        </div>
+                        
+                        <button class="btn btn-success confirmar-trueque" 
+                            data-bs-toggle="modal" data-bs-target="#modal-confirmar"
+                            data-trueque-id="{{ trueque.id }}">
+                            Confirmar
+                        </button>
+                        
+                    </span>
+
+                    
+                    
+                </div>
+               
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <h5 class="mt-5 my-3 text-center">No tiene trueques programados para hoy.</h5> 
+    <p class="p-2 text-center"><a href="{% url 'home' %}">Volver al inicio</a></p>
+{% endif %}
+
+<div class="modal fade" id="modal-confirmar" tabindex="-1" role="dialog" 
+    aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-static" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Antes de confirmar ¿Querés agregar ventas a este trueque?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="aceptarTrueque()">Aceptar la solicitud</button>
+            </div>
+        </div>
+    </div>  
+</div>
+

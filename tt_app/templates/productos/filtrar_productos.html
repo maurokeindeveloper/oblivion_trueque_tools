@@ -5,9 +5,9 @@
 {%block content%}
 
 {% if productos %}
-<h3 class="ms-4 mt-3 mb-5 text-start">Productos de categoría {{categoria}}:</h3>
-{% include 'productos/partials/filtrado_productos.html' %}
-
+    <h3 class="ms-4 mt-3 mb-5 text-start">Productos de categoría {{categoria}}:</h3>
+    {% include 'productos/partials/filtrado_productos.html' %}
+    <p class="p-2 text-center"><a href="{%url 'productos'%}">Volver a productos</a></p>
 {% else %}
     <h5 class="mt-5 my-3 text-center">No hay productos de la categoría seleccionada.</h5> 
     <p class="p-2 text-center"><a href="{%url 'productos'%}">Volver a productos</a></p>

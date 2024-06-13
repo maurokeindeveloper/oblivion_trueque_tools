@@ -1,0 +1,43 @@
+{%extends 'base.html'%}
+
+{% load static %}
+
+{%block content%}
+
+{% if user.is_staff %}
+
+    {% include 'partials/form_vista.html'%}
+
+    {% if ventas %}
+    <table class="table table-sm table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Nombre del producto</th>
+            <th scope="col">Precio unitario</th>
+            <th scope="col">Cantidad de unidades</th>
+            <th scope="col">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for venta in ventas %}
+            <tr>
+                <th>{{venta.nombre_producto}}</th>
+                <td>{{venta.precio_unitario}}</td>
+                <td>{{venta.cantidad_unidades}}</td>
+                <td>{{venta.get_total}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h3>No hay ventas agregadas</h3>
+    {% endif %}    
+    <form method="POST" action="{% url 'concretar_trueque' trueque_id %}" for>
+        {% csrf_token %}
+        <button class="btn btn-success" type="submit">Concretar Trueque</button>
+    </form>    
+
+{% else %}
+    <p>Debes ser empleado para registrar ventas :D</p>
+{% endif %}
+{%endblock%}
