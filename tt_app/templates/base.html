@@ -8,10 +8,10 @@
     <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/styles.css' %}" >
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
-<body>
+<body class="bg-light">
     {% include 'partials/navbar.html' %}
     {% with request.resolver_match.url_name as url_actual %}
-        {%if url_actual == 'trueques_programados' %}
+        {%if url_actual == 'trueques_programados' or url_actual == 'trueques_concretados' or url_actual == 'buscar_productos_trueques_programados'%}
             {%include 'trueques/partials/navbar_empleado.html'%}
         {%endif%}
     {%endwith%}

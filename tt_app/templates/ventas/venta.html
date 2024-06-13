@@ -4,40 +4,69 @@
 
 {%block content%}
 
-{% if user.is_staff %}
+<div class="d-flex row">   
+    {% if user.is_staff %}
 
-    {% include 'partials/form_vista.html'%}
-
-    {% if ventas %}
-    <table class="table table-sm table-hover">
-        <thead>
-        <tr>
-            <th scope="col">Nombre del producto</th>
-            <th scope="col">Precio unitario</th>
-            <th scope="col">Cantidad de unidades</th>
-            <th scope="col">Total</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for venta in ventas %}
+    <div class="col-5 px-4">
+        <div class="card p-1">
+            <form method="POST" class="card-body" enctype="multipart/form-data" novalidate>
+                <h2 class="text-center display-6 mb-4 ">{{titulo}}</h2>
+                {% csrf_token %}
+                {% for field in form %}
+                    {{ field.label_tag }} 
+                    {{ field }}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                        <small class="text-danger fw-medium"><p>{{ error }}</p></small> {#errores de los campos#}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+                {%if error%}<small class="text-danger fw-medium my-1"><p>{{error}}</p></small>{%endif%}     {#errores del formulario entero#}
+                <button class="btn btn-primary fw-medium mt-2 w-100" type="submit">{{boton}}</button>
+            </form>
+        </div>
+        {% if obligatorios%} <small class="text-muted fw-light mt-1">*: Este campo es obligatorio.</small> {%endif%}
+    </div>
+    <div class="col-7 ">
+        {% if ventas %}
+        <table class="table table-sm table-hover border rounded">
+            <thead>
             <tr>
-                <th>{{venta.nombre_producto}}</th>
-                <td>{{venta.precio_unitario}}</td>
-                <td>{{venta.cantidad_unidades}}</td>
-                <td>{{venta.get_total}}</td>
+                <th scope="col">Nombre del producto</th>
+                <th scope="col">Precio unitario</th>
+                <th scope="col">Cantidad de unidades</th>
+                <th scope="col">Total</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for venta in ventas %}
+                <tr>
+                    <th>{{venta.nombre_producto}}</th>
+                    <td>{{venta.precio_unitario}}</td>
+                    <td>{{venta.cantidad_unidades}}</td>
+                    <td>{{venta.get_total}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    
+                <th scope="col" >Total a pagar</th>
+                <th colspan="2"></th>
+                <th scope="col" class="text-start">${{total}}</th>
+                </tr>
+            </tfoot>
+        </table>
+        {% else %}
+        <p class="display-6 fs-2">No hay ventas agregadas</p>
+        {% endif %}     
+    </div>
     {% else %}
-    <h3>No hay ventas agregadas</h3>
-    {% endif %}    
-    <form method="POST" action="{% url 'concretar_trueque' trueque_id %}" for>
-        {% csrf_token %}
-        <button class="btn btn-success" type="submit">Concretar Trueque</button>
-    </form>    
-
-{% else %}
-    <p>Debes ser empleado para registrar ventas :D</p>
-{% endif %}
+        <p>Debes ser empleado para registrar ventas :D</p>
+    {% endif %}
+</div>
+<form method="POST" class="d-flex justify-content-end" action="{% url 'concretar_trueque' trueque_id %}" for>
+    {% csrf_token %}
+    <button class="btn btn-success" type="submit">Concretar Trueque</button>
+</form>  
 {%endblock%}

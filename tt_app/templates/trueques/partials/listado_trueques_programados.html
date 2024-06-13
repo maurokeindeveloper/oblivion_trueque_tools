@@ -3,10 +3,13 @@
 
 
 {% if trueques %}
-    <form method="POST" action="{% url 'cancelar_trueques_programados' %}">
-        {% csrf_token %}
-        <button class="btn btn-danger" type="submit">Cancelar trueques vencidos</button>
-    </form>
+    <span class="ms-4 mt-3 mb-5 d-flex align-items-center justify-content-between">
+        <h3 class=" text-start">Listado de trueques programados para hoy</h3>
+        <form method="POST" action="{% url 'cancelar_trueques_programados' %}">
+            {% csrf_token %}
+            <button class="btn btn-danger ms-auto" type="submit">Cancelar todos los trueques de hoy</button>
+        </form>
+    </span>
     {% for trueque in trueques %}
         <div class="card d-flex mb-3 ms-4 ">
             <div class="row p-2" style="height:250px;">
@@ -43,7 +46,7 @@
                 <div class="card-body col-lg-7 d-flex flex-column justify-content-around">
                     <h4 class="card-title">Intercambiar <a href="{% url 'detalle_producto' trueque.producto_solicitante.id %}" class="text-decoration-none text-reset">{{ trueque.producto_solicitante.nombre|striptags|truncatechars:40 }}</a> por <a href="{% url 'detalle_producto' trueque.producto_solicitado.id %}" class="text-decoration-none text-reset">{{ trueque.producto_solicitado.nombre|striptags|truncatechars:40 }}</a> </h4>
                     {% if trueque.estado == 3 %}
-                    <p class="card-title text-success">ACEPTADO: Sólo falta presentarte para realizar el intercambio!</p>
+                    <p class="card-title text-success">PROGRAMADO: Deben presentarse los participantes antes del horario de cierre.</p>
                     {%else%}
                     <p class="card-title text-success">Error: no tiene que aparecer este mensaje!</p>
                     {% endif %}
@@ -53,15 +56,13 @@
                             <small class="fw-light"><b>Sucursal</b>: {{trueque.sucursal}}</small>
                             <small class="fw-light"><b>Fecha</b>: {{trueque.fecha_programada|date:'l j \d\e F, Y'|capfirst}}</small>
                             <small class="fw-light"><b>Horario</b>: {{trueque.get_horario_display}}</small>
-                        </div>      
-                    </span>     
-                    <div class="d-flex justify-content-end">                                                        
-                        <button class="btn btn-success confirmar-trueque" 
+                        </div>    
+                        <button class="btn btn-success ms-auto mt-auto confirmar-trueque" 
                             data-bs-toggle="modal" data-bs-target="#modal-confirmar"
                             data-trueque-id="{{ trueque.id }}">
                             Confirmar
-                        </button>
-                    </div>    
+                        </button>  
+                    </span>     
                         
                     
                 </div>
@@ -79,7 +80,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-static" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Antes de confirmar ¿Querés agregar ventas a este trueque?</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Antes de confirmar, ¿Querés agregar ventas a este trueque?</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-footer">
@@ -115,7 +116,7 @@
         .then(function (response) {
             if (response.ok) {
                 console.log('Trueque aceptado exitosamente.');
-                window.location.href = `/listar-ventas-trueque/${truequeId}?mensaje=La solicitud se aceptó correctamente`;
+                window.location.href = `/trueque/id/${truequeId}?mensaje=Se confirmó el trueque!`;
             } else {
                 console.error('Error al aceptar el trueque. Código de estado: ' + response.status);
             }

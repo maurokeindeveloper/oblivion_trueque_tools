@@ -87,7 +87,7 @@ def buscar_productos_trueques_programados(request):
             },
         )
     else:
-        return render(request, "productos/productos.html", {"trueques": trueques_filtrados})
+        return render(request, "trueques/trueques_programados.html", {"trueques": trueques_filtrados})
 
 
 def detalle_producto(request, id):

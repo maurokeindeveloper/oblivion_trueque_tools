@@ -2,20 +2,14 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from ..forms.trueque_forms import SolicitarForm
 from ..forms.usuario_forms import check_cliente,check_empleado
-from ..models import Producto, Trueque
-from datetime import timedelta
+from ..models import Producto, Trueque, Venta
 from datetime import date
 
-@login_required
-def gestion_trueque(request):
-    chk=check_empleado(request.user)
-    if chk["ok"]:
-        return chk["return"]
-    return render(request, "gestion_trueque.html")
 
 @login_required
 def trueques_entrantes(request):
@@ -26,27 +20,6 @@ def trueques_entrantes(request):
     print(f"Usuario autenticado: {usuario.email}")
     trueques = Trueque.objects.exclude(activo=False).filter(Q(estado=1) | Q(estado=2),producto_solicitado__usuario=usuario).order_by("producto_solicitado")
     return render(request, "trueques/trueques_entrantes.html", {"trueques": trueques})
-
-# @login_required
-# def aceptar_solicitud(request, trueque_id):
-#     if request.POST:
-#         # Obtener el objeto trueque
-#         trueque = get_object_or_404(Trueque, id=trueque_id)   
-
-#         #trueques del solicitado (el que acepta la solicutud) que esten en estado solicitado para asignar en pendiente
-#         trueques = Trueque.objects.exclude(activo=False).filter(producto_solicitado=trueque.producto_solicitante, estado=1)     
-#         for tr in trueques:
-#             tr.estado = 2 #pendiente
-#             tr.save()
-
-#         producto = Producto.objects.first(id=trueque.producto_solicitado.id)
-#         producto.reservado = True
-#         producto.save()
-
-#         # Actualizar el trueque en la base de datos
-#         trueque.estado = 3
-#         trueque.save()        
-#     return redirect(reverse("trueques_entrantes") + "?mensaje=La solicitud se aceptó correctamente")
 
 @login_required
 def trueques_salientes(request):
@@ -209,25 +182,19 @@ def trueques_programados(request):
     if chk["ok"]:
         return chk["return"]
     hoy = date.today()
-    print('fecha de hoy:', hoy)
-    trueques_filtrados = Trueque.objects.exclude(activo=False).filter(fecha_programada=hoy, estado=3)
-    print('coleccion de truques: ', trueques_filtrados)
+    trueques_filtrados = Trueque.objects.exclude(activo=False).filter(fecha_programada=date.today(), estado=3)
     return render(request, "trueques/trueques_programados.html", {"trueques": trueques_filtrados,'hoy':hoy})
 
-'''
 @login_required
-def trueques_hoy(request):
+def trueques_concretados(request):
+    usuario = request.user
+    chk = check_empleado(usuario)
+    if chk["ok"]:
+        return chk["return"]
     hoy = date.today()
-    trueques_filtrados = Trueque.objects.filter(fecha_programada=hoy)
-    return render(request, 'trueques/partials/listado_trueques_programados.html', {'trueques': trueques_filtrados, 'hoy':hoy})
-'''
-'''
-@login_required
-def trueques_ayer(request):
-    ayer = date.today() - timedelta(days=1)
-    trueques_filtrados = Trueque.objects.filter(fecha_programada=ayer)
-    return render(request, 'trueques/partials/listado_trueques_programados.html', {'trueques': trueques_filtrados,'hoy':ayer})
-'''
+    trueques_filtrados = Trueque.objects.exclude(activo=False).filter(fecha_programada=date.today(), estado=4)
+    return render(request, "trueques/trueques_concretados.html", {"trueques": trueques_filtrados,'hoy':hoy})
+
 
 @login_required
 def confirmar_trueque(request, trueque_id):
@@ -247,7 +214,7 @@ def confirmar_trueque(request, trueque_id):
         trueque.estado = 4
         trueque.save()
 
-        return redirect(reverse("listar_ventas_trueque", args=[trueque.id]) + "?mensaje=El trueque se concretó correctamente")
+        return redirect(reverse("detalle_trueque", args=[trueque.id]) + "?mensaje=El trueque se concretó con exito!")
 
 def cancelar_trueque_programado(request):
     if request.method == 'POST':
@@ -263,3 +230,13 @@ def cancelar_trueque_programado(request):
                     s.estado = 1
                     s.save()
         return redirect(reverse("trueques_programados") + "?mensaje=El proceso de cancelación de trueques vencidos fue exitoso.")
+    
+def detalle_trueque(request, id):
+    trueque = get_object_or_404(Trueque, id=id) 
+    if trueque.estado != 4:
+        return HttpResponse("El trueque tiene que estar concretado!")
+    ventas = Venta.objects.exclude(activo=False).filter(trueque=trueque).order_by("-fecha")
+    total = 0
+    for venta in ventas:
+        total+=venta.get_total()
+    return render(request,"trueques/detalle_trueque.html",{"trueque": trueque, "ventas":ventas,"total":total})
