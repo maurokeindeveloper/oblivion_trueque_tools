@@ -33,12 +33,19 @@
                 {% if user.is_authenticated %}
                     {% if user.is_staff %}
                     {% if user.is_admin %}      {# PORCION PARA ADMIN #}
-                        <li class="nav-item">
-                            <a class="nav-link {%if url_actual == 'registro_empleado' %}active{%endif%}" href="{% url 'registro_empleado' %}">Registrar Empleado</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {%if url_actual == 'empleados' %}active{%endif%}" href="{% url 'empleados' %}">Listado de Empleados</a>
-                        </li>
+
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Menu desplegable
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark bg-dark" aria-labelledby="navbarDropdown"> {#Opciones del dropdown#}
+                            <li><a class="dropdown-item  {%if url_actual == 'registro_empleado' %}active{%endif%}" href="{% url 'registro_empleado' %}">Registrar Empleado</a></li>
+                            <li><hr class="dropdown-divider"></li>                                      {# separador (barrita) #}
+                            <li><a class="dropdown-item {%if url_actual == 'empleados' %}active{%endif%}" href="{% url 'empleados' %}">Listado de Empleados </a></li>
+                            <li><a class="dropdown-item {%if url_actual == 'sucursales' %}active{%endif%}" href="{% url 'sucursales' %}">Listado de sucursales 3</a></li>
+                        </ul>
+                    </li>
                         
                     {% else %}              {# PORCION PARA EMPLEADOS #}
                         <li class="nav-item">

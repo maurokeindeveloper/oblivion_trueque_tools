@@ -1,0 +1,36 @@
+
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de sucursales</title>
+    <link rel="stylesheet" href="{% static 'path/to/bootstrap.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Listado de Sucursales</h1>
+        {% for sucursal in sucursales %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Ciudad: {{ sucursal.ciudad }} Direccion: {{ sucursal.direccion }}</h5>
+
+                    <div class="d-flex justify-content-end mx-2">
+                        <button type="button" class="btn btn-danger mr-2">
+                            Eliminar
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            Modificar
+                        </button>
+                    </div>
+             
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <script src="{% static 'path/to/bootstrap.js' %}"></script>
+</body>
+</html>
+{% endblock %}
