@@ -30,8 +30,7 @@
         </div>
     </div>
     <div class="col-7 d-flex flex-column ps-4 pe-0">
-        <p class="mt-1">{{producto.descripcion|capfirst}}</p>
-        <span class="d-flex mt-auto">
+        <span class="d-flex mb-4">
             <div class=" fw-light">
                 <small>Sucursal del intercambio: {{producto.sucursal.ciudad}} - {{producto.sucursal.direccion}}</small><br>
                 <small>Publicado por: {{producto.usuario.first_name}}</small><br>
@@ -39,7 +38,7 @@
             </div>
             {%if not user.is_staff and producto.usuario != user and producto.disponible%}
                 {%if not user.is_authenticated or producto.reservado%}
-                <div class="d-flex flex-column justify-content-end align-items-center my-auto ms-auto">
+                <div class="d-flex flex-column justify-content-end align-items-center mb-auto ms-auto">
                     <button class="btn btn-secondary btn-lg" disabled>Solicitar intercambio</button>
                     {%if not user.is_authenticated%}
                     <small class="fw-light text-muted text-wrap opacity-75">Debes registrarte para hacer solicitudes.</small>
@@ -48,10 +47,12 @@
                     {%endif%}
                 </div>
             {%else%}
-            <a href="{% url 'solicitar' id=producto.id %}" class="btn btn-primary btn-lg my-auto ms-auto">Solicitar intercambio</a>
+            <a href="{% url 'solicitar' id=producto.id %}" class="btn btn-primary btn-lg mb-auto ms-auto">Solicitar intercambio</a>
             {%endif%}
             {%endif%}
         </span>
+        <p class="mt-1">{{producto.descripcion|capfirst}}</p>
+        
     </div>
     <h4 class="mt-5 mb-4">Preguntas y respuestas</h4>
     {% if user.is_authenticated %}

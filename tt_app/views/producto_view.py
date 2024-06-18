@@ -8,12 +8,12 @@ from ..forms.producto_forms import (
 from ..forms.usuario_forms import check_cliente
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from ..models import Producto, Pregunta, Respuesta,Trueque
+from ..models import Producto, Pregunta,Trueque
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from datetime import timedelta
 from datetime import date
 from django.db.models import Q
+
 @login_required
 def crear_producto(request):
     chk = check_cliente(request.user)
@@ -45,9 +45,84 @@ def crear_producto(request):
         },
     )
 
+@login_required
+def modificar_producto(request,id):
+    chk = check_cliente(request.user)
+    if chk["ok"]:
+        return chk["return"]
+    
+    producto = get_object_or_404(Producto,id=id) # Obtenemos el producto a modificar 
+
+    if request.POST:
+        form = CreacionDeProducto(request.POST,request.FILES, instance = producto)
+        if form.is_valid():
+            form = form.save(commit=False)
+            print("modificando...")
+            form.fecha_de_publicacion = producto.fecha_de_publicacion  # Establecer la fecha de publicación antes de guardar
+            form.nombre = form.nombre.capitalize()
+            form.save() # guardamos el producto
+            # Redirigir a la página de productos con mensaje de feedback
+            return redirect(
+                reverse("mis_productos", args=[request.user.id])
+                + "?mensaje=El producto se ha modificado correctamente."
+            )
+    else:
+        form = CreacionDeProducto(instance = producto)
+    return render(
+        request,
+        "productos/crear_producto.html",
+        {  # enviamos los siguientes parámetros:
+            "form": form,  # el form definido en producto_forms.py
+            "titulo": "Modificar producto",  # el titulo del form
+            "boton": "Modificar",  # el texto del botón de confirmación
+            "obligatorios": False,  # mostrar la advertencia de campos obligatorios o no
+        },
+    )
+    
+
+@login_required
+def eliminar_producto(request,id):
+    chk = check_cliente(request.user)
+    if chk["ok"]:
+        return chk["return"]
+    if request.method == 'POST':
+        # Obtener el producto si es que existe
+        producto = get_object_or_404(Producto, id=id)    
+        print("eliminando "+producto.nombre+"...")    
+        # Rechazar solicitudes recibidas, motivo 'Producto no disponible'    
+        for solicitud in Trueque.objects.exclude(activo=False).filter(Q(estado=1)|Q(estado=2), producto_solicitado=producto):
+            solicitud.estado=5 #rechazado
+            solicitud.motivo_rechazo=1 #Producto no disponible.
+            solicitud.save()
+            solicitud.producto_solicitante.reservado=False # desmarcamos el solicitante
+            solicitud.producto_solicitante.save()
+        # Cancelar solicitudes enviadas
+        for solicitud in Trueque.objects.exclude(activo=False).filter(Q(estado=1)|Q(estado=2), producto_solicitante=producto):
+            solicitud.estado=7
+            solicitud.save()
+        # Cancelar trueque por concretar si es que tiene
+        for trueque in Trueque.objects.exclude(activo=False).filter(producto_solicitado=producto, estado=3):
+            trueque.estado=7
+            trueque.save()
+            trueque.producto_solicitante.reservado=False # desmarcamos el otro producto
+            trueque.producto_solicitante.save()
+        for trueque in Trueque.objects.exclude(activo=False).filter(producto_solicitante=producto, estado=3):
+            trueque.estado=7
+            trueque.save()
+            trueque.producto_solicitado.reservado=False # desmarcamos el otro producto
+            trueque.producto_solicitado.save()
+        # Marcar producto como no disponible
+        producto.reservado=True
+        producto.disponible=False
+        producto.activo=False        
+        producto.save()
+        return redirect(reverse("mis_productos", args=[request.user.id]) + "?mensaje=El producto se eliminó correctamente.")
+    else:
+        return redirect(reverse("mis_productos", args=[request.user.id]) + "?mensaje=No se pudo eliminar el producto. Algo salió mal")
+
 
 def productos(request):
-    productos = Producto.objects.exclude(activo=False).order_by("-promocionado")
+    productos = Producto.objects.exclude(activo=False).order_by("fecha_de_publicacion").order_by("-promocionado")
     return render(request, "productos/productos.html", {"productos": productos})
 
 
@@ -171,3 +246,7 @@ def filtrar_productos(request, categoria):
         )
     else:
         return render(request, "productos/productos.html", {"productos": productos})
+
+def mis_productos(request,id):
+    productos = Producto.objects.exclude(activo=False).filter(usuario__id=id).order_by("fecha_de_publicacion")
+    return render(request, "productos/mis_productos.html", {"productos": productos})
