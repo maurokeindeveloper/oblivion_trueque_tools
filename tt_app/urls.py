@@ -30,7 +30,7 @@ urlpatterns = [
     path("productos/id/<int:id>/responder", producto_view.responder, name="responder"),
     path("filtrar_productos/<int:categoria>",producto_view.filtrar_productos,name="filtrar_productos"),
     path("mis_productos/<int:id>",producto_view.mis_productos,name="mis_productos"),
-    path("empleados/", usuario_view.listado_empleados, name="empleados"),
+    path("empleados", usuario_view.listado_empleados, name="empleados"),
     path('trueques_programados/', trueque_view.trueques_programados, name='trueques_programados'),
     path('trueques_concretados/', trueque_view.trueques_concretados, name='trueques_concretados'),
     path("registrar-ventas/<int:trueque_id>", venta_view.registrar_ventas, name="registrar_ventas"),
@@ -38,4 +38,6 @@ urlpatterns = [
     path("listar-ventas-trueque/<int:trueque_id>", venta_view.listar_ventas, name="listar_ventas_trueque"),
     path("cancelar-trueques-programados/", trueque_view.cancelar_trueque_programado, name="cancelar_trueques_programados"),
     path("sucursales/", sucursal_view.listado_sucursales, name="sucursales"),
+    path("modificar_empleado/<int:id>/", usuario_view.modificar_empleado, name="modificar_empleado"),
+    path("eliminar_empleado/<int:id>/", usuario_view.eliminar_empleado, name="eliminar_empleado"),
 ]
