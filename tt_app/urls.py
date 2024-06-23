@@ -41,4 +41,5 @@ urlpatterns = [
     path("promocionar-producto/<int:id>", producto_view.promocionar, name='promocionar_producto'),
     path("modificar_empleado/<int:id>/", usuario_view.modificar_empleado, name="modificar_empleado"),
     path("eliminar_empleado/<int:id>/", usuario_view.eliminar_empleado, name="eliminar_empleado"),
+    path("crear-sucursal/", sucursal_view.crear_sucursal, name="crear_sucursal")
 ]
