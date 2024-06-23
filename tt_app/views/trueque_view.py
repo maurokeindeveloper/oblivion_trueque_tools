@@ -210,6 +210,10 @@ def confirmar_trueque(request, trueque_id):
 
         #trueque.producto_solicitado.usuario.reputacion++
         #trueque.producto_solicitante.usuario.reputacion++
+        trueque.producto_solicitado.disponible=False
+        trueque.producto_solicitado.save()
+        trueque.producto_solicitante.disponible=False
+        trueque.producto_solicitante.save()
         
         trueque.estado = 4
         trueque.save()

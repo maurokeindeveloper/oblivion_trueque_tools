@@ -16,33 +16,19 @@
         <div class="row p-2" style="height:250px;">
             <div class="container col-lg-5 d-flex m-auto mh-100">
                 <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center ">
-                    {%if trueque.producto_solicitante.usuario == request.user%}
-                    <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="d-flex" style="height:190px;">
-                        <img src="{%if trueque.producto_solicitante.imagen%}
-                        {{trueque.producto_solicitante.imagen.url}}
-                        {%else%}
-                        {% static 'images/default-image-missing.png' %}
-                        {%endif%}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border  
-                        {%if trueque.estado == 4%}{#concretado#}border-primary
-                        {%else%} {#rechazado o cancelado#}border-danger 
-                        {%endif%}
-                        ">
-                    </a>
-                    {%else%}
                     <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class="d-flex" style="height:190px;">
                         <img src="
                         {%if trueque.producto_solicitado.imagen%}
                         {{trueque.producto_solicitado.imagen.url}}
                         {%else%}
                         {% static 'images/default-image-missing.png' %}
-                        {%endif%}" alt="Tu producto" class="img-fluid rounded mh-100 m-auto  border  
+                        {%endif%}" alt="img" class="img-fluid rounded mh-100 m-auto  border  
                         {%if trueque.estado == 4%}{#concretado#}border-primary
                         {%else%} {#rechazado o cancelado#}border-danger 
                         {%endif%}
                         ">
                     </a>
-                    {%endif%}
-                    <small class="text-muted">Tu producto</small>
+                    <small class="text-muted">{{trueque.producto_solicitado.usuario.first_name}}</small>
                 </div>
                 <div class="col-lg-2 d-flex my-auto">{#icono#}
                     {%if trueque.estado > 4%}
@@ -52,21 +38,7 @@
                     {%endif%}
                 </div>
                 <div class="col-lg-5 d-flex flex-column align-items-center justify-content-center">
-                    {%if trueque.producto_solicitante.usuario == request.user%}
-                    <a href="{% url 'detalle_producto' trueque.producto_solicitado.id%}" class="d-flex" style="height:190px;">
-                        <img src="
-                        {%if trueque.producto_solicitado.imagen%}
-                        {{trueque.producto_solicitado.imagen.url}}
-                        {%else%}
-                        {% static 'images/default-image-missing.png' %}
-                        {%endif%}" alt="{{trueque.producto_solicitado.usuario.first_name}} producto" class="img-fluid rounded mh-100 m-auto  border  
-                        {%if trueque.estado == 4%}{#concretado#}border-primary
-                        {%else%}{#rechazado o cancelado#}border-danger 
-                        {%endif%}
-                        ">
-                    </a>
-                    <small class="text-muted">{{trueque.producto_solicitado.usuario.first_name}}</small>
-                    {%else%}
+            
                     <a href="{% url 'detalle_producto' trueque.producto_solicitante.id%}" class="d-flex"style="height:190px;">
                         <img src="
                         {%if trueque.producto_solicitante.imagen%}
@@ -80,7 +52,6 @@
                         ">
                     </a>
                     <small class="text-muted">{{trueque.producto_solicitante.usuario.first_name}}</small>
-                    {%endif%}
                 </div>
             </div>
             <div class="card-body col-lg-7 d-flex flex-column ">
@@ -132,7 +103,7 @@
 
 
 {% else %}
-    <h5 class="mt-5 my-3 text-center">No tiene trueques finalizados.</h5> 
+    <h5 class="mt-5 my-3 text-center">No tiene trueques concretados por hoy.</h5> 
     <p class="p-2 text-center"><a href="{%url 'home'%}">Volver al inicio</a></p>
 {% endif %}
 

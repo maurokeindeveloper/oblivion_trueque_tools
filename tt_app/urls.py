@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import producto_view, usuario_view, trueque_view, venta_view
+from .views import producto_view, usuario_view, trueque_view, venta_view, sucursal_view
 
 urlpatterns = [
     path("", usuario_view.home, name="home"),
@@ -7,6 +7,8 @@ urlpatterns = [
     path("ingreso/", usuario_view.ingreso, name="ingreso"),
     path("logout/", usuario_view.cerrar_sesion, name="logout"),
     path("crear_producto/", producto_view.crear_producto, name="crear_producto"),
+    path("modificar_producto/<int:id>", producto_view.modificar_producto, name="modificar_producto"),
+    path("eliminar_producto/<int:id>", producto_view.eliminar_producto, name="eliminar_producto"),
     path("productos/", producto_view.productos, name="productos"),
     path("buscar_productos/", producto_view.buscar_productos, name="buscar_productos"),
     path("buscar_productos_trueques_programados/", producto_view.buscar_productos_trueques_programados, name="buscar_productos_trueques_programados"),
@@ -27,6 +29,7 @@ urlpatterns = [
     path("productos/id/<int:id>/preguntar", producto_view.preguntar, name="preguntar"),
     path("productos/id/<int:id>/responder", producto_view.responder, name="responder"),
     path("filtrar_productos/<int:categoria>",producto_view.filtrar_productos,name="filtrar_productos"),
+    path("mis_productos/<int:id>",producto_view.mis_productos,name="mis_productos"),
     path("empleados/", usuario_view.listado_empleados, name="empleados"),
     path('trueques_programados/', trueque_view.trueques_programados, name='trueques_programados'),
     path('trueques_concretados/', trueque_view.trueques_concretados, name='trueques_concretados'),
@@ -34,4 +37,6 @@ urlpatterns = [
     path('concretar-trueque/<int:trueque_id>/', trueque_view.confirmar_trueque, name="concretar_trueque"),
     path("listar-ventas-trueque/<int:trueque_id>", venta_view.listar_ventas, name="listar_ventas_trueque"),
     path("cancelar-trueques-programados/", trueque_view.cancelar_trueque_programado, name="cancelar_trueques_programados"),
+    path("sucursales/", sucursal_view.listado_sucursales, name="sucursales"),
+    path("promocionar-producto/<int:id>", producto_view.promocionar, name='promocionar_producto')
 ]

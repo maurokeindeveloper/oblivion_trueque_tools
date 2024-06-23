@@ -120,7 +120,7 @@ class Producto(models.Model):
         categoria_3 = 3, _("$10000+")
 
     categoria = models.IntegerField(choices=Categoria.choices)
-    fecha_de_publicacion = models.DateTimeField(auto_now=True)
+    fecha_de_publicacion = models.DateTimeField(auto_now=False)
 
     imagen = ImageField(blank=True, upload_to="media/")
     promocionado = models.BooleanField(default=False)
@@ -133,6 +133,7 @@ class Producto(models.Model):
     sucursal = models.ForeignKey(
         Sucursal, on_delete=models.CASCADE, related_name="productos"
     )
+    fecha_hasta_promocion = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.nombre + "\t(" + str(self.categoria) + ")"
