@@ -12,7 +12,7 @@ from django.utils import timezone
 from ..models import Producto, Pregunta,Trueque
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from datetime import date
+from datetime import date, timedelta
 from django.db.models import Q
 
 @login_required
@@ -259,10 +259,14 @@ def promocionar(request, id):
             print(id)
             producto = get_object_or_404(Producto, id=id)
             producto.promocionado = True
-                   
+            producto.fecha_hasta_promocion = date.today() + timedelta(weeks=1)
+            producto.save()
+            return redirect(
+                reverse("productos")
+                + "?mensaje=El producto se ha promocionado correctamente."
+            )
     else:
         form = FormularioPagarPromocion()
-        #return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
     return render(
         request,
         "productos/promocionar.html",
