@@ -17,15 +17,15 @@
                 <div class="card-body">
                     <h5 class="card-title">Ciudad: {{ sucursal.ciudad }} Direccion: {{ sucursal.direccion }}</h5>
 
-                    <div class="d-flex justify-content-end mx-2">
-                        <button type="button" class="btn btn-danger mr-2">
-                            Eliminar
-                        </button>
-                        <button type="button" class="btn btn-primary">
+                    <div class="btn-group">
+                        <form method="POST" action="{% url 'eliminar_sucursal' sucursal.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                        <a href="{% url 'modificar_sucursal' sucursal.id %}" class="btn btn-success">
                             Modificar
-                        </button>
-                    </div>
-             
+                        </a>
+                    </div>             
                 </div>
             </div>
         {% endfor %}
