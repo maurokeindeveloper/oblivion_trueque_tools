@@ -148,4 +148,8 @@ urlpatterns = [
         sucursal_view.eliminar_sucursal,
         name="eliminar_sucursal",
     ),
+    path("generar_estadisticas_ventas",
+         usuario_view.generar_estadisticas_ventas,
+         name="generar_estadisticas_ventas"
+    ),
 ]

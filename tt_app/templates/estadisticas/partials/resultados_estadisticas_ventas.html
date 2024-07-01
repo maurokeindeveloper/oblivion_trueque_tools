@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+{% if ventas %}
+    <h2>Resultados:</h2>
+    <p>Total de ventas: {{ total_ventas }}</p>
+    <p>Suma total: ${{ suma_ventas }}</p>
+    <ul>
+    {% for venta in ventas %}
+        <li>{{ venta.fecha }}: ${{ venta.monto }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %}
