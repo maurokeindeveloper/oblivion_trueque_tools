@@ -127,7 +127,7 @@ def listado_empleados(request):
     if chk["ok"]:
         return chk["return"]
     empleados = Usuario.objects.filter(is_staff=True, is_active=True, is_admin=False, is_superuser=False)
-    return render(request, "usuario/empleados.html", {"empleados": empleados})
+    return render(request, "usuario/partials/listado_empleados.html", {"empleados": empleados})
 
 
 @login_required

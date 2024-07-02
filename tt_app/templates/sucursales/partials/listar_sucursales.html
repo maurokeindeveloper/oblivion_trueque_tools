@@ -1,27 +1,18 @@
 
 {% block content %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de sucursales</title>
-    <link rel="stylesheet" href="{% static 'path/to/bootstrap.css' %}">
-</head>
-<body>
+
     <div class="container">
-        <h1>Listado de Sucursales</h1>
         {% for sucursal in sucursales %}
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Ciudad: {{ sucursal.ciudad }} Direccion: {{ sucursal.direccion }}</h5>
 
                     <div class="btn-group">
-                        <form method="POST" action="{% url 'eliminar_sucursal' sucursal.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                        </form>
+                        <!-- <form method="POST" action="{% url 'eliminar_sucursal' sucursal.id %}">
+                            {% csrf_token %} -->
+                            <button type="submit" class="btn btn-danger eliminar-sucursal" data-bs-target="#modal-eliminar" data-bs-toggle="modal" data-sucursal-id="{{ sucursal.id }}" > Eliminar </button>
+                        <!-- </form> -->
                         <a href="{% url 'modificar_sucursal' sucursal.id %}" class="btn btn-success">
                             Modificar
                         </a>
@@ -30,7 +21,60 @@
             </div>
         {% endfor %}
     </div>
-    <script src="{% static 'path/to/bootstrap.js' %}"></script>
-</body>
-</html>
+
+    <!--modals-->
+    <div class="modal fade" id="modal-eliminar" tabindex="-1" role="dialog" 
+    aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-static" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Estás seguro de eliminar la sucursal?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id=bodyModal></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger eliminar-sucursal" onclick="eliminarSucursal()">Eliminar sucursal</button>
+            </div>
+        </div>
+    </div>  
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    var sucursalId = null;
+    var motivoRechazo = null;
+    var urlRechazo, motivo;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var buttons = document.querySelectorAll('.eliminar-sucursal');
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                sucursalId = this.getAttribute('data-sucursal-id');
+            })
+        })
+    });
+
+    function eliminarSucursal() {        
+        fetch("/eliminar_sucursal/" + sucursalId + "/", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(function (response) {
+            if (response.ok) {
+                console.log('La sucursal se ha eliminado exitosamente.');
+                window.location.href = '{% url "sucursales" %}?mensaje=La sucursal se ha eliminado exitosamente';
+            } else {
+                console.error('Error al eliminar la sucursal. Código de estado: ' + response.status);
+            }
+        })
+        .catch(function (error) {
+            console.error('Error de red:', error);
+        });
+    }
+
+</script>
 {% endblock %}
