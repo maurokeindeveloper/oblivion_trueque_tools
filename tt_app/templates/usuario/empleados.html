@@ -1,16 +1,8 @@
-{% extends 'base.html' %}
+
 
 {% block content %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Empleados</title>
-    <link rel="stylesheet" href="{% static 'path/to/bootstrap.css' %}">
-</head>
-<body>
+
     <div class="container">
         <h1>Listado de Empleados</h1>
         {% for empleado in empleados %}
@@ -19,10 +11,10 @@
                     <h5 class="card-title">Nombre: {{ empleado.first_name }} Apellido: {{ empleado.last_name }}</h5>
                     <p class="card-text">Email: {{ empleado.email }}</p>
                     <div class="btn-group">
-                        <form method="POST" action="{% url 'eliminar_empleado' empleado.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                        </form>
+                        <!-- <form method="POST" action="{% url 'eliminar_empleado' empleado.id %}">
+                            {% csrf_token %} -->
+                            <button type="submit" class="btn btn-danger eliminar-empleado" data-bs-target="#modal-eliminar" data-bs-toggle="modal" data-empleado-id="{{ empleado.id }}" > Eliminar </button>
+                        <!-- </form> -->
                         <a href="{% url 'modificar_empleado' empleado.id %}" class="btn btn-success">
                             Modificar
                         </a>
@@ -31,7 +23,60 @@
             </div>
         {% endfor %}
     </div>
-    <script src="{% static 'path/to/bootstrap.js' %}"></script>
-</body>
-</html>
+
+<!--modals-->
+<div class="modal fade" id="modal-eliminar" tabindex="-1" role="dialog" 
+aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal-dialog modal-dialog-centered modal-dialog-static" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">¿Estás seguro de eliminar el empleado?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id=bodyModal></div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger eliminar-empleado" onclick="eliminarEmpleado2()">Eliminar empleado</button>
+        </div>
+    </div>
+</div>  
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    var empleadoId = null;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var buttons = document.querySelectorAll('.eliminar-empleado');
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                empleadoId = this.getAttribute('data-empleado-id');
+            })
+        })
+    });
+
+    function eliminarEmpleado2() {        
+        fetch("/eliminar_empleado/" + empleadoId + "/", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(function (response) {
+            if (response.ok) {
+                console.log('El empleado se ha eliminado exitosamente.');
+                window.location.href = '{% url "empleados" %}?mensaje=El empleado se ha eliminado exitosamente';
+            } else {
+                console.error('Error al eliminar el empleado. Código de estado: ' + response.status);
+            }
+        })
+        .catch(function (error) {
+            console.error('Error de red:', error);
+        });
+    }
+
+</script>
 {% endblock %}
