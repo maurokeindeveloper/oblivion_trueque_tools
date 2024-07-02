@@ -37,7 +37,7 @@ def generar_estadisticas_ventas(request):
             'fecha_inicio': fecha_inicio,
             'fecha_fin': fecha_fin,
         }
-        return render(request, 'estadisticas/estadisticas_ventas.html', context)
+        return render(request, 'estadisticas/partials/resultados_estadisticas_ventas.html', context)
     else:
         # Si es una solicitud GET, solo renderiza el formulario
         return render(request, 'estadisticas/estadisticas_ventas.html')

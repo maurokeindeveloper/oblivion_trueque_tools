@@ -2,15 +2,44 @@
 
 {% block content %}
 {% load static %}
+
+
 {% if ventas %}
-    <h2>Resultados:</h2>
-    <p>Total de ventas: {{ total_ventas }}</p>
-    <p>Suma total: ${{ suma_ventas }}</p>
-    <ul>
-    {% for venta in ventas %}
-        <li>{{ venta.fecha }}: ${{ venta.monto }}</li>
-    {% endfor %}
-    </ul>
-{% endif %}
+            <div class="mt-5">
+                <h2>Resultados de la estadística</h2>
+                <p><strong>Período:</strong> {{ fecha_inicio|date:"d/m/Y" }} - {{ fecha_fin|date:"d/m/Y" }}</p>
+                <p><strong>Total de ventas:</strong> {{ total_ventas }}</p>
+                <p><strong>Suma total:</strong> ${{ suma_ventas|floatformat:2 }}</p>
+                
+                <h3 class="mt-4">Detalle de ventas</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                            <th>Vendedor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for venta in ventas %}
+                            <tr>
+                                <td>{{ venta.fecha|date:"d/m/Y H:i" }}</td>
+                                <td>{{ venta.nombre_producto }}</td>
+                                <td>{{ venta.cantidad_unidades }}</td>
+                                <td>${{ venta.precio_unitario|floatformat:2 }}</td>
+                                <td>${{ venta.get_total|floatformat:2 }}</td>
+                                <td>{{ venta.vendedor.first_name }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <h2>No hay ventas en el periodo selecionado</h2><br>
+            <a style=" text-decoration:none" href="{% url 'generar_estadisticas_ventas' %}"> Volver </a>
+        {% endif %}
 
 {% endblock %}

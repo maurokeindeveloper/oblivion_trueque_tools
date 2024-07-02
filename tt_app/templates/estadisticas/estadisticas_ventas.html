@@ -24,42 +24,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Filtrar ventas</button>
         </form>
-       
-        {% if ventas %}
-            <div class="mt-5">
-                <h2>Resultados de la estadística</h2>
-                <p><strong>Período:</strong> {{ fecha_inicio|date:"d/m/Y" }} - {{ fecha_fin|date:"d/m/Y" }}</p>
-                <p><strong>Total de ventas:</strong> {{ total_ventas }}</p>
-                <p><strong>Suma total:</strong> ${{ suma_ventas|floatformat:2 }}</p>
-                
-                <h3 class="mt-4">Detalle de ventas</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Producto</th>
-                            <th>Cantidad</th>
-                            <th>Precio Unitario</th>
-                            <th>Total</th>
-                            <th>Vendedor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for venta in ventas %}
-                            <tr>
-                                <td>{{ venta.fecha|date:"d/m/Y H:i" }}</td>
-                                <td>{{ venta.nombre_producto }}</td>
-                                <td>{{ venta.cantidad_unidades }}</td>
-                                <td>${{ venta.precio_unitario|floatformat:2 }}</td>
-                                <td>${{ venta.get_total|floatformat:2 }}</td>
-                                <td>{{ venta.vendedor.first_name }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endif %}
-       
+
     </div>
    
     <script src="{% static 'path/to/bootstrap.js' %}"></script>
