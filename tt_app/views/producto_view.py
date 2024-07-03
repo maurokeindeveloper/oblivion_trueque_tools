@@ -12,7 +12,7 @@ from django.utils import timezone
 from ..models import Producto, Pregunta,Trueque
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from django.db.models import Q
 
 @login_required
@@ -122,10 +122,12 @@ def eliminar_producto(request,id):
 
 
 def productos(request):
-    productos = Producto.objects.exclude(activo=False).order_by("fecha_de_publicacion").order_by("-promocionado")
-    # for producto in productos:
-    #     producto.promocionado = producto.fecha_hasta_promocion < date.today().replace(day=7)
-    return render(request, "productos/productos.html", {"productos": productos})
+    productos = Producto.objects.exclude(activo=False).order_by("fecha_de_publicacion")
+    for producto in productos:
+        if producto.promocionado:
+            producto.promocionado = ( producto.fecha_hasta_promocion > timezone.now() )
+            producto.save()
+    return render(request, "productos/productos.html", {"productos": productos.order_by("-promocionado")})
 
 
 def buscar_productos(request):

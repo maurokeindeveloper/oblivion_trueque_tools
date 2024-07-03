@@ -173,9 +173,3 @@ class FormularioPagarPromocion(forms.ModelForm):
     class Meta:
         model = Producto
         fields = ["numero_tarjeta", "codigo_seguridad", "fecha_vencimiento"]
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)  # Aca van las clases bootstrap a aplicar en todos los widgets de este form
-        for field in self.fields:
-            self.fields[field].widget.attrs["class"] += (
-                " " + "w-100 mt-2 mb-3")
