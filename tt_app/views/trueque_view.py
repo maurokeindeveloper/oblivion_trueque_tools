@@ -118,7 +118,7 @@ def solicitar(request,id):
             )
     else:
         productos_solicitante = Producto.objects.exclude(activo=False).exclude(reservado=True).exclude(disponible=False).filter(usuario=usuario,categoria=producto_solicitado.categoria)
-        if productos_solicitante.empty():
+        if not productos_solicitante:
             return redirect(
                 reverse("productos") + "?mensaje=No tienes productos de la misma categoría para hacer el intercambio."
             )
