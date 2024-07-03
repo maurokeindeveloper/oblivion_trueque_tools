@@ -35,7 +35,7 @@ def registro_empleado(request):
             )  # Establecer la contraseña correctamente
             empleado.save()
             return redirect(
-                reverse("productos")
+                reverse("empleados")
                 + "?mensaje=El empleado se ha agregado correctamente."
             )
     else:

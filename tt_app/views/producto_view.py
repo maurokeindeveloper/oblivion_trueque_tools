@@ -124,6 +124,8 @@ def eliminar_producto(request,id):
 
 def productos(request):
     productos = Producto.objects.exclude(activo=False).order_by("fecha_de_publicacion").order_by("-promocionado")
+    # for producto in productos:
+    #     producto.promocionado = producto.fecha_hasta_promocion < date.today().replace(day=7)
     return render(request, "productos/productos.html", {"productos": productos})
 
 
