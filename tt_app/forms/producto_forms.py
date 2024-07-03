@@ -1,5 +1,7 @@
+from datetime import datetime, date
 from django import forms
 from ..models import Sucursal, Producto, Pregunta, Respuesta
+from django.core.validators import RegexValidator
 
 
 class CreacionDeProducto(forms.ModelForm):
@@ -114,3 +116,60 @@ class FormularioDeRespuesta(forms.ModelForm):
     class Meta:
         model = Respuesta
         fields = ["texto"]
+
+class FormularioPagarPromocion(forms.ModelForm):
+    numero_tarjeta = forms.CharField(
+        label='Número de Tarjeta de Crédito',
+        max_length=16,
+        min_length=16,
+        validators=[RegexValidator(r'^\d+$', message='Ingresar solo dígitos numéricos.')],
+        widget=forms.TextInput(attrs={
+            "class": "form-control", 
+            'placeholder': '1234 5678 9012 3456',
+            'id': 'id_numero_tarjeta'
+            }),
+        error_messages={
+            "required": "Debe ingresar su número de tarjeta",
+            "min_length": "El número de tarjeta debe tener 16 caracteres.",
+            "max_length": "El número de tarjeta tener 16 caracteres.",
+        },
+    )
+    codigo_seguridad = forms.CharField(
+        label='Código de Seguridad (CVV)',
+        max_length=3,
+        min_length=3,
+        validators=[RegexValidator(r'^\d+$', message='Ingresar solo dígitos numéricos.')],
+        widget=forms.TextInput(attrs={
+            "class": "form-control", 
+            'placeholder': '123',
+            "min_length": "El código de seguridad debe tener 3 caracteres.",
+            "max_length": "El código de seguridad debe tener 3 caracteres.",
+            'id': 'id_codigo_seguridad'})
+    )
+    fecha_vencimiento = forms.CharField(
+        label='Fecha de Vencimiento (MM/AA)',
+        #input_formats=['%m/%y', '%m/%Y'],
+        max_length=5,
+        min_length=5,
+        validators=[RegexValidator(r'^(0[1-9]|1[0-2])\/\d{2}$', message='La fecha de vencimiento debe estar en formato MM/AA.')],
+        widget=forms.TextInput(attrs={
+            "class": "form-control", 
+            'placeholder': 'MM/AA',
+            'id': 'id_fecha_vencimiento'
+        })
+    )
+    def clean_fecha_vencimiento(self):
+        datos = self.cleaned_data['fecha_vencimiento']
+        month, year = datos.split('/')
+        month = int(month)
+        year = int(year) + 2000  # Asumiendo que el año está en formato de dos dígitos
+
+        expiration_date = date(year, month, 1)
+        print(expiration_date)
+
+        if expiration_date < date.today().replace(day=1):
+            raise forms.ValidationError("La tarjeta ha expirado.")        
+        return datos    
+    class Meta:
+        model = Producto
+        fields = ["numero_tarjeta", "codigo_seguridad", "fecha_vencimiento"]

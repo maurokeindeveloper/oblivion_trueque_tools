@@ -133,6 +133,7 @@ class Producto(models.Model):
     sucursal = models.ForeignKey(
         Sucursal, on_delete=models.CASCADE, related_name="productos"
     )
+    fecha_hasta_promocion = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.nombre + "\t(" + str(self.categoria) + ")"

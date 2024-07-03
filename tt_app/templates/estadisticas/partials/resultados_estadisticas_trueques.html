@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+
+{% if trueques %}
+        <div class="mt-5">
+            <h2>Resultados de la estadística</h2>
+            <p><strong>Sucursal: </strong>{{ sucursal }}</p>
+            <p><strong>Período:</strong> {{ fecha_inicio|date:"d/m/Y" }} - {{ fecha_fin|date:"d/m/Y" }}</p>
+            <p><strong>Total de trueques confirmados:</strong> {{ total_trueques }}</p>
+            <p><strong>Total de ventas por trueques:</strong> ${{ total_ventas|floatformat:2 }}</p>
+            
+            <h3 class="mt-4">Informe de trueques confirmados</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Producto solicitante</th>
+                        <th>Producto solicitado</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trueque in trueques %}
+                        <tr>
+                            <td>{{ trueque.fecha }}</td>
+                            <td>{{ trueque.producto_solicitante }}</td>
+                            <td>{{ trueque.producto_solicitado }}</td>
+                            <td><a href="{% url 'detalle_trueque' trueque.id %}" class=" text-decoration-none text-reset">Visualizar</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <h2>No hay resultados para el período y la sucursal seleccionadas</h2>
+    {% endif %}
+    <a class="text-decoration-none" href="{% url 'generar_estadisticas_trueques' %}">Volver</a>
+
+{% endblock %}

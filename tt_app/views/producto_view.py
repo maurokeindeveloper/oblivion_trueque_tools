@@ -4,6 +4,7 @@ from ..forms.producto_forms import (
     CreacionDeProducto,
     FormularioDePregunta,
     FormularioDeRespuesta,
+    FormularioPagarPromocion
 )
 from ..forms.usuario_forms import check_cliente
 from django.contrib.auth.decorators import login_required
@@ -11,7 +12,7 @@ from django.utils import timezone
 from ..models import Producto, Pregunta,Trueque
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from datetime import date
+from datetime import date, timedelta
 from django.db.models import Q
 
 @login_required
@@ -246,6 +247,32 @@ def filtrar_productos(request, categoria):
     else:
         return render(request, "productos/productos.html", {"productos": productos})
 
-def mis_productos(request,id):
+def mis_productos(request, id):
     productos = Producto.objects.exclude(activo=False).filter(usuario__id=id).order_by("fecha_de_publicacion")
     return render(request, "productos/mis_productos.html", {"productos": productos})
+
+def promocionar(request, id):
+    if request.method == 'POST':
+        form = FormularioPagarPromocion(request.POST)
+        if form.is_valid():
+            print(id)
+            producto = get_object_or_404(Producto, id=id)
+            producto.promocionado = True
+            producto.fecha_hasta_promocion = date.today() + timedelta(weeks=1)
+            producto.save()
+            return redirect(
+                reverse("productos")
+                + "?mensaje=El producto se ha promocionado correctamente."
+            )
+    else:
+        form = FormularioPagarPromocion()
+    return render(
+        request,
+        "productos/promocionar.html",
+        {  # enviamos los siguientes parámetros:
+            "form": form,  # el form definido en venta_forms.py
+            "titulo": "Pagar promoción",  # el titulo del form
+            "boton": "Pagar",  # el texto del botón de confirmación
+            "obligatorios": True,  # mostrar la advertencia de campos obligatorios o no
+        }
+    )
