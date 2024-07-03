@@ -1,5 +1,12 @@
 from django.urls import path
-from .views import producto_view, usuario_view, trueque_view, venta_view, sucursal_view, estadistica_view
+from .views import (
+    producto_view,
+    usuario_view,
+    trueque_view,
+    venta_view,
+    sucursal_view,
+    estadistica_view,
+)
 
 urlpatterns = [
     path("", usuario_view.home, name="home"),
@@ -148,8 +155,14 @@ urlpatterns = [
         sucursal_view.eliminar_sucursal,
         name="eliminar_sucursal",
     ),
-    path("generar_estadisticas_ventas",
-         estadistica_view.generar_estadisticas_ventas,
-         name="generar_estadisticas_ventas"
+    path(
+        "generar_estadisticas_ventas",
+        estadistica_view.generar_estadisticas_ventas,
+        name="generar_estadisticas_ventas",
+    ),
+    path(
+        "generar_estadisticas_trueques",
+        estadistica_view.generar_estadisticas_trueques,
+        name="generar_estadisticas_trueques",
     ),
 ]

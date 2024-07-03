@@ -6,7 +6,7 @@
 {% if trueques %}
         <div class="mt-5">
             <h2>Resultados de la estadística</h2>
-            <p><strong>Sucursal: </strong>{{ sucursal }}</p>
+            <p><strong>Sucursal: </strong>{{ sucursal}}</p>
             <p><strong>Período:</strong> {{ fecha_inicio|date:"d/m/Y" }} - {{ fecha_fin|date:"d/m/Y" }}</p>
             <p><strong>Total de trueques confirmados:</strong> {{ total_trueques }}</p>
             <p><strong>Total de ventas por trueques:</strong> ${{ total_ventas|floatformat:2 }}</p>
@@ -34,7 +34,7 @@
             </table>
         </div>
     {% else %}
-        <h2>No hay resultados para el período y la sucursal seleccionadas</h2>
+        <h2>No hay resultados para las fechas y la sucursal seleccionadas</h2>
     {% endif %}
     <a class="text-decoration-none" href="{% url 'generar_estadisticas_trueques' %}">Volver</a>
 

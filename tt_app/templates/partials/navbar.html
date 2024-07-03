@@ -45,7 +45,8 @@
                             <li><hr class="dropdown-divider"></li>                                      {# separador (barrita) #}
                             <li><a class="dropdown-item {%if url_actual == 'empleados' %}active{%endif%}" href="{% url 'empleados' %}">Listado de Empleados </a></li>
                             <li><a class="dropdown-item {%if url_actual == 'sucursales' %}active{%endif%}" href="{% url 'sucursales' %}">Listado de sucursales </a></li>
-                            <li><a class="dropdown-item {%if url_actual == 'generar_estadisticas_ventas' %}active{%endif%}" href="{% url 'generar_estadisticas_ventas' %}">Estadisitica de ventas </a></li>
+                            <li><a class="dropdown-item {%if url_actual == 'generar_estadisticas_ventas' %}active{%endif%}" href="{% url 'generar_estadisticas_ventas' %}">Estadística de ventas </a></li>
+                            <li><a class="dropdown-item {%if url_actual == 'generar_estadisticas_trueques' %}active{%endif%}" href="{% url 'generar_estadisticas_trueques' %}">Estadística de trueques </a></li>
                         </ul>
                     </li>
                         
