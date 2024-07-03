@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from ..forms.usuario_forms import RegistrarEmpleado,RegistrationForm,IngresoForm
 from ..forms.usuario_forms import check_cliente,check_empleado,check_administrador
-from ..models import Producto,Usuario
+from ..models import Producto,Usuario,Venta
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
@@ -127,7 +127,7 @@ def listado_empleados(request):
     if chk["ok"]:
         return chk["return"]
     empleados = Usuario.objects.filter(is_staff=True, is_active=True, is_admin=False, is_superuser=False)
-    return render(request, "usuario/empleados.html", {"empleados": empleados})
+    return render(request, "usuario/partials/listado_empleados.html", {"empleados": empleados})
 
 
 @login_required
@@ -181,4 +181,3 @@ def eliminar_empleado(request, id):
         return redirect(
             reverse("empleados") + "?mensaje=El empleado no se ha podido eliminar."
         )
-    
