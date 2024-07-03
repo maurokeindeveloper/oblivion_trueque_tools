@@ -130,8 +130,8 @@ class FormularioPagarPromocion(forms.ModelForm):
             }),
         error_messages={
             "required": "Debe ingresar su número de tarjeta",
-            "min_length": "La descripción debe tener 16 caracteres.",
-            "max_length": "La descripción debe tener 16 caracteres.",
+            "min_length": "El número de tarjeta debe tener 16 caracteres.",
+            "max_length": "El número de tarjeta tener 16 caracteres.",
         },
     )
     codigo_seguridad = forms.CharField(
@@ -142,8 +142,8 @@ class FormularioPagarPromocion(forms.ModelForm):
         widget=forms.TextInput(attrs={
             "class": "form-control", 
             'placeholder': '123',
-            "min_length": "La descripción debe tener 3 caracteres.",
-            "max_length": "La descripción debe tener 3 caracteres.",
+            "min_length": "El código de seguridad debe tener 3 caracteres.",
+            "max_length": "El código de seguridad debe tener 3 caracteres.",
             'id': 'id_codigo_seguridad'})
     )
     fecha_vencimiento = forms.CharField(
