@@ -55,10 +55,9 @@ def modificar_producto(request,id):
     producto = get_object_or_404(Producto,id=id) # Obtenemos el producto a modificar 
 
     if request.POST:
-        form = CreacionDeProducto(request.POST,request.FILES, instance = producto)
+        form = CreacionDeProducto(request.POST,request.FILES, instance = producto) # palabra clave instance sirve para sobre
         if form.is_valid():
             form = form.save(commit=False)
-            print("modificando...")
             form.fecha_de_publicacion = producto.fecha_de_publicacion  # Establecer la fecha de publicación antes de guardar
             form.nombre = form.nombre.capitalize()
             form.save() # guardamos el producto

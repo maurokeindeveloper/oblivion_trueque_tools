@@ -91,15 +91,18 @@
 
 <div class="modal fade" id="modal-cancelar" tabindex="-1" role="dialog" 
     aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-static" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-static modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">¿Estás seguro de cancelar los trueques vencidos?</h5>
+                <h5 class="modal-title" id="exampleModalLabel">¿Estás seguro de cancelar todos los trueques del día de hoy?</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="modal-body">
+                Se cancelarán todos los trueques que figuren para la fecha de hoy. Procure utilizar este botón sólo en el horario de cierre del negocio.
+            </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success" onclick="cancelarTrueques()">Cancelar Trueques</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-danger" onclick="cancelarTrueques()">Cancelar Trueques</button>
             </div>
         </div>
     </div>  
@@ -149,7 +152,6 @@
         })
         .then(function (response) {
             if (response.ok) {
-                console.log('Trueque aceptado exitosamente.');
                 window.location.href = `/trueques_programados/?mensaje=El proceso de cancelación de trueques vencidos fue exitoso.`;
             } else {
                 console.error('Error al aceptar el trueque. Código de estado: ' + response.status);

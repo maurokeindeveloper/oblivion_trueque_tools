@@ -96,7 +96,7 @@ def cancelar_trueque(request,id,estado,ret):
 def solicitar(request,id):
     usuario = request.user
     chk=check_cliente(usuario)
-    if chk["ok"]:
+    if chk["ok"]: 
         return chk["return"]
     
     producto_solicitado =  get_object_or_404(Producto,id=id)
@@ -117,6 +117,11 @@ def solicitar(request,id):
                 reverse("trueques_salientes") + "?mensaje=Se envió la solicitud."
             )
     else:
+        productos_solicitante = Producto.objects.exclude(activo=False).exclude(reservado=True).exclude(disponible=False).filter(usuario=usuario,categoria=producto_solicitado.categoria)
+        if not productos_solicitante:
+            return redirect(
+                reverse("productos") + "?mensaje=No tienes productos de la misma categoría para hacer el intercambio."
+            )
         form = SolicitarForm(user=request.user,id=id)
     return render(request, "trueques/solicitar.html", {   # enviamos los siguientes parámetros:
         "form": form,                           # el form definido en usuario_forms.py
@@ -192,7 +197,7 @@ def trueques_concretados(request):
     if chk["ok"]:
         return chk["return"]
     hoy = date.today()
-    trueques_filtrados = Trueque.objects.exclude(activo=False).filter(fecha_programada=date.today(), estado=4)
+    trueques_filtrados = Trueque.objects.exclude(activo=False).filter(fecha_programada=date.today(), estado=4, sucursal__id=usuario.sucursal.id)
     return render(request, "trueques/trueques_concretados.html", {"trueques": trueques_filtrados,'hoy':hoy})
 
 
